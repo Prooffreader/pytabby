@@ -1,3 +1,10 @@
+# Because no Python version specified
+Pipfile.lock
+
+# custom for development
+*.ipynb
+.vscode/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
