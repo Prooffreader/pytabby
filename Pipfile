@@ -11,7 +11,11 @@ pytest-cov = "*"
 pytest-flakes = "*"
 pytest-datadir = "*"
 pytest-regressions = "*"
+black = "*"
 
 [packages]
 schema = "*"
 pyyaml = "*"
+
+[pipenv]
+allow_prereleases = true
