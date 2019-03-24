@@ -1,3 +1,6 @@
+# Because no Python version specified
+Pipfile.lock
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
