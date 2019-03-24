@@ -3,4 +3,5 @@
 
 """Tab class to represent individual tabs in Menu class"""
 
-pass
+class Tab:
+    pass
