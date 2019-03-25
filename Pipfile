@@ -9,7 +9,6 @@ pylama = "*"
 pytest-xdist = "*"
 pytest-cov = "*"
 pytest-flakes = "*"
-pytest-datadir = "*"
 pytest-regressions = "*"
 black = "*"
 
