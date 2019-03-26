@@ -26,8 +26,8 @@ def yaml_paths():
     with valid schemas.
     """
     path_to_here = Path(os.path.realpath(__file__))
-    data_path = path_to_here.parent / 'data'
-    yaml_paths = [str(x) for x in data_path.glob('*.yaml')]
+    data_path = path_to_here.parent / "data"
+    yaml_paths = [str(x) for x in data_path.glob("*.yaml")]
     return yaml_paths
 
 
@@ -42,13 +42,13 @@ TEST_CONFIGS = [Menu.safe_read_yaml(path) for path in YAML_PATHS]
 def pretest_yaml_ids():
     """Make sure yaml files in /test/data follow naming convention in that folders' README."""
     for yaml_id in YAML_IDS:
-        assert yaml_id.find('multiple') != -1 or yaml_id.find('single') != -1
-        if yaml_id.find('single') != -1:
-            assert yaml_id.find('with_key') != -1 or yaml_id.find('without_key') != -1
+        assert yaml_id.find("multiple") != -1 or yaml_id.find("single") != -1
+        if yaml_id.find("single") != -1:
+            assert yaml_id.find("with_key") != -1 or yaml_id.find("without_key") != -1
 
 
 pretest_yaml_ids()
-print('pretest_yaml_ids test passed')
+print("pretest_yaml_ids test passed")
 
 
 def pretest_configs_are_dicts():
@@ -58,7 +58,7 @@ def pretest_configs_are_dicts():
 
 
 pretest_configs_are_dicts()
-print('pretest_configs_are_dicts passed')
+print("pretest_configs_are_dicts passed")
 
 
 @pytest.fixture(scope="session", params=TEST_CONFIGS, ids=YAML_IDS)
@@ -77,13 +77,13 @@ def input_config_dict_and_id(request):
 def make_type_dict():
     """uses validators._determine_schema_type() to split up configs into separate fixtures"""
     type_dict = {}
-    for type_ in ['multiple', 'single_with_key', 'single_without_key']:
-        type_dict[type_] = {'configs': [], 'ids': []}
+    for type_ in ["multiple", "single_with_key", "single_without_key"]:
+        type_dict[type_] = {"configs": [], "ids": []}
     for config, id_ in zip(TEST_CONFIGS, YAML_IDS):
         type_ = _determine_schema_type(config)
-        assert type_ in ['multiple', 'single_with_key', 'single_without_key']  # in case new type appears
-        type_dict[type_]['configs'].append(config)
-        type_dict[type_]['ids'].append(id_)
+        assert type_ in ["multiple", "single_with_key", "single_without_key"]  # in case new type appears
+        type_dict[type_]["configs"].append(config)
+        type_dict[type_]["ids"].append(id_)
     return type_dict
 
 
@@ -91,21 +91,23 @@ TYPE_DICT = make_type_dict()
 print(TYPE_DICT)
 
 
-@pytest.fixture(scope='session', params=TYPE_DICT['multiple']['configs'], ids=TYPE_DICT['multiple']['ids'])
+@pytest.fixture(scope="session", params=TYPE_DICT["multiple"]["configs"], ids=TYPE_DICT["multiple"]["ids"])
 def input_config_multiple_only(request):
     """Returns config dicts only if they are the 'multiple' type"""
     return request.param
 
 
-@pytest.fixture(scope='session', params=TYPE_DICT['single_without_key']['configs'],
-                ids=TYPE_DICT['single_without_key']['ids'])
+@pytest.fixture(
+    scope="session", params=TYPE_DICT["single_without_key"]["configs"], ids=TYPE_DICT["single_without_key"]["ids"]
+)
 def input_config_single_without_key_only(request):
     """Returns config dicts only if they are the 'single_without_key' type"""
     return request.param
 
 
-@pytest.fixture(scope='session', params=TYPE_DICT['single_with_key']['configs'],
-                ids=TYPE_DICT['single_with_key']['ids'])
+@pytest.fixture(
+    scope="session", params=TYPE_DICT["single_with_key"]["configs"], ids=TYPE_DICT["single_with_key"]["ids"]
+)
 def input_config_single_with_key_only(request):
     """Returns config dicts only if they are the 'single_with_key' type"""
-    return request.param 
+    return request.param

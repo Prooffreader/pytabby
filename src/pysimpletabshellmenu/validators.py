@@ -19,11 +19,7 @@ class _ValidSchemas:
         )
 
         self.tab_schema_multiple = Schema(
-            {
-                "header_choice_displayed_and_accepted": Or(int, str),
-                "header_description": Or(str, None),
-                "items": list,
-            }
+            {"header_choice_displayed_and_accepted": Or(int, str), "header_description": Or(str, None), "items": list}
         )
 
         self.tab_schema_single = Schema({"items": list})
@@ -110,7 +106,7 @@ def schema_is_valid(dict_):
             raise ValueError(f"schema_type {schema_type} is invalid")
         return True
     except Exception as e:
-        if str(e.__class__).find('Schema') != -1:
+        if str(e.__class__).find("Schema") != -1:
             return False
         else:
             raise e

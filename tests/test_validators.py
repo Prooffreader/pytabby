@@ -73,26 +73,28 @@ def test_schema_is_valid_expect_pass(input_config_dict):
     """ensures each test case passes before making them fail for different reasons"""
     assert validators.schema_is_valid(input_config_dict)
 
-# scenarios = {'multiple': ["c['new_header'] = 'something'"
-
-#                             ],
-#                 'single_with_key': ["del c['tabs']",
-#                                     "tab = deepcopy(c['tabs'][0]);c['tabs'].append(tab)"
-#                                     ],
-#                 'single_without_key': ["c['items'][0]['valid_entries'].append(1.5)"
-
-#                                     ]}
-
 
 @pytest.mark.parametrize("scenario", [
     "c['new_header'] = 'something'"])
-def test_some_fail_scenarios_multiple(input_config_dict, scenario):
-    """Schema test should catch all of these, which are not exhaustive.
-    I'm using exec to be DRY. input is reset after each exec"""
+def test_some_fail_scenarios_multiple(input_config_multiple_only, scenario):
+    """Schema test should catch all of these, which are not exhaustive."""
+    c = deepcopy(input_config_multiple_only)
+    exec(scenario)
+    assert not validators.schema_is_valid(c)
 
-    schema_type = validators._determine_schema_type(input_config_dict)
-    if schema_type != 'multiple':
-        return
-    c = deepcopy(input_config_dict)
+@pytest.mark.parametrize("scenario", ["del c['tabs']",
+                                     "tab = deepcopy(c['tabs'][0]);c['tabs'].append(tab)"
+                                     ])
+def test_some_fail_scenarios_single_with_key(input_config_single_with_key_only, scenario):
+    """Schema test should catch all of these, which are not exhaustive."""
+    c = deepcopy(input_config_single_with_key_only)
+    exec(scenario)
+    assert not validators.schema_is_valid(c)
+
+
+@pytest.mark.parametrize("scenario", ["c['items'][0]['valid_entries'].append(1.5)"])
+def test_some_fail_scenarios_single_without_key(input_config_single_without_key_only, scenario):
+    """Schema test should catch all of these, which are not exhaustive."""
+    c = deepcopy(input_config_single_without_key_only)
     exec(scenario)
     assert not validators.schema_is_valid(c)
