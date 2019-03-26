@@ -109,9 +109,12 @@ def schema_is_valid(dict_):
         else:
             raise ValueError(f"schema_type {schema_type} is invalid")
         return True
-    except Schema.SchemaError:
-        return False
-        
+    except Exception as e:
+        if str(e.__class__).find('Schema') != -1:
+            return False
+        else:
+            raise e
+
 
 def validate_input_overlaps():
     pass
