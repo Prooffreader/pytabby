@@ -57,7 +57,7 @@ def _determine_schema_type(dict_):
 
     """
     if "tabs" in dict_.keys():
-        if len(dict["tabs"] > 1):
+        if len(dict_["tabs"]) > 1:
             schema_type = "multiple"
         else:
             schema_type = "single_with_key"
