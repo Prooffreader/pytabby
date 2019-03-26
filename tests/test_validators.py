@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from copy import deepcopy
+
 import pytest
+from schema import Schema, Or, Optional
 
 import pysimpletabshellmenu.validators as validators
 
@@ -25,28 +28,41 @@ def test__determine_schema_type(input_config_dict_and_id):
             assert id_.find("without_key") != -1
 
 
+def test_regression_ValidSchemas():
+    """Simply copies code from validators._ValidSchemas to see if it ever changes"""
 
+    class _ValidSchemasRegression:
 
-    # """Determines which of three valid schema types applies to input dict.
-    # Used in validate_schema()
+        def __init__(self):
+            self.with_key_outer_schema = Schema(
+                {"case_sensitive": bool, Optional("screen_width"): int, "tabs": list}
+            )
 
-    # Valid Types are:
-    # 1. multiple tabs ('multiple')
-    # 2. single tab with tab key ('single_with_key')
-    # 3. single tab without tab key ('single_without_key')
-    # note that single tabs should have no header-related keys; this is checked in the Schema portion
+            self.without_key_outer_schema = Schema(
+                {"case_sensitive": bool, Optional("screen_width"): int, "items": list}
+            )
 
-    # :param dict_: A dict
-    # :type dict: dict
-    # :returns: type of schema
-    # :rtype: str
+            self.multiple_tab_schema = Schema(
+                {
+                    "header_choice_displayed_and_accepted": Or(int, str),
+                    "header_description": Or(str, None),
+                    "items": list,
+                }
+            )
 
-    # """
-    # if "tabs" in dict_.keys():
-    #     if len(dict["tabs"] > 1):
-    #         schema_type = "multiple"
-    #     else:
-    #         schema_type = "single_with_key"
-    # else:
-    #     schema_type = "single_without_key"
-    # return schema_type
+            self.single_tab_schema = Schema({"items": list})
+
+            self.item_schema = Schema(
+                {
+                    "choice_displayed": Or(str, int),
+                    "choice_description": str,
+                    "valid_entries": list,
+                    "returns": Or(str, int),
+                }
+            )
+
+            self.entry_schema = Schema(Or(int, str))
+
+    current = validators._ValidSchemas()
+    regressed = _ValidSchemasRegression()
+    assert str(current.__dict__) == str(regressed.__dict__)
