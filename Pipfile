@@ -6,7 +6,6 @@ verify_ssl = true
 [dev-packages]
 pytest = "*"
 pylama = "*"
-pytest-xdist = "*"
 pytest-cov = "*"
 pytest-flakes = "*"
 pytest-regressions = "*"
