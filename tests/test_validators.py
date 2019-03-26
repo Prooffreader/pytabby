@@ -73,21 +73,26 @@ def test_schema_is_valid_expect_pass(input_config_dict):
     """ensures each test case passes before making them fail for different reasons"""
     assert validators.schema_is_valid(input_config_dict)
 
+# scenarios = {'multiple': ["c['new_header'] = 'something'"
 
-# def test_some_fail_scenarios(input_config_dict):
-#     """Schema test should catch all of these, which are not exhaustive.
-#     I'm using exec to be DRY. input is reset after each exec"""
-#     scenarios = {'multiple': ["c['new_header'] = 'something'"
+#                             ],
+#                 'single_with_key': ["del c['tabs']",
+#                                     "tab = deepcopy(c['tabs'][0]);c['tabs'].append(tab)"
+#                                     ],
+#                 'single_without_key': ["c['items'][0]['valid_entries'].append(1.5)"
 
-#                               ],
-#                  'single_with_key': ["del c['tabs']"
+#                                     ]}
 
-#                                      ],
-#                  'single_without_key': ["c['items'][0]['valid_entries'].append(1.5)"
 
-#                                         ]}
-#     schema_type = validators._determine_schema_type(input_config_dict)
-#     for scenario in scenarios[schema_type]:
-#         c = deepcopy(input_config_dict)
-#         exec(scenario)
-#         pytest.xfail(validators.schema_is_valid(c) is None)
+@pytest.mark.parametrize("scenario", [
+    "c['new_header'] = 'something'"])
+def test_some_fail_scenarios_multiple(input_config_dict, scenario):
+    """Schema test should catch all of these, which are not exhaustive.
+    I'm using exec to be DRY. input is reset after each exec"""
+
+    schema_type = validators._determine_schema_type(input_config_dict)
+    if schema_type != 'multiple':
+        return
+    c = deepcopy(input_config_dict)
+    exec(scenario)
+    assert not validators.schema_is_valid(c)

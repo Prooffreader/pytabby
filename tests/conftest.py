@@ -3,7 +3,9 @@
 
 """Setup fixtures.
 
-NOTE: this script tests static method menu.Menu.safe_read_yaml() instead of test_menu.py"""
+NOTE: this script tests uses static method menu.Menu.safe_read_yaml() and function
+validators._determine_schema_type, but they are both tested in their respective sections. So Exceptions will be
+raised here before those tests run"""
 
 import os
 from pathlib import Path
@@ -12,6 +14,7 @@ import pytest
 import yaml  # imported due to Menu class dependency
 
 from pysimpletabshellmenu.menu import Menu
+from pysimpletabshellmenu.validators import _determine_schema_type
 
 
 _ = yaml  # just to get rid of pyflakes warning
@@ -69,3 +72,40 @@ def input_config_dict(request):
 def input_config_dict_and_id(request):
     """To test validators._determine_schema_type"""
     return (request.param, YAML_IDS[request.param_index])
+
+
+def make_type_dict():
+    """uses validators._determine_schema_type() to split up configs into separate fixtures"""
+    type_dict = {}
+    for type_ in ['multiple', 'single_with_key', 'single_without_key']:
+        type_dict[type_] = {'configs': [], 'ids': []}
+    for config, id_ in zip(TEST_CONFIGS, YAML_IDS):
+        type_ = _determine_schema_type(config)
+        assert type_ in ['multiple', 'single_with_key', 'single_without_key']  # in case new type appears
+        type_dict[type_]['configs'].append(config)
+        type_dict[type_]['ids'].append(id_)
+    return type_dict
+
+
+TYPE_DICT = make_type_dict()
+print(TYPE_DICT)
+
+
+@pytest.fixture(scope='session', params=TYPE_DICT['multiple']['configs'], ids=TYPE_DICT['multiple']['ids'])
+def input_config_multiple_only(request):
+    """Returns config dicts only if they are the 'multiple' type"""
+    return request.param
+
+
+@pytest.fixture(scope='session', params=TYPE_DICT['single_without_key']['configs'],
+                ids=TYPE_DICT['single_without_key']['ids'])
+def input_config_single_without_key_only(request):
+    """Returns config dicts only if they are the 'single_without_key' type"""
+    return request.param
+
+
+@pytest.fixture(scope='session', params=TYPE_DICT['single_with_key']['configs'],
+                ids=TYPE_DICT['single_with_key']['ids'])
+def input_config_single_with_key_only(request):
+    """Returns config dicts only if they are the 'single_with_key' type"""
+    return request.param 
