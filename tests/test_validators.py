@@ -69,6 +69,25 @@ def test_regression_ValidSchemas():
     assert str(current.__dict__) == str(regressed.__dict__)
 
 
-def test_validate_schema_expect_pass(input_config_dict):
+def test_schema_is_valid_expect_pass(input_config_dict):
     """ensures each test case passes before making them fail for different reasons"""
-    assert validators.validate_schema(input_config_dict) is None
+    assert validators.schema_is_valid(input_config_dict)
+
+
+# def test_some_fail_scenarios(input_config_dict):
+#     """Schema test should catch all of these, which are not exhaustive.
+#     I'm using exec to be DRY. input is reset after each exec"""
+#     scenarios = {'multiple': ["c['new_header'] = 'something'"
+
+#                               ],
+#                  'single_with_key': ["del c['tabs']"
+
+#                                      ],
+#                  'single_without_key': ["c['items'][0]['valid_entries'].append(1.5)"
+
+#                                         ]}
+#     schema_type = validators._determine_schema_type(input_config_dict)
+#     for scenario in scenarios[schema_type]:
+#         c = deepcopy(input_config_dict)
+#         exec(scenario)
+#         pytest.xfail(validators.schema_is_valid(c) is None)
