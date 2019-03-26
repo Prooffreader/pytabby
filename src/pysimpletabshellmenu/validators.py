@@ -10,15 +10,15 @@ class _ValidSchemas:
     """Data-holding class for different schema.Schema instances to use in dict validation. Used in validate_schema()"""
 
     def __init__(self):
-        self.with_key_outer_schema = Schema(
+        self.outer_schema_multiple_or_single_with_key = Schema(
             {"case_sensitive": bool, Optional("screen_width"): int, "tabs": list}
         )
 
-        self.without_key_outer_schema = Schema(
+        self.outer_schema_single_without_key = Schema(
             {"case_sensitive": bool, Optional("screen_width"): int, "items": list}
         )
 
-        self.multiple_tab_schema = Schema(
+        self.tab_schema_multiple = Schema(
             {
                 "header_choice_displayed_and_accepted": Or(int, str),
                 "header_description": Or(str, None),
@@ -26,7 +26,7 @@ class _ValidSchemas:
             }
         )
 
-        self.single_tab_schema = Schema({"items": list})
+        self.tab_schema_single = Schema({"items": list})
 
         self.item_schema = Schema(
             {
@@ -76,31 +76,32 @@ def validate_schema(dict_):
     :param dict_: A dict
     :type dict: dict
     :returns: None
-    :raises: :class:`Schema.SchemaError`: if dict_ departs from valid schema
+    :raises: :class:`Schema.SchemaError`: or AssertionError if dict_ departs from valid schema
     """
     schema_type = _determine_schema_type(dict_)
+    valid_schemas = _ValidSchemas()
     if schema_type == "multiple":
-        _ = _ValidSchemas.with_key_outer_schema.validate(dict_)
+        _ = valid_schemas.outer_schema_multiple_or_single_with_key.validate(dict_)
         for tab in dict_["tabs"]:
-            _ = _ValidSchemas.multiple_tab_schema.validate(tab)
+            _ = valid_schemas.tab_schema_multiple.validate(tab)
             for item in tab["items"]:
-                _ = _ValidSchemas.item_schema.validate(item)
+                _ = valid_schemas.item_schema.validate(item)
                 for entry in item["valid_entries"]:
-                    _ = _ValidSchemas.entry_schema.validate(entry)
+                    _ = valid_schemas.entry_schema.validate(entry)
     elif schema_type == "single_with_key":
-        _ = _ValidSchemas.with_key_outer_schema.validate(dict_)
-        _ = _ValidSchemas.single_tab_schema.validate(dict_["tab"])
-        assert len(dict_["tab"] == 1)
-        for item in dict_["tab"][0]["items"]:
-            _ = _ValidSchemas.item_schema.validate(item)
+        _ = valid_schemas.outer_schema_multiple_or_single_with_key.validate(dict_)
+        assert len(dict_["tabs"]) == 1
+        _ = valid_schemas.tab_schema_single.validate(dict_["tabs"][0])
+        for item in dict_["tabs"][0]["items"]:
+            _ = valid_schemas.item_schema.validate(item)
             for entry in item["valid_entries"]:
-                _ = _ValidSchemas.entry_schema.validate(entry)
+                _ = valid_schemas.entry_schema.validate(entry)
     elif schema_type == "single_without_key":
-        _ = _ValidSchemas.without_key_outer_schema.validate(dict_)
+        _ = valid_schemas.outer_schema_single_without_key.validate(dict_)
         for item in dict_["items"]:
-            _ = _ValidSchemas.item_schema.validate(item)
+            _ = valid_schemas.item_schema.validate(item)
             for entry in item["valid_entries"]:
-                _ = _ValidSchemas.entry_schema.validate(entry)
+                _ = valid_schemas.entry_schema.validate(entry)
     else:
         raise ValueError(f"schema_type {schema_type} is invalid")
 

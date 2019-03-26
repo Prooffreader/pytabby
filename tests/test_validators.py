@@ -34,15 +34,16 @@ def test_regression_ValidSchemas():
     class _ValidSchemasRegression:
 
         def __init__(self):
-            self.with_key_outer_schema = Schema(
+
+            self.outer_schema_multiple_or_single_with_key = Schema(
                 {"case_sensitive": bool, Optional("screen_width"): int, "tabs": list}
             )
 
-            self.without_key_outer_schema = Schema(
+            self.outer_schema_single_without_key = Schema(
                 {"case_sensitive": bool, Optional("screen_width"): int, "items": list}
             )
 
-            self.multiple_tab_schema = Schema(
+            self.tab_schema_multiple = Schema(
                 {
                     "header_choice_displayed_and_accepted": Or(int, str),
                     "header_description": Or(str, None),
@@ -50,7 +51,7 @@ def test_regression_ValidSchemas():
                 }
             )
 
-            self.single_tab_schema = Schema({"items": list})
+            self.tab_schema_single = Schema({"items": list})
 
             self.item_schema = Schema(
                 {
@@ -66,3 +67,8 @@ def test_regression_ValidSchemas():
     current = validators._ValidSchemas()
     regressed = _ValidSchemasRegression()
     assert str(current.__dict__) == str(regressed.__dict__)
+
+
+def test_validate_schema_expect_pass(input_config_dict):
+    """ensures each test case passes before making them fail for different reasons"""
+    assert validators.validate_schema(input_config_dict) is None
