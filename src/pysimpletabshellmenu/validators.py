@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-pass
+# -*- coding: utf-8 -*-
 
 """Functions to validate inputs and configs"""
 
@@ -121,10 +121,10 @@ def _find_tabs(dict_):
     'rtype': list
     """
     schema_type = _determine_schema_type(dict_)
-    if schema_type == 'single_without_tabs':
-        return [dict_['items']] # wrapped in a list as if there were tabs specified
-    else:    
-        return dict_['tabs']
+    if schema_type == "single_without_key":
+        dict_["tabs"] = [{}]
+        dict_["tabs"][0]["items"] = dict_["items"]
+    return dict_["tabs"]
 
 
 def check_return_value_overlap(dict_):
@@ -139,17 +139,19 @@ def check_return_value_overlap(dict_):
     try:
         tabs = _find_tabs(dict_)
         for tab in tabs:
-            returns = [x['returns'] for x in tab['items']]
+            returns = [x["returns"] for x in tab["items"]]
             assert len(returns) == len(set(returns))
     except AssertionError:
-        if 'header_choice_displayed_and_accepted' in tab.keys():
-            raise AssertionError(f'in tab {tab["header_choice_displayed_and_accepted"]}, there are repeated '
-                                 f'return values: {returns}')
+        if "header_choice_displayed_and_accepted" in tab.keys():
+            raise AssertionError(
+                f'in tab {tab["header_choice_displayed_and_accepted"]}, there are repeated '
+                "return values: {returns}"
+            )
         else:
-            raise AssertionError(f'in the single tab, there are repeated return values: {returns}')
+            raise AssertionError(f"in the single tab, there are repeated return values: {returns}")
 
 
-def no_accepted_input_overlap(dict_):
+def check_accepted_input_overlap(dict_):
     """Validates that the potential inputs on each tab are unambiguous, i.e. that any entry will either lead
     to another tab OR to returning a unique value OR the current tab's input value (this could have gone either
     way, I chose not to accept duplicate tab name and input in that tab)
@@ -161,16 +163,20 @@ def no_accepted_input_overlap(dict_):
     """
     try:
         tabs = _find_tabs(dict_)
-        tab_values = [x.get('header_choice_displayed_and_accepted', None) for x in tabs]
-        tab_values = [x for x in tabs if x is not None]
+        tab_values = []
+        for tab in tabs:
+            if tab.get("header_choice_displayed_and_accepted", None):
+                tab_values.append(tab["header_choice_displayed_and_accepted"])
         for tab in tabs:
             input_values = tab_values[:]
-            for item in tab['items']:
-                input_values += item['valid_entries']
+            for item in tab["items"]:
+                input_values += item["valid_entries"]
                 assert len(input_values) == len(set(input_values))
     except AssertionError:
-        if 'header_choice_displayed_and_accepted' in tab.keys():
-            raise AssertionError(f'in tab {tab["header_choice_displayed_and_accepted"]}, there are repeated '
-                                 f'input values: {input values}, including other tabs')
+        if "header_choice_displayed_and_accepted" in tab.keys():
+            raise AssertionError(
+                f'in tab {tab["header_choice_displayed_and_accepted"]}, there are repeated '
+                "input values: {input values}, including other tabs"
+            )
         else:
-            raise AssertionError(f'in the single tab, there are repeated input values: {input_values}')
+            raise AssertionError(f"in the single tab, there are repeated input values: {input_values}")
