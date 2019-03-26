@@ -1,0 +1,45 @@
+%YAML 1.1
+---
+case_sensitive: False  # optional, default
+screen_width: 80  # optional, default
+tabs:
+  - header_choice_displayed_and_accepted: f
+    header_description: File  # can be None
+    items:
+      - choice_displayed: o
+        choice_description: Open
+        valid_entries: 
+          - o
+        returns: open
+      - choice_displayed: w,c  # note I put a comma here for clarity, but it is not parsed, I could have put anything eg "wc"
+        choice_description: Close
+        valid_entries: 
+          - w
+          - c
+        returns: close
+      - choice_displayed: q,x
+        choice_description: Quit
+        valid_entries: 
+          - q
+          - x  # note I could have left this out, it does not need to match choice_displayed, although it's a good idea to
+          - quit  # note was not specified in choice_displayed, doesn't have to be
+        returns: quit
+  - header_choice_displayed_and_accepted: v
+    header_description: View
+    items:
+      - choice_displayed: cat
+        choice_description: cat
+        valid_entries: 
+          - c
+          - cat  # Note that this takes a multi-character entry
+        returns: cat
+      - choice_displayed: h
+        choice_description: head
+        valid_entries: 
+          - h
+        returns: head
+      - choice_displayed: t
+        choice_description: tail
+        valid_entries: 
+          - t
+        returns: tail
