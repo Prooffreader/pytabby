@@ -34,7 +34,7 @@ class Menu:
         :returns: config to pass instantiate Menu
         :rtype: dict
         """
-        with open(path_to_yaml, 'r') as f:
+        with open(path_to_yaml, "r") as f:
             dict_ = yaml.safe_load(f)
         return dict_
 
@@ -47,7 +47,7 @@ class Menu:
         :returns: config to pass instantiate Menu
         :rtype: dict
         """
-        with open(path_to_json, 'r') as f:
+        with open(path_to_json, "r") as f:
             dict_ = json.load(f)
         return dict_
 
