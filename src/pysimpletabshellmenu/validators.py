@@ -3,6 +3,8 @@
 
 """Functions to validate inputs and configs"""
 
+# pylama:ignore=W293,W291,W391,E302,E128 (will be fixed by black)
+
 from schema import Schema, Or, Optional
 
 
@@ -68,7 +70,7 @@ def _determine_schema_type(dict_):
     return schema_type
 
 
-def schema_is_valid(dict_):
+def schema_is_valid(dict_):  # noqa: C901
     """Validates that the dict past to the Menu instance has the expected schema.
 
     Examples of valid schemas can be seen in the examples/ folder of the git repo, or in the docs.
@@ -168,21 +170,45 @@ def check_accepted_input_overlap(dict_):
     :raises: AssertionError if input values overlap, giving tab (if multiple) and values
     """
     try:
+        case_sensitive = dict_.get("case_sensitive", False)
         tabs = _find_tabs(dict_)
         tab_values = []
         for tab in tabs:
-            if tab.get("header_choice_displayed_and_accepted", None):
-                tab_values.append(tab["header_choice_displayed_and_accepted"])
+            header_choice = tab.get("header_choice_displayed_and_accepted", None)
+            if header_choice:
+                if not case_sensitive:
+                    header_choice = header_choice.lower()
+                tab_values.append(header_choice)
         for tab in tabs:
             input_values = tab_values[:]
             for item in tab["items"]:
-                input_values += item["valid_entries"]
+                valid_entries = item["valid_entries"]
+                if not case_sensitive:
+                    valid_entries = [x.lower() for x in valid_entries]
+                input_values += valid_entries
                 assert len(input_values) == len(set(input_values))
     except AssertionError:
-        if "header_choice_displayed_and_accepted" in tab.keys():
+        if header_choice:
             raise AssertionError(
-                f'in tab {tab["header_choice_displayed_and_accepted"]}, there are repeated '
-                "input values: {input values}, including other tabs"
+                f"in tab {header_choice}, there are repeated "
+                "input values: {input values}, including other tabs. Note case_sensitive={case_sensitive}"
             )
         else:
-            raise AssertionError(f"in the single tab, there are repeated input values: {input_values}")
+            raise AssertionError(
+                f"in the single tab, there are repeated input values: {input_values}. "
+                "Note case_sensitive={case_sensitive}"
+            )
+
+
+class InvalidInputError(Exception):
+    pass
+
+
+def validate_all(config):
+    """Runs above non-underscored functions on input"""
+    try:
+        assert schema_is_valid(config)
+        check_accepted_input_overlap(config)
+        check_return_value_overlap(config)
+    except Exception:
+        raise InvalidInputError

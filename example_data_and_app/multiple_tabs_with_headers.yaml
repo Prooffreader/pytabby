@@ -1,4 +1,4 @@
-%YAML1.1
+%YAML 1.1
 ---
 case_sensitive: False  # optional, default
 screen_width: 80  # optional, default

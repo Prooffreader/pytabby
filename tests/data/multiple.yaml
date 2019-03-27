@@ -3,7 +3,7 @@
 case_sensitive: False  # optional, default
 screen_width: 80  # optional, default
 tabs:
-  - header_choice_displayed_and_accepted: f
+  - header_choice_displayed_and_accepted: f  # note if there is only one tab, no header will be displayed
     header_description: File  # can be None
     long_description: This is a long description shown when changing tabs  # this key is optional
     items:

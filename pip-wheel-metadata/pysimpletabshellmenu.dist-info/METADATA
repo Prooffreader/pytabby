@@ -1,0 +1,65 @@
+Metadata-Version: 2.1
+Name: pysimpletabshellmenu
+Version: 0.1.0.dev0
+Summary: A simple, nonopinionated python shell menu system WITH TABS
+Home-page: http://github.com/Prooffreader/pysimpletabshellmenu
+Author: David Taylor
+Author-email: prooffreader@gmail.com
+License: MIT
+Keywords: python,shell,terminal,tabs,tabbed,menu,menus
+Platform: UNKNOWN
+Classifier: Development Status :: Development Status :: 1 - Planning
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: Unix
+Classifier: Operating System :: POSIX
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Topic :: Utilities
+
+pysimpletabshellmenu [in development]
+=====================================
+
+A non-opinionated, flexible TABBED menu system to run in the shell and control program flow interactively
+
+Dependencies:
+- pyyaml
+- schema
+
+
+TODO:
+ - see what happens if one tab but headers defined; ignore or invalid schema?
+ - add test case multiple tabs but one has no headers
+
+==========
+Change Log
+==========
+
+This document records all notable changes to `pysimpletabshellmenu <http://github.com/Prooffreader/pysimpletabshellmenu>`_.
+This project adheres to `Semantic Versioning <http://semver.org/>`_.
+
+`0.1.0`_ (unreleased)
+-------------------------
+
+* Initial release (eventually).
+
+
+`0.1.0-dev`_ (unreleased)
+-------------------------
+
+* Initial development, untagged.
+
+
+.. _`0.1.0`: https://github.com/Prooffreader/pysimpletabshellmenu/master
+
+Changelog template shamelessly copied from HTTPie.
+
+
