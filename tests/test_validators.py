@@ -27,11 +27,10 @@ def test__determine_schema_type(input_config_dict_and_id):
 
 
 def test_regression_ValidSchemas():
-    """Simply copies code from validators._ValidSchemas to see if it ever changes"""
+    """Simply copied code from validators._ValidSchemas to see if it ever changes"""
 
     class _ValidSchemasRegression:
         def __init__(self):
-
             self.outer_schema_multiple_or_single_with_key = Schema(
                 {"case_sensitive": bool, Optional("screen_width"): int, "tabs": list}
             )
@@ -44,6 +43,7 @@ def test_regression_ValidSchemas():
                 {
                     "header_choice_displayed_and_accepted": Or(int, str),
                     "header_description": Or(str, None),
+                    Optional("long_description"): str,
                     "items": list,
                 }
             )
@@ -54,6 +54,7 @@ def test_regression_ValidSchemas():
                 {
                     "choice_displayed": Or(str, int),
                     "choice_description": str,
+                    Optional("choice_long_description"): str,
                     "valid_entries": list,
                     "returns": Or(str, int),
                 }

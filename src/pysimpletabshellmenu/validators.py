@@ -19,7 +19,12 @@ class _ValidSchemas:
         )
 
         self.tab_schema_multiple = Schema(
-            {"header_choice_displayed_and_accepted": Or(int, str), "header_description": Or(str, None), "items": list}
+            {
+                "header_choice_displayed_and_accepted": Or(int, str),
+                "header_description": Or(str, None),
+                Optional("long_description"): str,
+                "items": list,
+            }
         )
 
         self.tab_schema_single = Schema({"items": list})
@@ -28,6 +33,7 @@ class _ValidSchemas:
             {
                 "choice_displayed": Or(str, int),
                 "choice_description": str,
+                Optional("choice_long_description"): str,
                 "valid_entries": list,
                 "returns": Or(str, int),
             }
