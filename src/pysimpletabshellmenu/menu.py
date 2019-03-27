@@ -22,15 +22,18 @@ class Menu:
 
     :param config: nested data structure containing all info used to make menu
     :type config: dict
+    :param config: start_tab_number: the (zero-based) position of the starting selected tab; handy when saving
+                   state between Menu instantiations
+    "type config: int
     """
 
-    def __init__(self, config):
+    def __init__(self, config, start_tab_number):
         self.config = config
         # validate config
         validators.validate_all(self.config)
-        self._parse_config(self.config)
-        self.current_tab_number = 0
-
+        self.current_tab_number = start_tab_number
+        self._parse_config()
+        
     @staticmethod
     def safe_read_yaml(path_to_yaml):
         """Reads yaml file at specified path.
@@ -62,35 +65,32 @@ class Menu:
         self.case_sensitive = self.config.get("case_sensitive", False)
         self.screen_width = self.config.get("screen_width", 80)
         if self.config.get("items", None):
-            tabs = [{"items": self.config["items"]}]
+            self.config_tabs = [{"items": self.config["items"]}]
         else:
-            tabs = self.config["tabs"]
+            self.config_tabs = self.config["tabs"]
         self.tab_selectors = []
-        for tab in tabs:
-            if tab.get(tab["header_choice_displayed_and_accepted"], None):
+        for tab in self.config_tabs:
+            if tab.get("header_choice_displayed_and_accepted", None):
                 self.tab_selectors.append(tab["header_choice_displayed_and_accepted"])
-        if len(self.config["tabs"]) == 1:
-            self.headers = False
-        else:
-            self.headers = True
+        assert self.current_tab_number < len(config_tabs)
         self.tabs = []
-        for tab in tabs:
+        for tab in self.config_tabs:
             self.tabs.append(Tab(tab, self.tab_selectors, self.case_sensitive))
 
     def _change_tab(self, new_number):
         # print message about new selection
-        old_tab = self.tabs[self.current_tab_number]
-        if old_tab.head_choice:
-            msg = [f"Change tab to {old_tab.head_choice}"]
-            if old_tab.head_desc:
-                msg.append(f": {old_tab.head_desc}")
-            if old_tab.head_desc_long:
-                msg.append(f"\n{old_tab.head_desc_long}")
+        new_tab = self.tabs[new_number]
+        if new_tab.head_choice:
+            msg = [f"Change tab to {new_tab.head_choice}"]
+            if new_tab.head_desc:
+                msg.append(f": {new_tab.head_desc}")
+            if new_tab.head_desc_long:
+                msg.append(f"\n{new_tab.head_desc_long}")
             print("".join(msg))
         self.current_tab_number = new_number
 
     def _print_menu(self):
-        formatted = formatting.format_menu(self.tabs, self.current_tab_number)
+        formatted = formatting.format_menu(self.config_tabs, self.current_tab_number, self.screen_width)
         print(formatted)
 
     def _collect_input(self):
@@ -111,8 +111,8 @@ class Menu:
     def run(self):
         """Called by user, runs menu until valid selection from a tab is made, and returns value
         
-        :returns: tuple of tab header choice, return value
-        :rtype: (str or None, str)
+        :returns: tuple of tab_number, tab header choice, return value
+        :rtype: (int, str or None, str)
 
         Note that the first item in the tuple is None if there is only one tab/are no tabs
         """
@@ -121,7 +121,7 @@ class Menu:
             self._print_menu()
             return_dict = self._collect_input()
             if return_dict["type"] == "change_tab":
-                self.change_tab(return_dict["new_number"])
+                self._change_tab(return_dict["new_number"])
                 continue
             else:
                 received_return_value = True
@@ -129,4 +129,4 @@ class Menu:
                     tab_id = self.tab_selectors[self.current_tab_number]
                 else:
                     tab_id = None
-        return (tab_id, return_dict["return_value"])
+        return (self.current_tab_number, tab_id, return_dict["return_value"])
