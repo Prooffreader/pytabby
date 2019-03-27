@@ -1,0 +1,3 @@
+[console_scripts]
+pysimpletabshellmenu = pysimpletabshellmenu.cli:main
+
