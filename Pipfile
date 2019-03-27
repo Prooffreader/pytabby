@@ -10,6 +10,8 @@ pytest-cov = "*"
 pytest-flakes = "*"
 pytest-regressions = "*"
 black = "*"
+sphinx = "*"
+doc8 = "*"
 
 [packages]
 schema = "*"
