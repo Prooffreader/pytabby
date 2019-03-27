@@ -5,9 +5,11 @@ screen_width: 80  # optional, default
 tabs:
   - header_choice_displayed_and_accepted: f
     header_description: File  # can be None
+    long_description: This is a long description shown when changing tabs  # this key is optional
     items:
       - choice_displayed: o
         choice_description: Open
+        choice_long_description: Open file to be used in the rest of the program  # this key is optional
         valid_entries: 
           - o
         returns: open
