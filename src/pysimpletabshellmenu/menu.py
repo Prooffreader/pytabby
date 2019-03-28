@@ -23,17 +23,17 @@ class Menu:
     :param config: nested data structure containing all info used to make menu
     :type config: dict
     :param config: start_tab_number: the (zero-based) position of the starting selected tab; handy when saving
-                   state between Menu instantiations
+                   state between Menu instantiations. Default 0
     "type config: int
     """
 
-    def __init__(self, config, start_tab_number):
+    def __init__(self, config, start_tab_number=0):
         self.config = config
         # validate config
         validators.validate_all(self.config)
         self.current_tab_number = start_tab_number
         self._parse_config()
-        
+
     @staticmethod
     def safe_read_yaml(path_to_yaml):
         """Reads yaml file at specified path.
