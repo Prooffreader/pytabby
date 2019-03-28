@@ -35,7 +35,6 @@ class _ValidSchemas:
             {
                 "choice_displayed": Or(str, int),
                 "choice_description": str,
-                Optional("choice_long_description"): str,
                 "valid_entries": list,
                 "returns": Or(str, int),
             }
