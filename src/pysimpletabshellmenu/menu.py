@@ -69,15 +69,47 @@ class Menu:
         else:
             self.config_tabs = self.config["tabs"]
         self.tab_selectors = []
+        self._convert_int_to_string()
         for tab in self.config_tabs:
             if tab.get("header_choice_displayed_and_accepted", None):
                 self.tab_selectors.append(tab["header_choice_displayed_and_accepted"])
-        assert self.current_tab_number < len(config_tabs)
+        assert self.current_tab_number < len(self.config_tabs)
         self.tabs = []
         for tab in self.config_tabs:
             self.tabs.append(Tab(tab, self.tab_selectors, self.case_sensitive))
 
+    def _convert_int_to_string(self):
+        """Converts strs to ints for the following fields:
+        tabs:-:header_choice_displayed_and_accepted
+        tabs:-:items:-:choice_displayed
+        tabs:-:items:-:valid_entries:-:
+        tabs:-:items:-:returns
+        """
+
+        def int_to_str(item):
+            if isinstance(item, int):
+                return str(item)
+            else:
+                return item
+
+        for tab_num, tab in enumerate(self.config_tabs):
+            try:
+                self.config_tabs[tab_num]["header_choice_displayed_and_accepted"] = int_to_str(
+                    tab["header_choice_displayed_and_accepted"]
+                )
+            except KeyError:  # single tab
+                assert len(self.config_tabs) == 1  # sanity check
+                pass
+            for item_num, item in enumerate(tab["items"]):
+                self.config_tabs[tab_num]["items"][item_num]["choice_displayed"] = int_to_str(
+                    item["choice_displayed"]
+                )
+                self.config_tabs[tab_num]["items"][item_num]["returns"] = int_to_str(item["returns"])
+                for entry_num, entry in enumerate(item["valid_entries"]):
+                    self.config_tabs[tab_num]["items"][item_num]["valid_entries"][entry_num] = int_to_str(entry)
+
     def _change_tab(self, new_number):
+        """Changes the active tab"""
         # print message about new selection
         new_tab = self.tabs[new_number]
         if new_tab.head_choice:
