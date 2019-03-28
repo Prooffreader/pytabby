@@ -8,10 +8,10 @@ pytest = "*"
 pylama = "*"
 pytest-cov = "*"
 pytest-flakes = "*"
-pytest-regressions = "*"
 black = "*"
 sphinx = "*"
 doc8 = "*"
+pytest-regtest = "*"
 
 [packages]
 schema = "*"

@@ -23,17 +23,17 @@ class Menu:
     :param config: nested data structure containing all info used to make menu
     :type config: dict
     :param config: start_tab_number: the (zero-based) position of the starting selected tab; handy when saving
-                   state between Menu instantiations
+                   state between Menu instantiations. Default 0
     "type config: int
     """
 
-    def __init__(self, config, start_tab_number):
+    def __init__(self, config, start_tab_number=0):
         self.config = config
         # validate config
         validators.validate_all(self.config)
         self.current_tab_number = start_tab_number
         self._parse_config()
-        
+
     @staticmethod
     def safe_read_yaml(path_to_yaml):
         """Reads yaml file at specified path.
@@ -69,15 +69,47 @@ class Menu:
         else:
             self.config_tabs = self.config["tabs"]
         self.tab_selectors = []
+        self._convert_int_to_string()
         for tab in self.config_tabs:
             if tab.get("header_choice_displayed_and_accepted", None):
                 self.tab_selectors.append(tab["header_choice_displayed_and_accepted"])
-        assert self.current_tab_number < len(config_tabs)
+        assert self.current_tab_number < len(self.config_tabs)
         self.tabs = []
         for tab in self.config_tabs:
             self.tabs.append(Tab(tab, self.tab_selectors, self.case_sensitive))
 
+    def _convert_int_to_string(self):
+        """Converts strs to ints for the following fields:
+        tabs:-:header_choice_displayed_and_accepted
+        tabs:-:items:-:choice_displayed
+        tabs:-:items:-:valid_entries:-:
+        tabs:-:items:-:returns
+        """
+
+        def int_to_str(item):
+            if isinstance(item, int):
+                return str(item)
+            else:
+                return item
+
+        for tab_num, tab in enumerate(self.config_tabs):
+            try:
+                self.config_tabs[tab_num]["header_choice_displayed_and_accepted"] = int_to_str(
+                    tab["header_choice_displayed_and_accepted"]
+                )
+            except KeyError:  # single tab
+                assert len(self.config_tabs) == 1  # sanity check
+                pass
+            for item_num, item in enumerate(tab["items"]):
+                self.config_tabs[tab_num]["items"][item_num]["choice_displayed"] = int_to_str(
+                    item["choice_displayed"]
+                )
+                self.config_tabs[tab_num]["items"][item_num]["returns"] = int_to_str(item["returns"])
+                for entry_num, entry in enumerate(item["valid_entries"]):
+                    self.config_tabs[tab_num]["items"][item_num]["valid_entries"][entry_num] = int_to_str(entry)
+
     def _change_tab(self, new_number):
+        """Changes the active tab"""
         # print message about new selection
         new_tab = self.tabs[new_number]
         if new_tab.head_choice:
@@ -90,10 +122,12 @@ class Menu:
         self.current_tab_number = new_number
 
     def _print_menu(self):
+        """Prints formatted menu to stdout"""
         formatted = formatting.format_menu(self.config_tabs, self.current_tab_number, self.screen_width)
         print(formatted)
 
     def _collect_input(self):
+        """Gets choice from user, repeating until a valid choice given"""
         received_valid_input = False
         prompt = "?"
         while not received_valid_input:

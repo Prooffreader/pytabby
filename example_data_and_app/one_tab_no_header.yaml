@@ -1,28 +1,62 @@
 %YAML 1.1
 ---
-case_sensitive: False  # optional, default
+case_sensitive: True  # optional, default is False
 screen_width: 80  # optional, default
-# note since there is only one tab and no headers, there is no 'tab' key here 
-# unlike in the multiple tabs example
-# this one tab no headers example WILL STILL WORK if there is an unnecessary 
-# 'tab' key present, with 'items' as a value, as long as it has no 
-# header-related keys inside it
+# Note since there is only one tab and no headers, there is no 'tab' key here unlike in the multiple tabs example.
+# However, this example will still work if there is the one unnecessary 'tab' key, with the 'items' key a value of
+# the 'tabs' key, **so long as there are no other values of the tabs key**, i.e. the 2-3 other keys --
+# `header_choice_displayed_and_accepted`, `header_description` or (optional) `long_description`.
+#
+# The reason for this design choice is that if there is only one tab defined, the program will never show a
+# header/tab bar (since with one tab by definition you can't change tabs). However, if any of the other keys are
+# present, it looks like the programmer wants multiple tabs, so it looks like having a single tab means s/he
+# accidentally forgot the other tabs, so the program won't accept it.
+#
+# I tried to come up with some plausible items for a single-menu Python shell app. The app I have in mind goes
+# through the filesystem file by file displaying the file and giving the user various options as to what to do
+# with the file or even the entire folder. This would be an inefficient way of handling files, to be sure!
+# It's only an example.
 items:
+  - choice_displayed: 'n'  # Because of YAML syntax, 'n' has to be in quotes to distinguish it from a boolean.
+                           # Using a code editor with syntax highlighting helps find these edge cases!
+    choice_description: Next directory
+    valid_entries: 
+      - 'n'
+    returns: next_dir
+  - choice_displayed: p
+    choice_description: Previous directory
+    valid_entries: 
+      - p
+    returns: prev_dir
+  - choice_displayed: u
+    choice_description: Up a directory
+    valid_entries: 
+      - u
+    returns: up_dir
+  - choice_displayed: e
+    choice_description: Enter directory (if one is current selection)  # Note there is no way to 'silence' menu
+                                                                       # Items as yet. On the wishlist!
+    valid_entries: 
+      - e
+    returns: enter_dir
   - choice_displayed: o
-    choice_description: Open
-    valid_entries: 
+    choice_description: Open file (if one is current selection)
+    valid_entries:
       - o
-    returns: open
-  - choice_displayed: w,c  # note I put a comma here for clarity, but it is not parsed, I could have put anything eg "wc"
-    choice_description: Close
-    valid_entries: 
-      - w
-      - c
-    returns: close
-  - choice_displayed: q,x
+    returns: open_file
+  - choice_displayed: d
+    choice_description: Delete file (if one is current selection)
+    valid_entries:
+      - d
+    returns: del_file
+  - choice_displayed: D  # uppercased same letter as previous item
+    choice_description: Delete directory and contents (if one is current selection)
+    valid_entries:
+      - D
+    returns: del_dir 
+  - choice_displayed: QX  # purposely made uppercase
     choice_description: Quit
     valid_entries: 
-      - q
-      - x  # note I could have left this out, it does not need to match choice_displayed, although it's a good idea to
-      - quit  # note was not specified in choice_displayed, doesn't have to be
+      - Q
+      - X
     returns: quit

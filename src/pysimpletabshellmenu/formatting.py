@@ -13,7 +13,7 @@ def format_menu(tabs, current_number, line_length):
     :rtype: str
     """
     menu = [""]
-    if len(tabs) > 0:
+    if len(tabs) > 1:
         menu += _format_headers(tabs, current_number, line_length)
     tab = tabs[current_number]
     items = tab["items"]
@@ -39,31 +39,31 @@ def _format_headers(tabs, current_number, line_length):
         if desc is None:
             desc = ""
         if i == current_number:
-            bottom_char = '='
+            bottom_char = "="
         else:
-            bottom_char = '-'
+            bottom_char = "-"
         if desc:
             spacer = ":"
         else:
             spacer = ""
         if i == 0:
-            start = '['
+            start = "["
         else:
-            start = '|'
+            start = "|"
         if i == len(tabs) - 1:
-            end = ']'
+            end = "]"
         else:
-            end = ''
+            end = ""
         new_top_entry = f"{start}{abbrev}{spacer}{desc}{end}"
         if current_line_length + len(new_top_entry) > line_length - 1:
             top_text.append("\n")
             bottom_text.append("\n")
             current_line_length = 0
         top_text.append(new_top_entry)
-        bottom_text.append(' ' + bottom_char * (len(new_top_entry) - 1))
+        bottom_text.append(" " + bottom_char * (len(new_top_entry) - 1))
         current_line_length += len(new_top_entry)
-    top_text = ''.join(top_text).split('\n')
-    bottom_text = ''.join(bottom_text).split('\n')
+    top_text = "".join(top_text).split("\n")
+    bottom_text = "".join(bottom_text).split("\n")
     total_text = []
     for top, bottom in zip(top_text, bottom_text):
         total_text.append(top)
