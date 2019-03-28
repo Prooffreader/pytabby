@@ -1,0 +1,21 @@
+{
+    "case_sensitive": ,
+    "screen_width": ,
+    "tabs": [
+       {
+          "header_choice_displayed_and_accepted": "",
+          "header_description": "",
+          "long_description": "",
+          "items": [
+             {
+                "choice_displayed": "",
+                "choice_description": "",
+                "valid_entries": [
+                   ""
+                ],
+                "returns": ""
+             }
+          ]
+       }
+    ]
+ }
