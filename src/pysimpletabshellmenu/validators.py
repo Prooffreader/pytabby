@@ -152,7 +152,7 @@ def check_return_value_overlap(dict_):
         if "header_choice_displayed_and_accepted" in tab.keys():
             raise AssertionError(
                 f'in tab {tab["header_choice_displayed_and_accepted"]}, there are repeated '
-                "return values: {returns}"
+                + f"return values: {returns}"
             )
         else:
             raise AssertionError(f"in the single tab, there are repeated return values: {returns}")
@@ -183,19 +183,19 @@ def check_accepted_input_overlap(dict_):
             for item in tab["items"]:
                 valid_entries = item["valid_entries"]
                 if not case_sensitive:
-                    valid_entries = [x.lower() for x in valid_entries]
+                    valid_entries = [x.lower() if isinstance(x, str) else x for x in valid_entries]
                 input_values += valid_entries
                 assert len(input_values) == len(set(input_values))
     except AssertionError:
         if header_choice:
             raise AssertionError(
-                f"in tab {header_choice}, there are repeated "
-                "input values: {input values}, including other tabs. Note case_sensitive={case_sensitive}"
+                f"in tab {header_choice}, there are repeated input values: {input_values},"
+                + f"including other tabs. Note case_sensitive={case_sensitive}"
             )
         else:
             raise AssertionError(
-                f"in the single tab, there are repeated input values: {input_values}. "
-                "Note case_sensitive={case_sensitive}"
+                f"in the single tab, there are repeated input values: {input_values},"
+                + f"Note case_sensitive={case_sensitive}"
             )
 
 
