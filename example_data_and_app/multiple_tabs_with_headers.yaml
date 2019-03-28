@@ -1,47 +1,142 @@
 %YAML 1.1
 ---
+# Note for this multiple tab system, I just copied the familiar elements of a typical windowed application.
+# Needless to say, it is a little unlikely a Python shell program will have these particular choices.
+# But it does not tie the example down to one use case, and makes testing easier because it's obvious
+# what to expect.
 case_sensitive: False  # optional, default
 screen_width: 80  # optional, default
 tabs:
-  - header_choice_displayed_and_accepted: f
+  - header_choice_displayed_and_accepted: fi  # two letters so it doesn't conflict with Edit tab's find
     header_description: File  # can be None
-    long_description: This is a long description shown when changing tabs  # this key is optional
+    long_description: Changing to File tab  # this key is optional, it is displayed only when changing tebs
     items:
       - choice_displayed: o
         choice_description: Open
-        choice_long_description: Open file to be used in the rest of the program  # this key is optional
         valid_entries: 
           - o
         returns: open
-      - choice_displayed: w,c  # note I put a comma here for clarity, but it is not parsed, I could have put anything eg "wc"
+      - choice_displayed: w,c  # note I put a comma here for clarity, but it is not parsed, I could have put 
+                               # anything eg "wc", "w|c", "w or c", "double-u or cee", "fizzbin", etc.
         choice_description: Close
         valid_entries: 
           - w
           - c
         returns: close
+      - choice_displayed: s
+        choice_description: Save
+        valid_entries: 
+          - s
+        returns: save
+      - choice_displayed: sa
+        choice_description: Save As
+        valid_entries: 
+          - sa  # Note this requires the user to give a TWO-letter response, not just one, in contrast to the
+                # w OR c of close.
+        returns: save_as  # At this point, the outer scope calling this module would presumably have to ask for
+                          # more information, e.g. a new file name and/or path
+      - choice_displayed: p
+        choice_description: Preferences
+        valid_entries: 
+          - p
+        returns: preferences  # this might, in the outer scope, call a NEW instance of Menu
       - choice_displayed: q,x
         choice_description: Quit
         valid_entries: 
           - q
           - x  # note I could have left this out, it does not need to match choice_displayed, although it's a good idea to
-          - quit  # note was not specified in choice_displayed, doesn't have to be
+          - quit  # note this was was not specified in `choice_displayed`, it doesn't have to be
         returns: quit
-  - header_choice_displayed_and_accepted: v
+  - header_choice_displayed_and_accepted: e
+    header_description: Edit  # can be None
+    long_description: You have just selected the edit menu  # this key is optional
+    items:
+      - choice_displayed: z
+        choice_description: Undo
+        valid_entries: 
+          - Z  # purposely made capital; because case sensitive = False, it will make no difference.
+        returns: undo
+      - choice_displayed: 'y'  # needs to be in quotes otherwise YAML treats as boolean
+        choice_description: Redo
+        valid_entries: 
+          - 'y'
+        returns: redo
+      - choice_displayed: x
+        choice_description: Cut
+        valid_entries: 
+          - x
+        returns: cut
+      - choice_displayed: c
+        choice_description: Copy
+        valid_entries: 
+          - C  # purposely made capital; because case sensitive = False, it will make no difference.
+        returns: copy
+      - choice_displayed: v
+        choice_description: Paste
+        valid_entries: 
+          - v
+        returns: paste
+      - choice_displayed: f
+        choice_description: Find
+        valid_entries: 
+          - f
+        returns: find
+      - choice_displayed: g
+        choice_description: Find again
+        valid_entries: 
+          - g
+        returns: find_again
+      - choice_displayed: r
+        choice_description: Replace
+        valid_entries: 
+          - r
+        returns: replace
+  - header_choice_displayed_and_accepted: vw  # Two letters so it doesn't conflict with edit's "v"/paste
     header_description: View
     items:
       - choice_displayed: cat
         choice_description: cat
         valid_entries: 
-          - c
           - cat  # Note that this takes a multi-character entry
         returns: cat
-      - choice_displayed: h
+      - choice_displayed: head
         choice_description: head
         valid_entries: 
-          - h
+          - head
         returns: head
-      - choice_displayed: t
+      - choice_displayed: tail
         choice_description: tail
         valid_entries: 
-          - t
+          - tail
         returns: tail
+  - header_choice_displayed_and_accepted: h
+    header_description: Help
+    items:
+      - choice_displayed: d
+        choice_description: Documentation
+        valid_entries: 
+          - d
+        returns: docs
+      - choice_displayed: a
+        choice_description: About
+        valid_entries: 
+          - a
+        returns: about
+  - header_choice_displayed_and_accepted: 0
+    header_description: Integer
+    items:
+      - choice_displayed: 1
+        choice_description: Choice #1
+        valid_entries: 
+          - 1
+        returns: 1
+      - choice_displayed: 2
+        choice_description: Choice #2
+        valid_entries: 
+          - 2
+        returns: 2
+      - choice_displayed: 3
+        choice_description: Choice #3
+        valid_entries: 
+          - 3
+        returns: 3
