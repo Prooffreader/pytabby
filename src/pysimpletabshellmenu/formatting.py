@@ -13,7 +13,7 @@ def format_menu(tabs, current_number, line_length):
     :rtype: str
     """
     menu = [""]
-    if len(tabs) > 0:
+    if len(tabs) > 1:
         menu += _format_headers(tabs, current_number, line_length)
     tab = tabs[current_number]
     items = tab["items"]
