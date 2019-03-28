@@ -1,10 +1,11 @@
 """A simple app to show a multiple tab example, it just echoes back the return values and keeps going forever."""
 
 import os
+import sys
 
 from pysimpletabshellmenu.menu import Menu
 
-CONFIG_FILE_NAME = 'multiple_tabs_with_headers.yaml'  # in same directory as this script
+CONFIG_FILE_NAME = "multiple_tabs_with_headers.yaml"  # in same directory as this script
 
 
 def main():
@@ -19,10 +20,14 @@ def main():
 
     # run, echoing back results
     while True:
-        tab, value = menu.run()
-        print('')
-        print(f'RETURNED TAB = {tab}')
-        print(f'RETURNED VALUE = {value}')
+        tab_number, tab, value = menu.run()
+        print("")
+        print(f"RETURNED TAB = {tab} (#{tab_number})")
+        print(f"RETURNED VALUE = {value}")
+
+        if value == "quit":
+            print("\nQuitting!\n")
+            sys.exit(0)
 
 
 if __name__ == "__main__":
