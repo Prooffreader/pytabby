@@ -122,10 +122,12 @@ class Menu:
         self.current_tab_number = new_number
 
     def _print_menu(self):
+        """Prints formatted menu to stdout"""
         formatted = formatting.format_menu(self.config_tabs, self.current_tab_number, self.screen_width)
         print(formatted)
 
     def _collect_input(self):
+        """Gets choice from user, repeating until a valid choice given"""
         received_valid_input = False
         prompt = "?"
         while not received_valid_input:
