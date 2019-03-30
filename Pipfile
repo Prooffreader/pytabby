@@ -11,7 +11,7 @@ pytest-flakes = "*"
 black = "*"
 sphinx = "*"
 doc8 = "*"
-pytest-regtest = "*"
+pytest-regressions = "*"
 
 [packages]
 schema = "*"
