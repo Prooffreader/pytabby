@@ -32,7 +32,13 @@ class Menu:
         # validate config
         validators.validate_all(self.config)
         self.current_tab_number = start_tab_number
-        self._parse_config()
+        self.case_sensitive = self.config.get("case_sensitive", False)
+        self.screen_width = self.config.get("screen_width", 80)
+        # self.config_tabs are the contents of config['tabs'] OR the config['items'] if schema type is single
+        # without 'tabs' key (i.e. it normalizes the contents of the schemas)
+        self.config_tabs = formatting.make_config_tabs(self.config)
+        assert self.current_tab_number < len(self.config_tabs)
+        self._create_tab_objects()
 
     @staticmethod
     def safe_read_yaml(path_to_yaml):
@@ -60,53 +66,18 @@ class Menu:
             dict_ = json.load(f)
         return dict_
 
-    def _parse_config(self):
-        """Creates Tab objects"""
-        self.case_sensitive = self.config.get("case_sensitive", False)
-        self.screen_width = self.config.get("screen_width", 80)
-        if self.config.get("items", None):
-            self.config_tabs = [{"items": self.config["items"]}]
-        else:
-            self.config_tabs = self.config["tabs"]
+    def _create_tab_objects(self):
+        """Creates Tab objects in list in order of self.config_tabs"""
+        # tab_selectors is list (in tab order) of entries that select tabs
+        # needed because along with items[:]valid_entries, these are valid entries
+        # this will be an empty list for a single tab
         self.tab_selectors = []
-        self._convert_int_to_string()
         for tab in self.config_tabs:
             if tab.get("header_choice_displayed_and_accepted", None):
                 self.tab_selectors.append(tab["header_choice_displayed_and_accepted"])
-        assert self.current_tab_number < len(self.config_tabs)
         self.tabs = []
         for tab in self.config_tabs:
             self.tabs.append(Tab(tab, self.tab_selectors, self.case_sensitive))
-
-    def _convert_int_to_string(self):
-        """Converts strs to ints for the following fields:
-        tabs:-:header_choice_displayed_and_accepted
-        tabs:-:items:-:choice_displayed
-        tabs:-:items:-:valid_entries:-:
-        tabs:-:items:-:returns
-        """
-
-        def int_to_str(item):
-            if isinstance(item, int):
-                return str(item)
-            else:
-                return item
-
-        for tab_num, tab in enumerate(self.config_tabs):
-            try:
-                self.config_tabs[tab_num]["header_choice_displayed_and_accepted"] = int_to_str(
-                    tab["header_choice_displayed_and_accepted"]
-                )
-            except KeyError:  # single tab
-                assert len(self.config_tabs) == 1  # sanity check
-                pass
-            for item_num, item in enumerate(tab["items"]):
-                self.config_tabs[tab_num]["items"][item_num]["choice_displayed"] = int_to_str(
-                    item["choice_displayed"]
-                )
-                self.config_tabs[tab_num]["items"][item_num]["returns"] = int_to_str(item["returns"])
-                for entry_num, entry in enumerate(item["valid_entries"]):
-                    self.config_tabs[tab_num]["items"][item_num]["valid_entries"][entry_num] = int_to_str(entry)
 
     def _change_tab(self, new_number):
         """Changes the active tab"""

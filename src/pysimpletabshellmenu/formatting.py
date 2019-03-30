@@ -69,3 +69,52 @@ def _format_headers(tabs, current_number, line_length):
         total_text.append(top)
         total_text.append(bottom)
     return total_text
+
+
+def make_config_tabs(config):
+    """From any of the three valid schema types (multiple, single_with_key, single_without_key), normalizes to
+    create the contents of the first-level 'tab' key (or what it would be were it there)
+    
+    :param config: config dict passed from menu.Menu
+    :type config: dict
+    :returns: 'items'
+    :rtype: list of dicts, corresponding to config['tabs']
+    """
+    if config.get("items", None):
+        config_tabs = [{"items": config["items"]}]
+    else:
+        config_tabs = config["tabs"]
+    config_tabs = convert_int_to_string(config_tabs)
+    return config_tabs
+
+
+def convert_int_to_string(config_tabs):
+    """Converts strs to ints for the following config_tabs fields:
+    * [:]header_choice_displayed_and_accepted
+    * [:]items[:]choice_displayed
+    * [:]items[:]valid_entries[:]
+    * [:]items[:]returns
+    """
+
+    def int_to_str(item):
+        if isinstance(item, int):
+            return str(item)
+        else:
+            return item
+
+    for tab_num, tab in enumerate(config_tabs):
+        try:
+            config_tabs[tab_num]["header_choice_displayed_and_accepted"] = int_to_str(
+                tab["header_choice_displayed_and_accepted"]
+            )
+        except KeyError:  # single tab
+            assert len(config_tabs) == 1  # sanity check
+            pass
+        for item_num, item in enumerate(tab["items"]):
+            config_tabs[tab_num]["items"][item_num]["choice_displayed"] = int_to_str(
+                item["choice_displayed"]
+            )
+            config_tabs[tab_num]["items"][item_num]["returns"] = int_to_str(item["returns"])
+            for entry_num, entry in enumerate(item["valid_entries"]):
+                config_tabs[tab_num]["items"][item_num]["valid_entries"][entry_num] = int_to_str(entry)
+    return config_tabs
