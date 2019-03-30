@@ -3,9 +3,9 @@
 
 """Functions to validate inputs and configs"""
 
-# pylama:ignore=W293,W291,W391,E302,E128 (will be fixed by black)
+# pylama:ignore=W293,W291,W391,E302,E128,E127 (will be fixed by black)
 
-from schema import Schema, Or, Optional
+from schema import Schema, Or, Optional, And
 
 
 class _ValidSchemas:
@@ -13,34 +13,35 @@ class _ValidSchemas:
 
     def __init__(self):
         self.outer_schema_multiple_or_single_with_key = Schema(
-            {Optional("case_sensitive"): bool, Optional("screen_width"): int, "tabs": list}
+            {Optional("case_sensitive"): bool, Optional("screen_width"): int, "tabs": And(list, 
+                lambda x: len(x) > 0)}
         )
 
         self.outer_schema_single_without_key = Schema(
-            {"case_sensitive": bool, Optional("screen_width"): int, "items": list}
+            {"case_sensitive": bool, Optional("screen_width"): int, "items": And(list, lambda x: len(x) > 0)}
         )
 
         self.tab_schema_multiple = Schema(
             {
-                "header_choice_displayed_and_accepted": Or(int, str),
-                "header_description": Or(str, None),
-                Optional("long_description"): str,
-                "items": list,
+                "header_choice_displayed_and_accepted": And(Or(int, str), lambda x: len(str(x)) > 0),
+                "header_description": And(Or(str, None), lambda x: x is None or len(x) > 0),
+                Optional("long_description"): And(str, lambda x: len(x) > 0),
+                "items": And(list, lambda x: len(x) > 0)
             }
         )
 
-        self.tab_schema_single = Schema({"items": list})
+        self.tab_schema_single = Schema({"items": And(list, lambda x: len(x) > 0)})
 
         self.item_schema = Schema(
             {
-                "choice_displayed": Or(str, int),
-                "choice_description": str,
-                "valid_entries": list,
-                "returns": Or(str, int),
+                "choice_displayed": And(Or(int, str), lambda x: len(str(x)) > 0),
+                "choice_description": And(str, lambda x: len(x) > 0),
+                "valid_entries": And(list, lambda x: len(x) > 0),
+                "returns": And(Or(int, str), lambda x: len(str(x)) > 0),
             }
         )
 
-        self.entry_schema = Schema(Or(int, str))
+        self.entry_schema = Schema(And(Or(int, str), lambda x: len(str(x)) > 0))
 
 
 def _determine_schema_type(dict_):
