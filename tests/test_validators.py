@@ -1,13 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# pylama:ignore=W293,W291,W391,E302,E128,E127,E303 (will be fixed by black)
+
 from copy import deepcopy
 
 import pytest
-from schema import Schema, Or, Optional
+# from schema import Schema, Or, Optional
 
 import pysimpletabshellmenu.validators as validators
 
+pytest_plugins = ("regressions",)
 
 def test__determine_schema_type(input_config_dict_and_id):
     """As long as naming convention of test files stated in <root>/tests/data are followed, this should
@@ -25,45 +28,12 @@ def test__determine_schema_type(input_config_dict_and_id):
         if schema_type.endswith("_without_key"):
             assert id_.find("without_key") != -1
 
-@pytest.mark.skip  #TODO: Integrate with regtest plugin using __dict__
-def test_regression_ValidSchemas():
-    """Simply copied code from validators._ValidSchemas to see if it ever changes"""
-
-    class _ValidSchemasRegression:
-        def __init__(self):
-            self.outer_schema_multiple_or_single_with_key = Schema(
-                {"case_sensitive": bool, Optional("screen_width"): int, "tabs": list}
-            )
-
-            self.outer_schema_single_without_key = Schema(
-                {"case_sensitive": bool, Optional("screen_width"): int, "items": list}
-            )
-
-            self.tab_schema_multiple = Schema(
-                {
-                    "header_choice_displayed_and_accepted": Or(int, str),
-                    "header_description": Or(str, None),
-                    Optional("long_description"): str,
-                    "items": list,
-                }
-            )
-
-            self.tab_schema_single = Schema({"items": list})
-
-            self.item_schema = Schema(
-                {
-                    "choice_displayed": Or(str, int),
-                    "choice_description": str,
-                    "valid_entries": list,
-                    "returns": Or(str, int),
-                }
-            )
-
-            self.entry_schema = Schema(Or(int, str))
-
-    current = validators._ValidSchemas()
-    regressed = _ValidSchemasRegression()
-    assert str(current.__dict__) == str(regressed.__dict__)
+@pytest.mark.skip  # TODO: fix this
+def test_regression_ValidSchemas(data_regression):
+    """Must stringify because contains schema objects"""
+    data = str(validators._ValidSchemas().__dict__)
+    data = {"data": data}  # apparently data_regression must use dict
+    data_regression.check(data)
 
 
 def test_schema_is_valid_expect_pass(input_config_dict):
@@ -71,12 +41,35 @@ def test_schema_is_valid_expect_pass(input_config_dict):
     assert validators.schema_is_valid(input_config_dict)
 
 
-@pytest.mark.parametrize("scenario", ["c['new_header'] = 'something'"])
+@pytest.mark.parametrize("scenario", ["c['new_header'] = 'something'",
+                                      "del c['tabs'][0]['items'][0]['choice_displayed']",
+                                      "c['tabs'][0]['items'][0]['valid_entries'] = []"],
+                                      ids=['unexpected top level header',
+                                             'no tabs.items.choice_displayed',
+                                             'tabs.items.valid_entries is empty list'])
 def test_some_fail_scenarios_multiple(input_config_multiple_only, scenario):
     """Schema test should catch all of these, which are not exhaustive."""
     c = deepcopy(input_config_multiple_only)
     exec(scenario)
     assert not validators.schema_is_valid(c)
+
+
+def test_optional_top_level_keys_multiple(input_config_multiple_only):
+    """Schema test should catch all of these, which are not exhaustive."""
+    c = deepcopy(input_config_multiple_only)
+    assert validators.schema_is_valid(c)
+    for key, value in [('case_sensitive', True), ('screen_width', 60)]:
+        if key in c.keys():
+            del c[key]
+        else:
+            c[key] = value
+        assert validators.schema_is_valid(c)
+    
+
+def test_optional_long_description_multiple(input_config_multiple_only):
+    c = deepcopy(input_config_multiple_only)
+    assert validators.schema_is_valid(c)
+    
 
 
 @pytest.mark.parametrize("scenario", ["del c['tabs']", "tab = deepcopy(c['tabs'][0]);c['tabs'].append(tab)"])
