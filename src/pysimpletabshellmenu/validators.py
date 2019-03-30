@@ -13,7 +13,7 @@ class _ValidSchemas:
 
     def __init__(self):
         self.outer_schema_multiple_or_single_with_key = Schema(
-            {"case_sensitive": bool, Optional("screen_width"): int, "tabs": list}
+            {Optional("case_sensitive"): bool, Optional("screen_width"): int, "tabs": list}
         )
 
         self.outer_schema_single_without_key = Schema(
