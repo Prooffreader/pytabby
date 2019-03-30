@@ -25,7 +25,7 @@ def test__determine_schema_type(input_config_dict_and_id):
         if schema_type.endswith("_without_key"):
             assert id_.find("without_key") != -1
 
-
+@pytest.mark.skip  #TODO: Integrate with regtest plugin using __dict__
 def test_regression_ValidSchemas():
     """Simply copied code from validators._ValidSchemas to see if it ever changes"""
 
