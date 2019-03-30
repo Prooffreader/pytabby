@@ -17,47 +17,48 @@ screen_width: 80  # optional, default
 # with the file or even the entire folder. This would be an inefficient way of handling files, to be sure!
 # It's only an example.
 tabs:
-  items:
-    - choice_displayed: 'n'  # Because of YAML syntax, 'n' has to be in quotes to distinguish it from a boolean.
-                            # Using a code editor with syntax highlighting helps find these edge cases!
-      choice_description: Next directory
-      valid_entries: 
-        - 'n'
-      returns: next_dir
-    - choice_displayed: p
-      choice_description: Previous directory
-      valid_entries: 
-        - p
-      returns: prev_dir
-    - choice_displayed: u
-      choice_description: Up a directory
-      valid_entries: 
-        - u
-      returns: up_dir
-    - choice_displayed: e
-      choice_description: Enter directory (if one is current selection)  # Note there is no way to 'silence' menu
-                                                                        # Items as yet. On the wishlist!
-      valid_entries: 
-        - e
-      returns: enter_dir
-    - choice_displayed: o
-      choice_description: Open file (if one is current selection)
-      valid_entries:
-        - o
-      returns: open_file
-    - choice_displayed: d
-      choice_description: Delete file (if one is current selection)
-      valid_entries:
-        - d
-      returns: del_file
-    - choice_displayed: D  # uppercased same letter as previous item
-      choice_description: Delete directory and contents (if one is current selection)
-      valid_entries:
-        - D
-      returns: del_dir 
-    - choice_displayed: QX  # purposely made uppercase
-      choice_description: Quit
-      valid_entries: 
-        - Q
-        - X
-      returns: quit
+  - items:
+      - choice_displayed: 'n'  # Because of YAML syntax, 'n' has to be in quotes to distinguish it from a boolean.
+                              # Using a code editor with syntax highlighting helps find these edge cases!
+        choice_description: Next directory
+        valid_entries: 
+          - 'n'
+        returns: next_dir
+      - choice_displayed: p
+        choice_description: Previous directory
+        valid_entries: 
+          - p
+        returns: prev_dir
+      - choice_displayed: u
+        choice_description: Up a directory
+        valid_entries: 
+          - u
+        returns: up_dir
+      - choice_displayed: e
+        choice_description: Enter directory (if one is current selection)  # Note there is no way to 'silence' menu
+                                                                          # Items as yet. On the wishlist!
+        valid_entries: 
+          - e
+        returns: enter_dir
+      - choice_displayed: o
+        choice_description: Open file (if one is current selection)
+        valid_entries:
+          - o
+        returns: open_file
+      - choice_displayed: d
+        choice_description: Delete file (if one is current selection)
+        valid_entries:
+          - d
+        returns: del_file
+      - choice_displayed: D  # uppercased same letter as previous item
+        choice_description: Delete directory and contents (if one is current selection)
+        valid_entries:
+          - D
+        returns: del_dir 
+      - choice_displayed: QX  # purposely made uppercase
+        choice_description: Quit
+        valid_entries: 
+          - Q
+          - X
+        returns: quit
+  
