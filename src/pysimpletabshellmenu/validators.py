@@ -76,7 +76,7 @@ def schema_is_valid(dict_):  # noqa: C901
     There are two kinds of schemas, one with headers (i.e. with multiple tabs) and one without headers (i.e.
     with only one tab, which may be omitted or may be present as a 'tabs' key in the schema).
 
-    :param dict_: A dict
+    :param dict_: config dict past from menu.Menu instance
     :type dict: dict
     :returns: bool
     :raises: :class:`Schema.SchemaError`: or AssertionError if dict_ departs from valid schema
