@@ -95,7 +95,8 @@ def input_config_dict_and_id(request):
 
 
 def make_type_dict():
-    """uses validators._determine_schema_type() to split up configs into separate fixtures"""
+    """uses validators._determine_schema_type() to split up configs into separate fixtures.
+    Ensures there is at least one of each"""
     type_dict = {}
     for type_ in ["multiple", "single_with_key", "single_without_key"]:
         type_dict[type_] = {"configs": [], "ids": []}
@@ -104,6 +105,8 @@ def make_type_dict():
         assert type_ in ["multiple", "single_with_key", "single_without_key"]  # in case new type appears
         type_dict[type_]["configs"].append(config)
         type_dict[type_]["ids"].append(id_)
+    for type_ in ["multiple", "single_with_key", "single_without_key"]:
+        assert len(type_dict[type_]) > 0
     return type_dict
 
 
