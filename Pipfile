@@ -17,7 +17,6 @@ coverage = "*"
 [packages]
 schema = "*"
 pyyaml = "*"
-pysimpletabshellmenu = {editable = true,path = "."}
 
 [pipenv]
 allow_prereleases = true
