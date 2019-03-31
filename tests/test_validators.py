@@ -6,11 +6,13 @@
 from copy import deepcopy
 
 import pytest
+
 # from schema import Schema, Or, Optional
 
 import pysimpletabshellmenu.validators as validators
 
 pytest_plugins = ("regressions",)
+
 
 def test__determine_schema_type(input_config_dict_and_id):
     """As long as naming convention of test files stated in <root>/tests/data are followed, this should
@@ -27,6 +29,7 @@ def test__determine_schema_type(input_config_dict_and_id):
             assert id_.find("with_key") != -1
         if schema_type.endswith("_without_key"):
             assert id_.find("without_key") != -1
+
 
 @pytest.mark.skip  # TODO: fix this
 def test_regression_ValidSchemas(data_regression):

@@ -38,7 +38,7 @@ def main(config_filename):
 
 if __name__ == "__main__":
     for fn in CONFIG_FILE_NAMES:
-        print('\n##########')
-        print(f'# Using config file {fn}')
-        print('##########\n')
+        print("\n##########")
+        print(f"# Using config file {fn}")
+        print("##########\n")
         main(fn)

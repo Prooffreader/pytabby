@@ -111,9 +111,7 @@ def convert_int_to_string(config_tabs):
             assert len(config_tabs) == 1  # sanity check
             pass
         for item_num, item in enumerate(tab["items"]):
-            config_tabs[tab_num]["items"][item_num]["choice_displayed"] = int_to_str(
-                item["choice_displayed"]
-            )
+            config_tabs[tab_num]["items"][item_num]["choice_displayed"] = int_to_str(item["choice_displayed"])
             config_tabs[tab_num]["items"][item_num]["returns"] = int_to_str(item["returns"])
             for entry_num, entry in enumerate(item["valid_entries"]):
                 config_tabs[tab_num]["items"][item_num]["valid_entries"][entry_num] = int_to_str(entry)

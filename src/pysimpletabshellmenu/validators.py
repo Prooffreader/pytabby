@@ -13,8 +13,7 @@ class _ValidSchemas:
 
     def __init__(self):
         self.outer_schema_multiple_or_single_with_key = Schema(
-            {Optional("case_sensitive"): bool, Optional("screen_width"): int, "tabs": And(list, 
-                lambda x: len(x) > 0)}
+            {Optional("case_sensitive"): bool, Optional("screen_width"): int, "tabs": And(list, lambda x: len(x) > 0)}
         )
 
         self.outer_schema_single_without_key = Schema(
@@ -26,7 +25,7 @@ class _ValidSchemas:
                 "header_choice_displayed_and_accepted": And(Or(int, str), lambda x: len(str(x)) > 0),
                 "header_description": And(Or(str, None), lambda x: x is None or len(x) > 0),
                 Optional("long_description"): And(str, lambda x: len(x) > 0),
-                "items": And(list, lambda x: len(x) > 0)
+                "items": And(list, lambda x: len(x) > 0),
             }
         )
 
