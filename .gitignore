@@ -4,6 +4,7 @@ Pipfile.lock
 # custom for development
 *.ipynb
 .vscode/
+runblack.sh
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
