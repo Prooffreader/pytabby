@@ -5,7 +5,6 @@ verify_ssl = true
 
 [dev-packages]
 pytest = "*"
-pylama = "*"
 pytest-cov = "*"
 pytest-flakes = "*"
 black = "*"
@@ -13,6 +12,7 @@ sphinx = "*"
 doc8 = "*"
 pytest-regressions = "*"
 coverage = "*"
+pylama = "*"
 
 [packages]
 schema = "*"
