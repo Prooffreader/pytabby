@@ -3,7 +3,6 @@ The only action taken is the choices are printed to stdout, unless the 'quit' it
 either the next config file starts or the program exits after both config files have been run"""
 
 import os
-import sys
 
 from tabbedshellmenus.menu import Menu
 
