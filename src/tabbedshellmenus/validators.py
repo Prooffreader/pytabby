@@ -7,9 +7,12 @@
 
 from schema import Schema, Or, Optional, And
 
+class ValueOverlapError(ValueError):
+    pass
+
 
 class _ValidSchemas:
-    """Data-holding class for different schema.Schema instances to use in dict validation. Used in schema_is_valid()"""
+    """Data-holding class for different schema.Schema instances to use in dict validation. Used in validate_schema()"""
 
     def __init__(self):
         self.outer_schema_multiple_or_single_with_key = Schema(
