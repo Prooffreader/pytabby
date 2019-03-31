@@ -31,6 +31,11 @@ pysimpletabshellmenu [in development]
 A non-opinionated, flexible TABBED menu system to run in the shell and control
 program flow interactively
 
+NOTE:
+- the config files can use integers instead of strings for several fields, but
+internally they are always converted to strings and the return value for
+Menu.run() is always a string, e.g. '1'.
+
 
 
 Dependencies:
