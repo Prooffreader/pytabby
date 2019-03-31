@@ -23,8 +23,8 @@ def read(*names, **kwargs):
 
 
 setup(
-    name='pysimpletabshellmenu',
-    version='0.1.0-dev',
+    name='tabbedshellmenus',
+    version='0.0.1-dev',
     license='MIT',
     description='A simple, nonopinionated python shell menu system WITH TABS',
     long_description='%s\n%s' % (
@@ -33,7 +33,7 @@ setup(
     ),
     author='David Taylor',
     author_email='prooffreader@gmail.com',
-    url='http://github.com/Prooffreader/pysimpletabshellmenu',
+    url='http://github.com/Prooffreader/tabbedshellmenus',
     packages=find_packages('src'),
     package_dir={'': 'src'},
     py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
@@ -77,7 +77,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'pysimpletabshellmenu = pysimpletabshellmenu.cli:main',
+            'tabbedshellmenus = tabbedshellmenus.cli:main',
         ]
     },
 )

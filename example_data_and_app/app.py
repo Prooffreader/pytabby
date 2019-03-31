@@ -5,7 +5,7 @@ either the next config file starts or the program exits after both config files 
 import os
 import sys
 
-from pysimpletabshellmenu.menu import Menu
+from tabbedshellmenus.menu import Menu
 
 import glob
 

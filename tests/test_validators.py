@@ -9,7 +9,7 @@ import pytest
 
 # from schema import Schema, Or, Optional
 
-import pysimpletabshellmenu.validators as validators
+import tabbedshellmenus.validators as validators
 
 pytest_plugins = ("regressions",)
 
