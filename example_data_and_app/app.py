@@ -7,9 +7,12 @@ import sys
 
 from pysimpletabshellmenu.menu import Menu
 
-CONFIG_FILE_NAMES = ["multiple_tabs_with_headers.yaml",
-                     "one_tab_no_header.yaml"]
+import glob
+
+CONFIG_FILE_NAMES = glob.glob("*.yaml")
 # in same directory as this app.py script
+CONFIG_FILE_NAMES = [x for x in CONFIG_FILE_NAMES if not x.startswith("blank")]
+
 
 def main(config_filename):
 
