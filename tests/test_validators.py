@@ -10,6 +10,7 @@ import pytest
 # from schema import Schema, Or, Optional
 
 import tabbedshellmenus.validators as validators
+from schema import SchemaError
 
 pytest_plugins = ("regressions",)
 
@@ -41,7 +42,7 @@ def test_regression_ValidSchemas(data_regression):
 
 def test_schema_is_valid_expect_pass(input_config_dict):
     """ensures each test case passes before making them fail for different reasons"""
-    assert validators.schema_is_valid(input_config_dict)
+    validators.validate_schema(input_config_dict)
 
 
 @pytest.mark.parametrize(
@@ -57,38 +58,42 @@ def test_some_fail_scenarios_multiple(input_config_multiple_only, scenario):
     """Schema test should catch all of these, which are not exhaustive."""
     c = deepcopy(input_config_multiple_only)
     exec(scenario)
-    assert not validators.schema_is_valid(c)
+    with pytest.raises(SchemaError) as excinfo:
+        validators.validate_schema(c)     
+    #assert excinfo.value.message == 'some info'
 
 
 def test_optional_top_level_keys_multiple(input_config_multiple_only):
     """Test that top level keys case_sensitive and screen_width are optional
     and the correct types"""
     c = deepcopy(input_config_multiple_only)
-    assert validators.schema_is_valid(c)
+    validators.validate_schema(c)
     for key, value in [("case_sensitive", True), ("screen_width", 60)]:
         if key in c.keys():
             del c[key]
         else:
             c[key] = value
-        assert validators.schema_is_valid(c)
+        validators.validate_schema(c)
     # test wrong types
     for key, value in [("case_sensitive", "string"), ("screen_width", "string")]:
         c[key] = value
-    assert not validators.schema_is_valid(c)
+    with pytest.raises(SchemaError) as excinfo:
+        validators.validate_schema(c)
 
 
 def test_optional_long_description_multiple(input_config_multiple_only):
     """Test that a tab's 'long_description' is optional and string"""
     c = deepcopy(input_config_multiple_only)
-    assert validators.schema_is_valid(c)
+    validators.validate_schema(c)
     if "long_description" in c["tabs"][0].keys():
         del c["tabs"][0]["long_description"]
     else:
         c["tabs"][0]["long_description"] = "a long description"
-    assert validators.schema_is_valid(c)
+    validators.validate_schema(c)
     # test wrong type
     c["tabs"][0]["long_description"] = 2.54
-    assert not validators.schema_is_valid(c)
+    with pytest.raises(SchemaError) as excinfo:
+        validators.validate_schema(c)
 
 
 @pytest.mark.parametrize("scenario", ["del c['tabs']"], ids=["no tabs"])
@@ -96,7 +101,8 @@ def test_some_fail_scenarios_single_with_key(input_config_single_with_key_only, 
     """Schema test should catch all of these, which are not exhaustive."""
     c = deepcopy(input_config_single_with_key_only)
     exec(scenario)
-    assert not validators.schema_is_valid(c)
+    with pytest.raises(SchemaError) as excinfo:
+        validators.validate_schema(c)
 
 
 def test_no_multiple_tabs_in_single_with_key(input_config_single_with_key_only, some_random_integers):
@@ -109,9 +115,10 @@ def test_no_multiple_tabs_in_single_with_key(input_config_single_with_key_only, 
         "returns": "magic_text_probably_not_there_".format(str_random),
     }
     c = deepcopy(input_config_single_with_key_only)
-    assert validators.schema_is_valid(c)
+    validators.validate_schema(c)
     c["tabs"].append(items)
-    assert not validators.schema_is_valid(c)
+    with pytest.raises(SchemaError) as excinfo:
+        validators.validate_schema(c)
 
 
 @pytest.mark.parametrize("scenario", ["c['items'][0]['valid_entries'].append(1.5)"], ids=["float-in-valid-entries"])
@@ -119,53 +126,46 @@ def test_some_fail_scenarios_single_without_key(input_config_single_without_key_
     """Schema test should catch all of these, which are not exhaustive."""
     c = deepcopy(input_config_single_without_key_only)
     exec(scenario)
-    assert not validators.schema_is_valid(c)
+    with pytest.raises(SchemaError) as excinfo:
+        validators.validate_schema(c)
 
 
-def test__find_tabs(input_config_dict):
+def test__config_tabs(input_config_dict):
     """Hard to make this non tautological"""
-    tabs = validators._find_tabs(input_config_dict)
+    tabs = validators._config_tabs(input_config_dict)
     assert isinstance(tabs[0]["items"], list)
 
 
-def test_check_return_value_overlap(input_config_dict):
+def test_validate_no_return_value_overlap(input_config_dict):
     """Expect pass on valid input data"""
-    validators.check_return_value_overlap(input_config_dict)
+    validators.validate_no_return_value_overlap(input_config_dict)
 
 
-def test_check_accepted_input_overlap(input_config_dict):
+def test_validate_no_input_value_overlap(input_config_dict):
     """Expect pass on valid input data"""
-    validators.check_accepted_input_overlap(input_config_dict)
+    validators.validate_no_input_value_overlap(input_config_dict)
 
 
-def test_check_return_value_overlap_fail(input_config_multiple_only):
+def test_validate_no_return_value_overlap_fail(input_config_multiple_only):
     """Add a duplicate return value in a tab"""
     c = deepcopy(input_config_multiple_only)
     c["tabs"][0]["items"].append(c["tabs"][0]["items"][-1])
-    try:
-        validators.check_return_value_overlap(c)
-    except AssertionError:
-        pass
+    with pytest.raises(validators.ValueOverlapError) as exc_info:
+        validators.validate_no_return_value_overlap(c)
 
 
-def test_check_return_value_overlap_fail_within(input_config_multiple_only):
+def test_validate_no_return_value_overlap_fail_within(input_config_multiple_only):
     """Add a duplicate input value within a tab"""
     c = deepcopy(input_config_multiple_only)
     c["tabs"][0]["items"].append(c["tabs"][0]["items"][-1])
-    try:
-        validators.check_return_value_overlap(c)
-        raise AssertionError
-    except AssertionError:
-        pass
+    with pytest.raises(validators.ValueOverlapError) as exc_info:
+        validators.validate_no_input_value_overlap(c)
 
 
-def test_check_return_value_overlap_fail_wtab(input_config_multiple_only):
+def test_validate_no_return_value_overlap_fail_wtab(input_config_multiple_only):
     """Add another tab input value to a tab input"""
     c = deepcopy(input_config_multiple_only)
     extra_value = c["tabs"][0]["header_choice_displayed_and_accepted"]
     c["tabs"][1]["items"][0]["valid_entries"].append(extra_value)
-    try:
-        validators.check_return_value_overlap(c)
-        raise AssertionError
-    except AssertionError:
-        pass
+    with pytest.raises(validators.ValueOverlapError) as exc_info:
+        validators.validate_no_input_value_overlap(c)
