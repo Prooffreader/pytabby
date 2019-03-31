@@ -12,6 +12,7 @@ black = "*"
 sphinx = "*"
 doc8 = "*"
 pytest-regressions = "*"
+coverage = "*"
 
 [packages]
 schema = "*"
