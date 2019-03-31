@@ -46,9 +46,9 @@ class _ValidSchemas:
         self.entry_schema = Schema(And(Or(int, str), lambda x: len(str(x)) > 0))
 
 
-def _determine_schema_type(dict_):
+def _determine_schema_type(config):
     """Determines which of three valid schema types applies to input dict.
-    Used in schema_is_valid()
+    Used in validate_schema()
 
     Valid Types are:
     1. multiple tabs ('multiple')
@@ -56,14 +56,14 @@ def _determine_schema_type(dict_):
     3. single tab without tab key ('single_without_key')
     note that single tabs should have no header-related keys; this is checked in the Schema portion
 
-    :param dict_: A dict
+    :param config: A dict
     :type dict: dict
     :returns: type of schema
     :rtype: str
 
     """
-    if "tabs" in dict_.keys():
-        if len(dict_["tabs"]) > 1:
+    if "tabs" in config.keys():
+        if len(config["tabs"]) > 1:
             schema_type = "multiple"
         else:
             schema_type = "single_with_key"
