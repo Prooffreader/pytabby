@@ -7,10 +7,8 @@ from copy import deepcopy
 
 import pytest
 
-# from schema import Schema, Or, Optional
-
 import tabbedshellmenus.validators as validators
-from schema import SchemaError
+import schema
 
 pytest_plugins = ("regressions",)
 
@@ -46,21 +44,21 @@ def test_schema_is_valid_expect_pass(input_config_dict):
 
 
 @pytest.mark.parametrize(
-    "scenario",
+    "command,error_class,error_message",
     [
-        "c['new_header'] = 'something'",
-        "del c['tabs'][0]['items'][0]['choice_displayed']",
-        "c['tabs'][0]['items'][0]['valid_entries'] = []",
+        ("c['new_header'] = 'something'", schema.SchemaWrongKeyError, "Wrong key 'new header'"),
+        ("del c['tabs'][0]['items'][0]['choice_displayed']", schema.SchemaMissingKeyError, "Missing key: 'choice_displayed'"),
+        ("c['tabs'][0]['items'][0]['valid_entries'] = []", schema.SchemaError, "should evaluate to True")
     ],
-    ids=["unexpected-top-level-header", "no-tabs.items.choice_displayed", "tabs.items.valid_entries-is-empty-list"],
+    ids=["unexpected_top_level_header", "no_tabs.items.choice_displayed", "tabs.items.valid_entries_is_empty_list"],
 )
-def test_some_fail_scenarios_multiple(input_config_multiple_only, scenario):
+def test_some_fail_scenarios_multiple(input_config_multiple_only, command, error_class, error_message):
     """Schema test should catch all of these, which are not exhaustive."""
     c = deepcopy(input_config_multiple_only)
-    exec(scenario)
-    with pytest.raises(SchemaError) as excinfo:
+    exec(command)
+    with pytest.raises(error_class) as exc_info:
         validators.validate_schema(c)     
-    #assert excinfo.value.message == 'some info'
+        assert exc_info.value.message.find(error_message)
 
 
 def test_optional_top_level_keys_multiple(input_config_multiple_only):
@@ -101,7 +99,7 @@ def test_some_fail_scenarios_single_with_key(input_config_single_with_key_only, 
     """Schema test should catch all of these, which are not exhaustive."""
     c = deepcopy(input_config_single_with_key_only)
     exec(scenario)
-    with pytest.raises(SchemaError) as excinfo:
+    with pytest.raises(schema.SchemaError) as exc_info:
         validators.validate_schema(c)
 
 
@@ -117,7 +115,7 @@ def test_no_multiple_tabs_in_single_with_key(input_config_single_with_key_only, 
     c = deepcopy(input_config_single_with_key_only)
     validators.validate_schema(c)
     c["tabs"].append(items)
-    with pytest.raises(SchemaError) as excinfo:
+    with pytest.raises(schema.SchemaError) as exc_info:
         validators.validate_schema(c)
 
 
@@ -126,7 +124,7 @@ def test_some_fail_scenarios_single_without_key(input_config_single_without_key_
     """Schema test should catch all of these, which are not exhaustive."""
     c = deepcopy(input_config_single_without_key_only)
     exec(scenario)
-    with pytest.raises(SchemaError) as excinfo:
+    with pytest.raises(schema.SchemaError) as exc_info:
         validators.validate_schema(c)
 
 
