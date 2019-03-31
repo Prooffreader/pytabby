@@ -24,12 +24,15 @@ This conftest.py produces the following fixtures containing config dicts out of 
    validators._determine_schema_type()
 5. input_config_single_without_key_only: all dicts from .yaml files which return 'single_without_key' from 
    validators._determine_schema_type()
+6. input_config_case_sensitive_only: all dicts from .yaml files where first-level key "case_sensitive" is True
+6. input_config_case_insensitive_only: all dicts from .yaml files where first-level key "case_sensitive" is False
 """
 
 # pylama:ignore=W293,W291,W391,E302,E128 (will be fixed by black)
 
 import os
 from pathlib import Path
+from random import randint
 
 import pytest
 import yaml  # imported due to Menu class dependency
@@ -133,3 +136,45 @@ def input_config_single_without_key_only(request):
 def input_config_single_with_key_only(request):
     """Returns config dicts only if they are the 'single_with_key' type"""
     return request.param
+
+
+def make_case_sensitivity_dict():
+    """looks at 'case_sensitive' key to split configs into separate fixtures. Ensures there is at least one of each"""
+    case_dict = {}
+    for type_ in ["case_sensitive", "case_insensitive"]:
+        case_dict[type_] = {"configs": [], "ids": []}
+    for config, id_ in zip(TEST_CONFIGS, YAML_IDS):
+        if config["case_sensitive"]:
+            case_dict["case_sensitive"]["configs"].append(config)
+            case_dict["case_sensitive"]["ids"].append(id_)
+        else:
+            case_dict["case_insensitive"]["configs"].append(config)
+            case_dict["case_insensitive"]["ids"].append(id_)
+    for type_ in ["case_sensitive", "case_insensitive"]:
+        assert len(case_dict[type_]) > 0
+    return case_dict
+
+
+CASE_DICT = make_case_sensitivity_dict()
+
+
+@pytest.fixture(
+    scope="session", params=CASE_DICT["case_sensitive"]["configs"], ids=CASE_DICT["case_sensitive"]["ids"]
+)
+def input_config_case_sensitive_only(request):
+    """Returns config dicts only if they are case_sensitive"""
+    return request.param
+
+
+@pytest.fixture(
+    scope="session", params=CASE_DICT["case_insensitive"]["configs"], ids=CASE_DICT["case_insensitive"]["ids"]
+)
+def input_config_case_insensitive_only(request):
+    """Returns config dicts only if they are case_sensitive"""
+    return request.param
+
+
+@pytest.fixture(scope="function")
+def some_random_integers():
+    """Just some random integers to ensure no magic numbers or text in tests"""
+    return randint(100000, 999999)
