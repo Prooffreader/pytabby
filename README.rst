@@ -1,4 +1,4 @@
-pysimpletabshellmenu [in development]
+tabbedshellmenus [in development]
 =====================================
 
 A non-opinionated, flexible TABBED menu system to run in the shell and control

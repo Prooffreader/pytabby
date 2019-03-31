@@ -37,8 +37,8 @@ from random import randint
 import pytest
 import yaml  # imported due to Menu class dependency
 
-from pysimpletabshellmenu.menu import Menu
-from pysimpletabshellmenu.validators import _determine_schema_type
+from tabbedshellmenus.menu import Menu
+from tabbedshellmenus.validators import _determine_schema_type
 
 _ = yaml  # just to get rid of pyflakes warning
 
