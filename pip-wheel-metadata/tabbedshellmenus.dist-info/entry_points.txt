@@ -1,0 +1,3 @@
+[console_scripts]
+tabbedshellmenus = tabbedshellmenus.cli:main
+
