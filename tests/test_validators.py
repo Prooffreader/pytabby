@@ -72,11 +72,15 @@ def test_optional_top_level_keys_multiple(input_config_multiple_only):
         else:
             c[key] = value
         validators.validate_schema(c)
-    # test wrong types
-    for key, value in [("case_sensitive", "string"), ("screen_width", "string")]:
+
+def test_wrong_types_top_level_keys_multiple(input_config_multiple_only):
+    c = deepcopy(input_config_multiple_only)
+    validators.validate_schema(c)
+    for key, value, msg in [("case_sensitive", "string", "bool"), ("screen_width", "string", "int")]:
         c[key] = value
-    with pytest.raises(SchemaError) as excinfo:
+    with pytest.raises(schema.SchemaError) as exc_info:
         validators.validate_schema(c)
+        assert exc_info.value.message.find("string' should be instance of '{}'".format(msg))
 
 
 def test_optional_long_description_multiple(input_config_multiple_only):
@@ -88,10 +92,14 @@ def test_optional_long_description_multiple(input_config_multiple_only):
     else:
         c["tabs"][0]["long_description"] = "a long description"
     validators.validate_schema(c)
-    # test wrong type
+
+def test_wrong_type_long_description_multiple(input_config_multiple_only):
+    c = deepcopy(input_config_multiple_only)
+    validators.validate_schema(c)
     c["tabs"][0]["long_description"] = 2.54
-    with pytest.raises(SchemaError) as excinfo:
+    with pytest.raises(schema.SchemaError) as exc_info:
         validators.validate_schema(c)
+        assert exc_info.value.message.find("should be instance of 'str'")
 
 
 @pytest.mark.parametrize("scenario", ["del c['tabs']"], ids=["no tabs"])
