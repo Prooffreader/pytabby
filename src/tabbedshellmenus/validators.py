@@ -115,7 +115,7 @@ def validate_schema(config):  # noqa: C901
         else:
             raise ValueError(f"schema_type {schema_type} is invalid")
     except Exception as e:
-        raise
+        raise e
 
 
 def _config_tabs(config):
@@ -209,7 +209,7 @@ def validate_all(config):
     """Runs above non-underscored functions on input"""
     try:
         validate_schema(config)
-        validate_no_accepted_input_overlap(config)
+        validate_no_input_value_overlap(config)
         validate_no_return_value_overlap(config)
     except Exception:
         raise InvalidInputError
