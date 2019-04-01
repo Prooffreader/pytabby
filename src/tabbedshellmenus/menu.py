@@ -11,6 +11,7 @@ import yaml
 
 from . import validators
 from . import formatting
+from . import tab
 from .tab import Tab
 
 
@@ -36,7 +37,8 @@ class Menu:
         self.screen_width = self.config.get("screen_width", 80)
         # self.config_tabs are the contents of config['tabs'] OR the config['items'] if schema type is single
         # without 'tabs' key (i.e. it normalizes the contents of the schemas)
-        self.config_tabs = formatting.make_config_tabs(self.config)
+        self.config_tabs = tab.make_config_tabs(self.config)
+        self.has_multiple_tabs = len(self.config_tabs) > 1
         assert self.current_tab_number < len(self.config_tabs)
         self._create_tab_objects()
 
@@ -67,17 +69,7 @@ class Menu:
         return dict_
 
     def _create_tab_objects(self):
-        """Creates Tab objects in list in order of self.config_tabs"""
-        # tab_selectors is list (in tab order) of entries that select tabs
-        # needed because along with items[:]valid_entries, these are valid entries
-        # this will be an empty list for a single tab
-        self.tab_selectors = []
-        for tab in self.config_tabs:
-            if tab.get("header_choice_displayed_and_accepted", None):
-                self.tab_selectors.append(tab["header_choice_displayed_and_accepted"])
-        self.tabs = []
-        for tab in self.config_tabs:
-            self.tabs.append(Tab(tab, self.tab_selectors, self.case_sensitive))
+        self.tabs = tab.create_tab_objects(self.config_tabs, self.case_sensitive)
 
     def _change_tab(self, new_number):
         """Changes the active tab"""
@@ -130,8 +122,8 @@ class Menu:
                 continue
             else:
                 received_return_value = True
-                if self.tab_selectors:
-                    tab_id = self.tab_selectors[self.current_tab_number]
+                if self.has_multiple_tabs:
+                    tab_id = self.tabs[self.current_tab_number].head_choice
                 else:
                     tab_id = None
         return (self.current_tab_number, tab_id, return_dict["return_value"])
