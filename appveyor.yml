@@ -63,11 +63,13 @@ install:
 
 build_script:
   # Build the compiled extension
-  - "%CMD_IN_ENV% python setup.py build"
+  #- "%CMD_IN_ENV% python setup.py build"
+  - "%CMD_IN_ENV% pip install ."
 
 test_script:
   # Run the project tests --and store results in .xml log--
   - ps: |
+      &$env:PYTHON\python --version
       &$env:PYTHON\python -m pytest
       if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
       
