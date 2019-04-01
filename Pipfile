@@ -13,6 +13,7 @@ doc8 = "*"
 pytest-regressions = "*"
 coverage = "*"
 pylama = "*"
+pytest-ordering = "*"
 
 [packages]
 schema = "*"
