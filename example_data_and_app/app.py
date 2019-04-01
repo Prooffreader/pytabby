@@ -8,17 +8,15 @@ from tabbedshellmenus.menu import Menu
 
 import glob
 
-CONFIG_FILE_NAMES = glob.glob("*.yaml")
+THIS_FOLDER = os.path.split(__file__)[0]
+
 # in same directory as this app.py script
+CONFIG_FILE_NAMES = [os.path.split(x)[-1] for x in glob.glob(os.path.join(THIS_FOLDER, "*.yaml"))]
 CONFIG_FILE_NAMES = [x for x in CONFIG_FILE_NAMES if not x.startswith("blank")]
 
-
 def main(config_filename):
-
-    this_dir = os.path.split(os.path.realpath(__file__))[0]
-
     # use staticmethod to read yaml
-    config = Menu.safe_read_yaml(os.path.join(this_dir, config_filename))
+    config = Menu.safe_read_yaml(os.path.join(THIS_FOLDER, config_filename))
 
     # instantiate
     menu = Menu(config)
@@ -34,6 +32,7 @@ def main(config_filename):
             print("\nQuitting!\n")
             return
 
+print(__name__)
 
 if __name__ == "__main__":
     for fn in CONFIG_FILE_NAMES:
