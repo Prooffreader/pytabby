@@ -19,7 +19,7 @@ Dependencies:
 - schema
 
 NOTE:
-- dev-requirements.txt manually copied from Pipfile
+- dev-requirements.txt added from edited pip freeze
 
 
 TODO:
