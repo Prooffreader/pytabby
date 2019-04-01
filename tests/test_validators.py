@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# pylama:ignore=W293,W291,W391,E302,E128,E127,E303 (will be fixed by black)
+# pylama:ignore=W293,W291,W391,E302,E128,E127,E303,E501 (will be fixed by black)
 
 from copy import deepcopy
 
@@ -9,6 +9,7 @@ import pytest
 
 import tabbedshellmenus.validators as validators
 import schema
+import re
 
 pytest_plugins = ("regressions",)
 
@@ -30,11 +31,13 @@ def test__determine_schema_type(input_config_dict_and_id):
             assert id_.find("without_key") != -1
 
 
-@pytest.mark.skip  # TODO: fix this
 def test_regression_ValidSchemas(data_regression):
     """Must stringify because contains schema objects"""
     data = str(validators._ValidSchemas().__dict__)
-    data = {"data": data}  # apparently data_regression must use dict
+    # remove specific memory addresses
+    data = re.sub(' at 0x[a-f0-9]+>', 'at 0xSOME_MEMORY_ADDRESS>', data)
+     # convert because apparently data_regression must use dict
+    data = {"data": data} 
     data_regression.check(data)
 
 
