@@ -1,21 +1,21 @@
 data: '{''outer_schema_multiple_or_single_with_key'': Schema({Optional(''case_sensitive''):
   <class ''bool''>, Optional(''screen_width''): <class ''int''>, ''tabs'': And(<class
-  ''list''>, <function _ValidSchemas.__init__.<locals>.<lambda> at 0x7fbf7cf14730>)}),
+  ''list''>, <function _ValidSchemas.__init__.<locals>.<lambda>at 0xSOME_MEMORY_ADDRESS>)}),
   ''outer_schema_single_without_key'': Schema({''case_sensitive'': <class ''bool''>,
   Optional(''screen_width''): <class ''int''>, ''items'': And(<class ''list''>, <function
-  _ValidSchemas.__init__.<locals>.<lambda> at 0x7fbf7cf146a8>)}), ''tab_schema_multiple'':
+  _ValidSchemas.__init__.<locals>.<lambda>at 0xSOME_MEMORY_ADDRESS>)}), ''tab_schema_multiple'':
   Schema({''header_choice_displayed_and_accepted'': And(Or(<class ''int''>, <class
-  ''str''>), <function _ValidSchemas.__init__.<locals>.<lambda> at 0x7fbf7cf14f28>),
-  ''header_description'': And(Or(<class ''str''>, None), <function _ValidSchemas.__init__.<locals>.<lambda>
-  at 0x7fbf7cf43048>), Optional(''long_description''): And(<class ''str''>, <function
-  _ValidSchemas.__init__.<locals>.<lambda> at 0x7fbf7cf430d0>), ''items'': And(<class
-  ''list''>, <function _ValidSchemas.__init__.<locals>.<lambda> at 0x7fbf7cf43158>)}),
-  ''tab_schema_single'': Schema({''items'': And(<class ''list''>, <function _ValidSchemas.__init__.<locals>.<lambda>
-  at 0x7fbf7cf431e0>)}), ''item_schema'': Schema({''choice_displayed'': And(Or(<class
-  ''int''>, <class ''str''>), <function _ValidSchemas.__init__.<locals>.<lambda> at
-  0x7fbf7cf43268>), ''choice_description'': And(<class ''str''>, <function _ValidSchemas.__init__.<locals>.<lambda>
-  at 0x7fbf7cf432f0>), ''valid_entries'': And(<class ''list''>, <function _ValidSchemas.__init__.<locals>.<lambda>
-  at 0x7fbf7cf43378>), ''returns'': And(Or(<class ''int''>, <class ''str''>), <function
-  _ValidSchemas.__init__.<locals>.<lambda> at 0x7fbf7cf43400>)}), ''entry_schema'':
-  Schema(And(Or(<class ''int''>, <class ''str''>), <function _ValidSchemas.__init__.<locals>.<lambda>
-  at 0x7fbf7cf43488>))}'
+  ''str''>), <function _ValidSchemas.__init__.<locals>.<lambda>at 0xSOME_MEMORY_ADDRESS>),
+  ''header_description'': And(Or(<class ''str''>, None), <function _ValidSchemas.__init__.<locals>.<lambda>at
+  0xSOME_MEMORY_ADDRESS>), Optional(''long_description''): And(<class ''str''>, <function
+  _ValidSchemas.__init__.<locals>.<lambda>at 0xSOME_MEMORY_ADDRESS>), ''items'': And(<class
+  ''list''>, <function _ValidSchemas.__init__.<locals>.<lambda>at 0xSOME_MEMORY_ADDRESS>)}),
+  ''tab_schema_single'': Schema({''items'': And(<class ''list''>, <function _ValidSchemas.__init__.<locals>.<lambda>at
+  0xSOME_MEMORY_ADDRESS>)}), ''item_schema'': Schema({''choice_displayed'': And(Or(<class
+  ''int''>, <class ''str''>), <function _ValidSchemas.__init__.<locals>.<lambda>at
+  0xSOME_MEMORY_ADDRESS>), ''choice_description'': And(<class ''str''>, <function
+  _ValidSchemas.__init__.<locals>.<lambda>at 0xSOME_MEMORY_ADDRESS>), ''valid_entries'':
+  And(<class ''list''>, <function _ValidSchemas.__init__.<locals>.<lambda>at 0xSOME_MEMORY_ADDRESS>),
+  ''returns'': And(Or(<class ''int''>, <class ''str''>), <function _ValidSchemas.__init__.<locals>.<lambda>at
+  0xSOME_MEMORY_ADDRESS>)}), ''entry_schema'': Schema(And(Or(<class ''int''>, <class
+  ''str''>), <function _ValidSchemas.__init__.<locals>.<lambda>at 0xSOME_MEMORY_ADDRESS>))}'

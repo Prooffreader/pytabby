@@ -31,8 +31,9 @@ This conftest.py produces the following fixtures containing config dicts out of 
 # pylama:ignore=W293,W291,W391,E302,E128 (will be fixed by black)
 
 import os
+from string import ascii_lowercase, ascii_uppercase
 from pathlib import Path
-from random import randint
+from random import choice
 
 import pytest
 import yaml  # imported due to Menu class dependency
@@ -139,11 +140,14 @@ def input_config_single_with_key_only(request):
 
 
 def make_case_sensitivity_dict():
-    """looks at 'case_sensitive' key to split configs into separate fixtures. Ensures there is at least one of each"""
+    """looks at 'case_sensitive' key to split configs into separate fixtures. Ensures there is at least one of each.
+    Does not use single_without_tab type, just to keep things easier"""
     case_dict = {}
     for type_ in ["case_sensitive", "case_insensitive"]:
         case_dict[type_] = {"configs": [], "ids": []}
     for config, id_ in zip(TEST_CONFIGS, YAML_IDS):
+        if config.get('items', None):
+            continue
         if config["case_sensitive"]:
             case_dict["case_sensitive"]["configs"].append(config)
             case_dict["case_sensitive"]["ids"].append(id_)
@@ -156,6 +160,16 @@ def make_case_sensitivity_dict():
 
 
 CASE_DICT = make_case_sensitivity_dict()
+
+# ensure they each have at least one config with at least one tab key with at least two items
+def ensure_valid_test_cases_exist_for_case_in_sensitivity():
+    for k in ['case_sensitive', 'case_insensitive']:
+        found_valid = False
+        for config in CASE_DICT[k]['configs']:
+            if 'tabs' in config.keys() and len(config['tabs'][0]['items']) > 1:
+                found_valid = True
+        assert found_valid, "No valid test case found for {}".format(k)
+    
 
 
 @pytest.fixture(
@@ -175,6 +189,18 @@ def input_config_case_insensitive_only(request):
 
 
 @pytest.fixture(scope="function")
-def some_random_integers():
-    """Just some random integers to ensure no magic numbers or text in tests"""
-    return randint(100000, 999999)
+def random_string():
+    """Sixteen alternating uppercase and lowercase letters to avoid magic strings"""
+    thestring = []
+    for i in range(8):
+        thestring.append(choice(ascii_lowercase))
+        thestring.append(choice(ascii_uppercase))
+    return ''.join(thestring)
+
+
+@pytest.fixture(scope="session", params=TEST_CONFIGS, ids=YAML_IDS)
+def all_tabs():
+    """A bit backwards because this will fail if some upstream tests would fail, but it's the easiest approach
+    for test_formatting"""
+    menu = M
+
