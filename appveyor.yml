@@ -4,7 +4,7 @@
 image: Visual Studio 2017
 
 environment:
-  global:
+  # global:
     # Not sure if this is needed without C extension?
     # SDK v7.0 MSVC Express 2008's SetEnv.cmd script will fail if the
     # /E:ON and /V:ON options are not enabled in the batch script intepreter
@@ -71,14 +71,14 @@ test_script:
       &$env:PYTHON\python -m pytest
       if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
       
-after_test:
+# after_test:
   # If tests are successful, create binary packages for the project.
   # - "%CMD_IN_ENV% python setup.py bdist_wheel"
   # - "%CMD_IN_ENV% python setup.py bdist_wininst"
   # - "%CMD_IN_ENV% python setup.py bdist_msi"
   # - ps: "ls dist"
 
-artifacts:
+# artifacts:
   # Archive the generated packages in the ci.appveyor.com build report.
   # - path: dist\*
 
@@ -86,7 +86,7 @@ artifacts:
 #  - TODO: upload the content of dist/*.whl to a public wheelhouse
 #
 
-on_finish:
+# on_finish:
   # Upload test results to AppVeyor
   # - ps: |
       # this uploads nosetests.xml produced in test_script step
