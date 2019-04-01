@@ -4,6 +4,9 @@ tabbedshellmenus [in development]
 .. image:: https://secure.travis-ci.org/Prooffreader/tabbedshellmenus.png
     :target: http://travis-ci.org/Prooffreader/tabbedshellmenus
 
+.. image:: https://ci.appveyor.com/api/projects/status/preqq0h4peiad07a?svg=true
+    :target: https://ci.appveyor.com/project/Prooffreader/tabbedshellmenus
+
 A non-opinionated, flexible TABBED menu system to run in the shell and control
 program flow interactively
 
