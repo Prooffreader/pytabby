@@ -33,6 +33,7 @@ install:
           throw "There are newer queued builds for this pull request, failing early." }
   - ECHO "Filesystem root:"
   - ps: "ls \"C:/\""
+  - cmd: set PY_PYTHON=3
 
   #- ECHO "Installed SDKs:"
   #- ps: "ls \"C:/Program Files/Microsoft SDKs/Windows\""
