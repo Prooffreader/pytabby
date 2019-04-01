@@ -18,6 +18,9 @@ Dependencies:
 - pyyaml
 - schema
 
+NOTE:
+- dev-requirements.txt manually copied from Pipfile
+
 
 TODO:
  - see what happens if one tab but headers defined; ignore or invalid schema?
