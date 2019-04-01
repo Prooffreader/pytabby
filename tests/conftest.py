@@ -140,11 +140,14 @@ def input_config_single_with_key_only(request):
 
 
 def make_case_sensitivity_dict():
-    """looks at 'case_sensitive' key to split configs into separate fixtures. Ensures there is at least one of each"""
+    """looks at 'case_sensitive' key to split configs into separate fixtures. Ensures there is at least one of each.
+    Does not use single_without_tab type, just to keep things easier"""
     case_dict = {}
     for type_ in ["case_sensitive", "case_insensitive"]:
         case_dict[type_] = {"configs": [], "ids": []}
     for config, id_ in zip(TEST_CONFIGS, YAML_IDS):
+        if config.get('items', None):
+            continue
         if config["case_sensitive"]:
             case_dict["case_sensitive"]["configs"].append(config)
             case_dict["case_sensitive"]["ids"].append(id_)
@@ -157,6 +160,16 @@ def make_case_sensitivity_dict():
 
 
 CASE_DICT = make_case_sensitivity_dict()
+
+# ensure they each have at least one config with at least one tab key with at least two items
+def ensure_valid_test_cases_exist_for_case_in_sensitivity():
+    for k in ['case_sensitive', 'case_insensitive']:
+        found_valid = False
+        for config in CASE_DICT[k]['configs']:
+            if 'tabs' in config.keys() and len(config['tabs'][0]['items']) > 1:
+                found_valid = True
+        assert found_valid, "No valid test case found for {}".format(k)
+    
 
 
 @pytest.fixture(
