@@ -31,8 +31,9 @@ This conftest.py produces the following fixtures containing config dicts out of 
 # pylama:ignore=W293,W291,W391,E302,E128 (will be fixed by black)
 
 import os
+from string import ascii_lowercase, ascii_uppercase
 from pathlib import Path
-from random import randint
+from random import choice
 
 import pytest
 import yaml  # imported due to Menu class dependency
@@ -175,6 +176,18 @@ def input_config_case_insensitive_only(request):
 
 
 @pytest.fixture(scope="function")
-def some_random_integers():
-    """Just some random integers to ensure no magic numbers or text in tests"""
-    return randint(100000, 999999)
+def random_string():
+    """Sixteen alternating uppercase and lowercase letters to avoid magic strings"""
+    thestring = []
+    for i in range(8):
+        thestring.append(choice(ascii_lowercase))
+        thestring.append(choice(ascii_uppercase))
+    return ''.join(thestring)
+
+
+@pytest.fixture(scope="session", params=TEST_CONFIGS, ids=YAML_IDS)
+def all_tabs():
+    """A bit backwards because this will fail if some upstream tests would fail, but it's the easiest approach
+    for test_formatting"""
+    menu = M
+
