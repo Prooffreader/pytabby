@@ -27,9 +27,8 @@ setup(
     version='0.0.1-dev',
     license='MIT',
     description='A simple, nonopinionated python shell menu system WITH TABS',
-    long_description='%s\n%s' % (
-        re.compile('^.. start-badges.*^.. end-badges', re.M | re.S).sub('', read('README.rst')),
-        re.sub(':[a-z]+:`~?(.*?)`', r'``\1``', read('CHANGELOG.rst'))
+    long_description='%s' % (
+        re.compile('^.. start-badges.*^.. end-badges', re.M | re.S).sub('', read('README.rst'))
     ),
     author='David Taylor',
     author_email='prooffreader@gmail.com',
