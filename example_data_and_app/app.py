@@ -14,6 +14,7 @@ THIS_FOLDER = os.path.split(__file__)[0]
 CONFIG_FILE_NAMES = [os.path.split(x)[-1] for x in glob.glob(os.path.join(THIS_FOLDER, "*.yaml"))]
 CONFIG_FILE_NAMES = [x for x in CONFIG_FILE_NAMES if not x.startswith("blank")]
 
+
 def main(config_filename):
     # use staticmethod to read yaml
     config = Menu.safe_read_yaml(os.path.join(THIS_FOLDER, config_filename))
@@ -31,6 +32,7 @@ def main(config_filename):
         if value == "quit":
             print("\nQuitting!\n")
             return
+
 
 print(__name__)
 
