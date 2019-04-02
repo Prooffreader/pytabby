@@ -26,7 +26,10 @@ Classifier: Topic :: Software Development :: Libraries :: Python Modules
 Classifier: Topic :: Utilities
 
 tabbedshellmenus [in development]
-=====================================
+=================================
+
+.. image:: https://secure.travis-ci.org/Prooffreader/tabbedshellmenus.png
+    :target: http://travis-ci.org/Prooffreader/tabbedshellmenus
 
 A non-opinionated, flexible TABBED menu system to run in the shell and control
 program flow interactively
@@ -41,6 +44,9 @@ Menu.run() is always a string, e.g. '1'.
 Dependencies:
 - pyyaml
 - schema
+
+NOTE:
+- dev-requirements.txt added from edited pip freeze
 
 
 TODO:
