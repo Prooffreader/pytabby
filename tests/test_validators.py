@@ -13,7 +13,7 @@ import re
 
 
 # TODO: comment back in, it's making Travis-CI fail
-#pytest_plugins = ("regressions",)
+# pytest_plugins = ("regressions",)
 
 
 def test__determine_schema_type(input_config_dict_and_id):
@@ -32,6 +32,7 @@ def test__determine_schema_type(input_config_dict_and_id):
         if schema_type.endswith("_without_key"):
             assert id_.find("without_key") != -1
 
+
 # TODO: uncomment, it's making travis-ci fail
 # def test_regression_ValidSchemas(data_regression):
 #     """Must stringify because contains schema objects"""
@@ -39,7 +40,7 @@ def test__determine_schema_type(input_config_dict_and_id):
 #     # remove specific memory addresses
 #     data = re.sub(' at 0x[a-f0-9]+>', 'at 0xSOME_MEMORY_ADDRESS>', data)
 #      # convert because apparently data_regression must use dict
-#     data = {"data": data} 
+#     data = {"data": data}
 #     data_regression.check(data)
 
 
@@ -52,8 +53,12 @@ def test_schema_is_valid_expect_pass(input_config_dict):
     "command,error_class,error_message",
     [
         ("c['new_header'] = 'something'", schema.SchemaWrongKeyError, "Wrong key 'new header'"),
-        ("del c['tabs'][0]['items'][0]['choice_displayed']", schema.SchemaMissingKeyError, "Missing key: 'choice_displayed'"),
-        ("c['tabs'][0]['items'][0]['valid_entries'] = []", schema.SchemaError, "should evaluate to True")
+        (
+            "del c['tabs'][0]['items'][0]['choice_displayed']",
+            schema.SchemaMissingKeyError,
+            "Missing key: 'choice_displayed'",
+        ),
+        ("c['tabs'][0]['items'][0]['valid_entries'] = []", schema.SchemaError, "should evaluate to True"),
     ],
     ids=["unexpected_top_level_header", "no_tabs.items.choice_displayed", "tabs.items.valid_entries_is_empty_list"],
 )
@@ -62,7 +67,7 @@ def test_some_fail_scenarios_multiple(input_config_multiple_only, command, error
     c = deepcopy(input_config_multiple_only)
     exec(command)
     with pytest.raises(error_class) as exc_info:
-        validators.validate_schema(c)     
+        validators.validate_schema(c)
         assert exc_info.value.message.find(error_message)
 
 
@@ -77,6 +82,7 @@ def test_optional_top_level_keys_multiple(input_config_multiple_only):
         else:
             c[key] = value
         validators.validate_schema(c)
+
 
 def test_wrong_types_top_level_keys_multiple(input_config_multiple_only):
     c = deepcopy(input_config_multiple_only)
@@ -98,6 +104,7 @@ def test_optional_long_description_multiple(input_config_multiple_only):
         c["tabs"][0]["long_description"] = "a long description"
     validators.validate_schema(c)
 
+
 def test_wrong_type_long_description_multiple(input_config_multiple_only):
     c = deepcopy(input_config_multiple_only)
     validators.validate_schema(c)
@@ -111,61 +118,77 @@ def test_wrong_type_long_description_multiple(input_config_multiple_only):
     "command,error_class,error_message",
     [
         ("c['items']=c['tabs'][0]['items'];del c['tabs']", TypeError, "'NoneType' object is not subscriptable"),
-        ("c['tabs'][0]['header_choice_displayed_and_accepted']='somestring'", schema.SchemaWrongKeyError, 
-        "Wrong key 'header_choice_displayed_and_accepted' in"),
-        ("c['tabs'][0]['header_description']='somestring'", schema.SchemaWrongKeyError, 
-        "Wrong key 'header_description' in"),
-        ("c['tabs'][0]['long_description']='somestring'", schema.SchemaWrongKeyError, 
-        "Wrong key 'long_description' in")
+        (
+            "c['tabs'][0]['header_choice_displayed_and_accepted']='somestring'",
+            schema.SchemaWrongKeyError,
+            "Wrong key 'header_choice_displayed_and_accepted' in",
+        ),
+        (
+            "c['tabs'][0]['header_description']='somestring'",
+            schema.SchemaWrongKeyError,
+            "Wrong key 'header_description' in",
+        ),
+        (
+            "c['tabs'][0]['long_description']='somestring'",
+            schema.SchemaWrongKeyError,
+            "Wrong key 'long_description' in",
+        ),
     ],
-    ids=["made_into_without_key",
-         "has_header_choice_displayed_and_accepted",
-         "has_header_description",
-         "has_long_description_which_is_optional_in_multiple"],
+    ids=[
+        "made_into_without_key",
+        "has_header_choice_displayed_and_accepted",
+        "has_header_description",
+        "has_long_description_which_is_optional_in_multiple",
+    ],
 )
 def test_some_fail_scenarios_single_with_key(input_config_single_with_key_only, command, error_class, error_message):
     """Schema test should catch all of these, which are not exhaustive."""
     c = deepcopy(input_config_single_with_key_only)
     exec(command)
-    if error_message == 'interrupt':  # for test development
+    if error_message == "interrupt":  # for test development
         validators.validate_schema(c)
     with pytest.raises(error_class) as exc_info:
-        validators.validate_schema(c)     
+        validators.validate_schema(c)
         assert exc_info.value.message.find(error_message)
+
 
 def test_no_multiple_tabs_in_single_with_key(input_config_single_with_key_only, random_string):
     """Too complicated to fit in one exec statement in test_some_fail_scenarios_single_with_key.
     This will be recognized by the validator as a multiple tab type, but missing the keys
     'header_choice_displayed_and_accepted' and 'header_description'"""
-    tab = {'items': {
-        "choice_displayed": "a_{}".format(random_string),
-        "choice_description": "a_{}".format(random_string),
-        "valid_entries": ["magic_text_hopefully_not_there_{}".format(random_string)],
-        "returns": "magic_text_probably_not_there_".format(random_string),
-    }}
+    tab = {
+        "items": {
+            "choice_displayed": "a_{}".format(random_string),
+            "choice_description": "a_{}".format(random_string),
+            "valid_entries": ["magic_text_hopefully_not_there_{}".format(random_string)],
+            "returns": "magic_text_probably_not_there_".format(random_string),
+        }
+    }
     c = deepcopy(input_config_single_with_key_only)
     validators.validate_schema(c)
     c["tabs"].append(tab)
     with pytest.raises(schema.SchemaMissingKeyError) as exc_info:
         validators.validate_schema(c)
-        assert exc_info.value.message.find("Missing keys: 'header_choice_displayed_and_accepted', 'header_description'")
+        assert exc_info.value.message.find(
+            "Missing keys: 'header_choice_displayed_and_accepted', 'header_description'"
+        )
+
 
 @pytest.mark.parametrize(
     "command,error_class,error_message",
-    [
-        ("c['items'][0]['valid_entries']+=[1.5]", schema.SchemaError, "did not validate 1.5")
-    ],
+    [("c['items'][0]['valid_entries']+=[1.5]", schema.SchemaError, "did not validate 1.5")],
     ids=["float_in_valid_entries"],
 )
-def test_some_fail_scenarios_single_without_key(input_config_single_without_key_only, command, error_class, 
-        error_message):
+def test_some_fail_scenarios_single_without_key(
+    input_config_single_without_key_only, command, error_class, error_message
+):
     """Schema test should catch all of these, which are not exhaustive."""
     c = deepcopy(input_config_single_without_key_only)
     exec(command)
-    if error_message == 'interrupt':  # for test development
+    if error_message == "interrupt":  # for test development
         validators.validate_schema(c)
     with pytest.raises(error_class) as exc_info:
-        validators.validate_schema(c)     
+        validators.validate_schema(c)
         assert exc_info.value.message.find(error_message)
 
 
@@ -217,19 +240,20 @@ def test_validate_case_sensitive(input_config_case_sensitive_only, random_string
     """NB in conftest.py, skips those without a tab key
     NB the test cases have to include at least one case sensitive config with
     at least one tab with at least two items"""
-    if len(input_config_case_sensitive_only['tabs'][0]['items']) < 2:
+    if len(input_config_case_sensitive_only["tabs"][0]["items"]) < 2:
         assert 1 == 1
     else:
         # check multiple items valid entries
         c = deepcopy(input_config_case_sensitive_only)
-        c['tabs'][0]['items'][0]['valid_choices'] = [random_string]
-        c['tabs'][0]['items'][1]['valid_choices'] = [random_string.lower()]
+        c["tabs"][0]["items"][0]["valid_choices"] = [random_string]
+        c["tabs"][0]["items"][1]["valid_choices"] = [random_string.lower()]
         validators.validate_no_input_value_overlap(c)
         # check with multiple tabs
-        if len(c['tabs']) > 1:
-            c['tabs'][0]['items'][1]['valid_choices'] = [random_string+random_string]
-            c['tabs'][1]['header_choice_displayed_and_accepted'] = random_string.lower()
+        if len(c["tabs"]) > 1:
+            c["tabs"][0]["items"][1]["valid_choices"] = [random_string + random_string]
+            c["tabs"][1]["header_choice_displayed_and_accepted"] = random_string.lower()
             validators.validate_no_input_value_overlap(c)
+
 
 # DOES NOT WORK; NEED BRANCH TO FIX CASE-SENSITIVE AND OTHERWISE NORMALIZE
 
@@ -251,5 +275,3 @@ def test_validate_case_sensitive(input_config_case_sensitive_only, random_string
 #             c['tabs'][0]['items'][1]['valid_choices'] = [random_string+random_string]
 #             c['tabs'][1]['header_choice_displayed_and_accepted'] = random_string.lower()
 #             validators.validate_no_input_value_overlap(c)
-
-

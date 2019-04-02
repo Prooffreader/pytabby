@@ -7,6 +7,7 @@
 
 from schema import Schema, Or, Optional, And
 
+
 class ValueOverlapError(ValueError):
     pass
 

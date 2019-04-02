@@ -5,6 +5,7 @@
 
 # pylama:ignore=W293,W291,W391,E302,E128 (will be fixed by black)
 
+
 def make_config_tabs(config):
     """From any of the three valid schema types (multiple, single_with_key, single_without_key), normalizes to
     create the contents of the first-level 'tab' key (or what it would be were it there)
@@ -20,6 +21,7 @@ def make_config_tabs(config):
         config_tabs = config["tabs"]
     config_tabs = convert_int_to_string(config_tabs)
     return config_tabs
+
 
 def convert_int_to_string(config_tabs):
     """Converts strs to ints for the following config_tabs fields:
@@ -50,6 +52,7 @@ def convert_int_to_string(config_tabs):
                 config_tabs[tab_num]["items"][item_num]["valid_entries"][entry_num] = int_to_str(entry)
     return config_tabs
 
+
 def create_tab_objects(config_tabs, case_sensitive):
     """Creates Tab objects in list in order of config_tabs.
     
@@ -72,6 +75,7 @@ def create_tab_objects(config_tabs, case_sensitive):
     for tab in config_tabs:
         tabs.append(Tab(tab, tab_selectors, case_sensitive))
     return tabs
+
 
 class Tab:
     """Tab class to represent individual tabs in Menu class

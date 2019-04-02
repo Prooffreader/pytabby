@@ -5,6 +5,7 @@
 
 # pylama:ignore=W293,W291,W391,E302,E128 (will be fixed by black)
 
+
 def format_menu(tabs, current_number, line_length):
     """Creates menu to be displayed to user, called from menu.Menu only
     
@@ -68,6 +69,3 @@ def _format_headers(tabs, current_number, line_length):
         total_text.append(top)
         total_text.append(bottom)
     return total_text
-
-
-
