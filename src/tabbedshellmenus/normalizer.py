@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# pylama:ignore=W293,W291,W391,E302,E128,E127,E303,E501,W292 (will be fixed by black)
+# pylama:ignore=W293,W291,W391,E302,E305,E128,E127,E303,E501,W292 (will be fixed by black)
 
 """Functions that ensure incoming configs have the same general features AFTER validation.
 (This ordering is chosen because if the config doesn't pass validation, the user will have to fix it as they
@@ -20,29 +20,30 @@ def _add_tabs_key_if_needed(config):
         return config
 
 
-def _walk_stringize_and_case(config):
+def _walk_stringize_and_case(config):  # noqa: C901
     """Walks the various contents of config and:
     1. Converts to string if not None
     2. If case_sensitive is False, converts to lowercase
     """
     case_sensitive = config['case_sensitive']
     for i, tab in enumerate(config['tabs']):
-        for k, v in tab.keys():
+        for k, v in tab.items():
             if k != 'items' and v is not None:
-                config['tab'][i][k] = str(tab[k])
+                config['tabs'][i][k] = str(tab[k])
                 if not case_sensitive:
-                    config['tabs'][i][k] = tab[k].lower()
+                    config['tabs'][i][k] = config['tabs'][i][k].lower()
         for j, item in enumerate(config['tabs'][i]['items']):
-            for k, v in item.keys():
-                if item != 'valid_entries':
-                    config['tabs'][i]['items'][k] = str(item[k])
+            for k, v in item.items():
+                if k != 'valid_entries':
+                    config['tabs'][i]['items'][j][k] = str(v)
                     if not case_sensitive:
-                        config['tabs'][i]['items'][k] = item[k].lower()
+                        config['tabs'][i]['items'][j][k] = config['tabs'][i]['items'][j][k].lower()
                 else:
-                    for n, member in enumerate(item[k]):
-                        config['tabs'][i]['items'][k][n] = str(member)
+                    for n, member in enumerate(v):
+                        config['tabs'][i]['items'][j]['valid_entries'][n] = str(member)
                         if not case_sensitive:
-                            config['tabs'][i]['items'][k][n] = member.lower()
+                            config['tabs'][i]['items'][j]['valid_entries'][n] = config['tabs'][i]['items'][j]['valid_entries'][n].lower()
+    return config
 
 
 def normalize(config):
