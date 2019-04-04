@@ -6,12 +6,13 @@
 # pylama:ignore=W293,W291,W391,E302,E128 (will be fixed by black)
 
 
-def format_menu(tabs, current_number, line_length):
+def format_menu(config, current_number, line_length):
     """Creates menu to be displayed to user, called from menu.Menu only
     
     :returns: menu to display to stdout
     :rtype: str
     """
+    tabs = config['tabs']
     menu = [""]
     if len(tabs) > 1:
         menu += _format_headers(tabs, current_number, line_length)
