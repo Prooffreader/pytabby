@@ -1,15 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Functions to validate inputs and configs"""
+"""Functions to validate inputs and configs. Note that this creates one exception listing all errors encountered"""
 
-# pylama:ignore=W293,W291,W391,E302,E128,E127 (will be fixed by black)
+# pylama:ignore=W293,W291,W391,E302,E128,E305,E127,E303 (will be fixed by black)
 
-from schema import Schema, Or, Optional, And
+from schema import Schema, Or, Optional, And, Forbidden
+
+from collections import Counter
 
 
-class ValueOverlapError(ValueError):
+class InvalidInputError(ValueError):
     pass
+
+error_messages = []  # will be mutated by functions
 
 
 class _ValidSchemas:
@@ -17,35 +21,60 @@ class _ValidSchemas:
 
     def __init__(self):
         self.outer_schema_multiple_or_single_with_key = Schema(
-            {Optional("case_sensitive"): bool, Optional("screen_width"): int, "tabs": And(list, lambda x: len(x) > 0)}
+            {Optional("case_sensitive"): bool, 
+             Optional("screen_width"): And(int, lambda x: x > 0), 
+             "tabs": And(list, lambda x: len(x) > 0)}
         )
 
         self.outer_schema_single_without_key = Schema(
-            {"case_sensitive": bool, Optional("screen_width"): int, "items": And(list, lambda x: len(x) > 0)}
+            {Optional("case_sensitive"): bool, 
+             Optional("screen_width"): And(int, lambda x: x > 0), 
+             "items": And(Or(list, tuple), lambda x: len(x) > 0)}
         )
 
         self.tab_schema_multiple = Schema(
             {
-                "header_choice_displayed_and_accepted": And(Or(int, str), lambda x: len(str(x)) > 0),
-                "header_description": And(Or(str, None), lambda x: x is None or len(x) > 0),
-                Optional("long_description"): And(str, lambda x: len(x) > 0),
-                "items": And(list, lambda x: len(x) > 0),
+                "header_choice_displayed_and_accepted": lambda x: len(str(x)) > 0,
+                Optional("header_description"): lambda x: (x or x is None) or len(str(x)) > 0,
+                Optional("long_description"): lambda x: (x or x is None) or len(str(x)) > 0,
+                "items": And(Or(list, tuple), lambda x: len(x) > 0),
             }
         )
 
-        self.tab_schema_single = Schema({"items": And(list, lambda x: len(x) > 0)})
+        self.tab_schema_single_with_key = Schema(
+            {
+                Forbidden("header_choice_displayed_and_accepted"): object,
+                Forbidden("header_description"): object,
+                Forbidden("long_description"): object,
+                "items": And(Or(list, tuple), lambda x: len(x) > 0)
+            }
+        )
 
         self.item_schema = Schema(
             {
-                "choice_displayed": And(Or(int, str), lambda x: len(str(x)) > 0),
-                "choice_description": And(str, lambda x: len(x) > 0),
-                "valid_entries": And(list, lambda x: len(x) > 0),
-                "returns": And(Or(int, str), lambda x: len(str(x)) > 0),
+                "choice_displayed": lambda x: x and len(str(x)) > 0,
+                "choice_description": lambda x: x and len(str(x)) > 0,
+                "valid_entries": And(Or(list, tuple), lambda x: len(x) > 0),
+                "returns": lambda x: x and len(str(x)) > 0,
             }
         )
 
-        self.entry_schema = Schema(And(Or(int, str), lambda x: len(str(x)) > 0))
+        self.entry_schema = Schema(lambda x: x and len(str(x)) > 0)
 
+def _extract_class(class_repr):
+    return class_repr.replace("<class '", "").replace("'>", "")
+
+def  _validate_schema_part(error_messages, schema_, to_validate, prefix=None):
+    """Mutates error_messages if error found"""
+    try:
+        _ = schema_.validate(to_validate)
+    except Exception as e:
+        error_type = _extract_class(str(e.__class__)) + ': '
+        error_description = str(e).replace('\n', ' ')
+        if not prefix:
+            prefix = ''
+        error_message = prefix + error_type + error_description
+        error_messages.append(error_message)
 
 def _determine_schema_type(config):
     """Determines which of three valid schema types applies to input dict.
