@@ -1,19 +1,20 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Contains Menu class; this is the base imported class of this package"""
+"""Contains Menu class; this is the base imported class of this package
+
+NOTE: When ruamel.yaml v15 API gets finalized, yaml reader code will have to change"""
 
 # pylama:ignore=W293,W291,W391,E302 (will be fixed by black)
 
 import json
 
-from ruamel.yaml import YAML
+from ruamel import yaml
 
 from . import validators
 from . import formatting
-from . import normalization
+from . import normalizer
 from . import tab
-from .tab import Tab
 
 
 class Menu:
@@ -34,12 +35,13 @@ class Menu:
         # validate config
         validators.validate_all(self.config)
         # normalize config
-        self.config = normalization.normalize(self.config)
+        self.config = normalizer.normalize(self.config)
         self.current_tab_number = start_tab_number
         self.screen_width = self.config.get("screen_width", 80)
-        self.has_multiple_tabs = len(self.config_tabs) > 1
+        self.has_multiple_tabs = len(self.config['tabs']) > 1
         assert self.current_tab_number < len(self.config['tabs'])
         self._create_tab_objects()
+        self.case_sensitive = config.get('case_sensitive', False)  # for user input
 
     @staticmethod
     def safe_read_yaml(path_to_yaml):
@@ -50,9 +52,8 @@ class Menu:
         :returns: config to pass to instantiate Menu
         :rtype: dict
         """
-        yaml = YAML(typ='safe')
         with open(path_to_yaml, "r") as f:
-            dict_ = yaml.load(f.read())
+            dict_ = yaml.safe_load(f.read())
         return dict_
 
     @staticmethod
@@ -69,7 +70,7 @@ class Menu:
         return dict_
 
     def _create_tab_objects(self):
-        self.tabs = tab.create_tab_objects(self.config_tabs, self.case_sensitive)
+        self.tabs = tab.create_tab_objects(self.config)
 
     def _change_tab(self, new_number):
         """Changes the active tab"""
@@ -86,7 +87,7 @@ class Menu:
 
     def _print_menu(self):
         """Prints formatted menu to stdout"""
-        formatted = formatting.format_menu(self.config_tabs, self.current_tab_number, self.screen_width)
+        formatted = formatting.format_menu(self.config, self.current_tab_number, self.screen_width)
         print(formatted)
 
     def _collect_input(self):
@@ -100,7 +101,6 @@ class Menu:
             return_dict = self.tabs[self.current_tab_number].process_input(selection)
             if return_dict["type"] == "invalid":
                 prompt = "Invalid, try again"
-                continue
             else:
                 received_valid_input = True
         return return_dict
@@ -108,10 +108,9 @@ class Menu:
     def run(self):
         """Called by user, runs menu until valid selection from a tab is made, and returns value
         
-        :returns: tuple of tab_number, tab header choice, return value
-        :rtype: (int, str or None, str)
-
-        Note that the first item in the tuple is None if there is only one tab/are no tabs
+        :returns: if there is more than one tab, returns tuple of (tab selector, return value). 
+                  If there is only one tab, returns return value only.
+        :rtype: either (str, str) or str
         """
         received_return_value = False
         while not received_return_value:
@@ -119,11 +118,9 @@ class Menu:
             return_dict = self._collect_input()
             if return_dict["type"] == "change_tab":
                 self._change_tab(return_dict["new_number"])
-                continue
             else:
-                received_return_value = True
                 if self.has_multiple_tabs:
                     tab_id = self.tabs[self.current_tab_number].head_choice
+                    return (tab_id, return_dict["return_value"])
                 else:
-                    tab_id = None
-        return (self.current_tab_number, tab_id, return_dict["return_value"])
+                    return return_dict["return_value"]
