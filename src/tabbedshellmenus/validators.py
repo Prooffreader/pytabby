@@ -148,83 +148,84 @@ def _config_tabs(config):
     return config["tabs"]
 
 
-def validate_no_return_value_overlap(config):
-    """Validates that all return values in every tab are unique.
+def _count_for_overlap(items_):
+    """counts items, returns multiple values only or empty set"""
+    counter = Counter(items_)
+    multiples = [x for x in counter.most_common() if x[1] > 1]
+    return multiples
 
-    NOTE: Raises exception at first discovered tab with return value overlap, does not continue checking
-    
-    :param config: config dict passed to Menu constructor
-    :type config: dict
-    :returns: None
-    :raises: :class:`ValueOverlapError` if return values overlap, giving tab (if applicable) and values
+
+
+
+
+def validate_no_return_value_overlap(error_messages, config):
+    """Validates that all return values in every tab are unique. Mutates error_messages with all errors found
+
+    NOTE: Checks all tabs, so can result in long error message
+    NOTE: Case insensitivity does not affect return values
     """
-    try:
-        tabs = _config_tabs(config)
-        for tab in tabs:
-            returns = [x["returns"] for x in tab["items"]]
-            assert len(returns) == len(set(returns))
-    except AssertionError:
-        if "header_choice_displayed_and_accepted" in tab.keys():
-            raise ValueOverlapError(
-                f'in tab {tab["header_choice_displayed_and_accepted"]}, there are repeated '
-                + f"return values: {returns}"
-            )
-        else:
-            raise ValueOverlapError(f"in the single tab, there are repeated return values: {returns}")
+    tabs = _config_tabs(config)
+    error_messages = []
+    for tab_num, tab in enumerate(tabs):
+        returns = [x["returns"] for x in tab["items"]]
+        multiples = _count_for_overlap(returns)
+        if multiples:
+            if "header_choice_displayed_and_accepted" in tab.keys():
+                error_messages.append(
+                    "In tab#{0}, there are repeated return values: {1}.".format(
+                        tab_num, multiples)
+                )
+            else:
+                error_messages.append("In the single tab, there are repeated return values: {0}".format(multiples))
 
 
-def validate_no_input_value_overlap(config):
+def validate_no_input_value_overlap(error_messages, config):
     """Validates that the potential inputs on each tab are unambiguous, i.e. that any entry will either lead
     to another tab OR to returning a unique value OR the current tab's input value (this could have gone either
     way, I chose not to accept duplicate tab name and input in that tab)
 
-    NOTE: Raises exception at first tab found with overlapping inputs, does not continue checking
-    
-    :param config: config dict passed to Menu constructor
-    :type config: dict
-    :returns: None
-    :raises: :class:`ValueOverlapError` if input values overlap, giving tab (if applicable) and values
+    NOTE: Mutates error_messages
+    NOTE: Case sensitivity casts all inputs to lowercase, which can create overlap
     """
-    try:
-        case_sensitive = config.get("case_sensitive", False)
-        tabs = _config_tabs(config)
-        tab_values = []
-        for tab in tabs:
-            header_choice = tab.get("header_choice_displayed_and_accepted", None)
-            if header_choice:
-                if not case_sensitive:
-                    header_choice = header_choice.lower()
-                tab_values.append(header_choice)
-        for tab in tabs:
-            input_values = tab_values[:]
-            for item in tab["items"]:
-                valid_entries = item["valid_entries"]
-                if not case_sensitive:
-                    valid_entries = [x.lower() if isinstance(x, str) else x for x in valid_entries]
-                input_values += valid_entries
-                assert len(input_values) == len(set(input_values))
-    except AssertionError:
-        if header_choice:
-            raise ValueOverlapError(
-                f"in tab {header_choice}, there are repeated input values: {sorted(input_values)},"
-                + f"including other tabs. Note case_sensitive={case_sensitive}"
-            )
-        else:
-            raise ValueOverlapError(
-                f"in the single tab, there are repeated input values: {sorted(input_values)},"
-                + f"Note case_sensitive={case_sensitive}"
-            )
-
-
-class InvalidInputError(Exception):
-    pass
+    case_sensitive = config.get('case_sensitive', False)
+    schema_type = _determine_schema_type(config)
+    tabs = _config_tabs(config)
+    error_messages = []
+    for tab_num, tab in enumerate(tabs):
+        choices = []
+        if schema_type == 'multiple':
+            choices.append(tab["header_choice_displayed_and_accepted"])
+        for item in tab['items']:
+            for entry in item["valid_entries"]:
+                choices.append(entry)
+        if case_sensitive:
+            choices = [choice.lower() for choice in choices]
+        multiples = _count_for_overlap(choices)
+        if multiples:
+            if not config.get('case_sensitive', False):
+                case_sensitive_message = (' Note case sensitive is false, so values have been changed to lower-case, '
+                                        'which can create overlap')
+            else:
+                case_sensitive_message = ''
+            if schema_type == 'multiple':
+                error_messages.append(
+                    "In tab#{0}, there are repeated input values including tab selectors: {1}.{2}".format(
+                        tab_num, multiples, case_sensitive_message)
+                )
+            else:
+                error_messages.append(
+                    "In single tab, there are repeated input values: {0}.{1}".format(
+                        multiples, case_sensitive_message)
+                )
 
 
 def validate_all(config):
     """Runs above non-underscored functions on input"""
-    try:
-        validate_schema(config)
-        validate_no_input_value_overlap(config)
-        validate_no_return_value_overlap(config)
-    except Exception:
-        raise InvalidInputError
+    validate_schema(error_messages, config)
+    validate_no_input_value_overlap(error_messages, config)
+    validate_no_return_value_overlap(error_messages, config)
+    if error_messages:
+        printed_message = ["", "Errors:"]
+        for i, message in enumerate(error_messages):
+            printed_message.append("{0}. {1}".format(i, message))
+        raise InvalidInputError('\n'.join(printed_message))
