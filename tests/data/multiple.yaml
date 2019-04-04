@@ -1,4 +1,4 @@
-%YAML 1.1
+%YAML 1.2
 ---
 # Note for this multiple tab system, I just copied the familiar elements of a typical windowed application.
 # Needless to say, it is a little unlikely a Python shell program will have these particular choices.
