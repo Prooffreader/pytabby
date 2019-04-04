@@ -85,12 +85,6 @@ def _determine_schema_type(config):
     2. single tab with tab key ('single_with_key')
     3. single tab without tab key ('single_without_key')
     note that single tabs should have no header-related keys; this is checked in the Schema portion
-
-    :param config: A dict
-    :type dict: dict
-    :returns: type of schema
-    :rtype: str
-
     """
     if "tabs" in config.keys():
         if len(config["tabs"]) > 1:
@@ -102,59 +96,50 @@ def _determine_schema_type(config):
     return schema_type
 
 
-def validate_schema(config):  # noqa: C901
-    """Validates that the dict passed to the Menu instance has the expected schema.
+def validate_schema(error_messages, config):  # noqa: C901
+    """Validates that the dict passed to the Menu instance has the expected schema. Mutates error_messages by
+    appending all errors found
 
     Examples of valid schemas can be seen in the examples/ folder of the git repo, or in the docs.
-    There are two kinds of schemas, one with headers (i.e. with multiple tabs) and one without headers (i.e.
-    with only one tab, which may be omitted or may be present as a 'tabs' key in the schema).
-
-    :param config: config dict past from menu.Menu instance
-    :type dict: dict
-    :returns: None
-    :raises: :class:`schema:SchemaError` if config departs from valid schema
+    There are three kinds of schemas, one with multiple tabs, one with a single tab, and one with an implicit single
+    tab that skips the redundant 'tabs' key
     """
-    try:
-        schema_type = _determine_schema_type(config)
-        valid_schemas = _ValidSchemas()
-        if schema_type == "multiple":
-            _ = valid_schemas.outer_schema_multiple_or_single_with_key.validate(config)
-            for tab in config["tabs"]:
-                _ = valid_schemas.tab_schema_multiple.validate(tab)
-                for item in tab["items"]:
-                    _ = valid_schemas.item_schema.validate(item)
-                    for entry in item["valid_entries"]:
-                        _ = valid_schemas.entry_schema.validate(entry)
-        elif schema_type == "single_with_key":
-            _ = valid_schemas.outer_schema_multiple_or_single_with_key.validate(config)
-            try:
-                assert len(config["tabs"]) == 1
-            except AssertionError:
-                raise Schema.SchemaError
-            _ = valid_schemas.tab_schema_single.validate(config["tabs"][0])
-            for item in config["tabs"][0]["items"]:
-                _ = valid_schemas.item_schema.validate(item)
-                for entry in item["valid_entries"]:
-                    _ = valid_schemas.entry_schema.validate(entry)
-        elif schema_type == "single_without_key":
-            _ = valid_schemas.outer_schema_single_without_key.validate(config)
-            for item in config["items"]:
-                _ = valid_schemas.item_schema.validate(item)
-                for entry in item["valid_entries"]:
-                    _ = valid_schemas.entry_schema.validate(entry)
-        else:
-            raise ValueError(f"schema_type {schema_type} is invalid")
-    except Exception as e:
-        raise e
+    schema_type = _determine_schema_type(config)
+    valid_schemas = _ValidSchemas()
+    if schema_type == "multiple":
+        _validate_schema_part(error_messages, valid_schemas.outer_schema_multiple_or_single_with_key, config)
+        for tab_num, tab in enumerate(config["tabs"]):
+            prefix = 'tab#{0}: '.format(tab_num)
+            _validate_schema_part(error_messages, valid_schemas.tab_schema_multiple, tab, prefix)
+            for item_num, item in enumerate(tab["items"]):
+                prefix = 'tab#{0},item#{1}: '.format(tab_num, item_num)
+                _validate_schema_part(error_messages, valid_schemas.item_schema, item, prefix)
+                for entry_num, entry in enumerate(item["valid_entries"]):
+                    prefix = 'tab#{0},item#{1},valid_entry#{2}: '.format(tab_num, item_num, entry_num)
+                    _validate_schema_part(error_messages, valid_schemas.entry_schema, entry, prefix)
+    elif schema_type == "single_with_key":
+        _validate_schema_part(error_messages, valid_schemas.outer_schema_multiple_or_single_with_key, config)
+        prefix = "sole tab: "
+        _validate_schema_part(error_messages, valid_schemas.tab_schema_single_with_key, config["tabs"][0], prefix)
+        for item_num, item in enumerate(config["tabs"][0]["items"]):
+            prefix = "sole tab,item#{0}: ".format(item_num)
+            _validate_schema_part(error_messages, valid_schemas.item_schema, item, prefix)
+            for entry_num, entry in enumerate(item["valid_entries"]):
+                prefix = 'sole tab,item#{0},valid_entry#{1}: '.format(item_num, entry_num)
+                _validate_schema_part(error_messages, valid_schemas.entry_schema, entry, prefix)
+    elif schema_type == "single_without_key":
+        _validate_schema_part(error_messages, valid_schemas.outer_schema_single_without_key, config)
+        for item_num, item in enumerate(config["items"]):
+            prefix = "item#{0}: ".format(item_num)
+            _validate_schema_part(error_messages, valid_schemas.item_schema, item, prefix)
+            for entry_num, entry in enumerate(item["valid_entries"]):
+                prefix = 'item#{0},valid_entry#{1}: '.format(item_num, entry_num)
+                _validate_schema_part(error_messages, valid_schemas.entry_schema, entry, prefix)
 
 
 def _config_tabs(config):
-    """Finds (or creates) 'tabs' list from config dict for following tests
-
-    :param config: config dict passed to Menu constructor
-    :type config: dict
-    :returns: list under 'tabs' key, explicit or implied
-    'rtype': list
+    """Finds (or creates) 'tabs' list from config dict for following tests.
+    Creates one from top level 'items' if type is single_without_key
     """
     schema_type = _determine_schema_type(config)
     if schema_type == "single_without_key":
