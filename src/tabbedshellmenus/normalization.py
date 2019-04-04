@@ -9,11 +9,10 @@ see it, not as it looks after validation)"""
 
 from copy import deepcopy
 
-from .validators import _determine_schema_type
 
-
-def add_tabs_key_if_needed(config):
-    if _determine_schema_type(config) == 'single_without_tab':
+def _add_tabs_key_if_needed(config):
+    if 'tabs' not in config.keys():
+        assert 'items' in config.keys()  # sanity check
         config['tabs'] = deepcopy(config['items'])
         del config['items']
         return config
@@ -21,28 +20,36 @@ def add_tabs_key_if_needed(config):
         return config
 
 
-def walk_stringize_and_case(config):
+def _walk_stringize_and_case(config):
     """Walks the various contents of config and:
-    1. If it can be string or int, converts to string
+    1. Converts to string if not None
     2. If case_sensitive is False, converts to lowercase
     """
     case_sensitive = config['case_sensitive']
     for i, tab in enumerate(config['tabs']):
-        k = "header_choice_displayed_and_accepted"
-        if k in tab.keys():  # congruity of this checked in validators
-            config['tabs'][i][k] = str(tab[k])
-        if not case_sensitive:
-            config['tabs'][i][k] = tab[k].lower()
+        for k, v in tab.keys():
+            if k != 'items' and v is not None:
+                config['tab'][i][k] = str(tab[k])
+                if not case_sensitive:
+                    config['tabs'][i][k] = tab[k].lower()
         for j, item in enumerate(config['tabs'][i]['items']):
-            for k in ['choice_displayed', 'returns']:
-                config['tabs'][i]['items'][k] = str(item[k])
-                if not case_sensitive:
-                    config['tabs'][i]['items'][k] = item[k].lower()
-            k = 'valid_entries'
-            for n, member in enumerate(item[k]):
-                config['tabs'][i]['items'][k][n] = str(member)
-                if not case_sensitive:
-                    config['tabs'][i]['items'][k][n] = member.lower()
+            for k, v in item.keys():
+                if item != 'valid_entries':
+                    config['tabs'][i]['items'][k] = str(item[k])
+                    if not case_sensitive:
+                        config['tabs'][i]['items'][k] = item[k].lower()
+                else:
+                    for n, member in enumerate(item[k]):
+                        config['tabs'][i]['items'][k][n] = str(member)
+                        if not case_sensitive:
+                            config['tabs'][i]['items'][k][n] = member.lower()
+
+
+def normalize(config):
+    """Runs underscored functions in this module on config dict"""
+    config = _add_tabs_key_if_needed(config)
+    config = _walk_stringize_and_case(config)
+    return config
                 
 
             
