@@ -194,8 +194,8 @@ def random_string():
     return "".join(thestring)
 
 
-@pytest.fixture(scope="session", params=TEST_CONFIGS, ids=YAML_IDS)
-def all_tabs():
-    """A bit backwards because this will fail if some upstream tests would fail, but it's the easiest approach
-    for test_formatting"""
-    menu = M
+# @pytest.fixture(scope="session", params=TEST_CONFIGS, ids=YAML_IDS)
+# def all_tabs():
+#     """A bit backwards because this will fail if some upstream tests would fail, but it's the easiest approach
+#     for test_formatting"""
+#     menu = M
