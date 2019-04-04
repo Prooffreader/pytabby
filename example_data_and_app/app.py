@@ -4,7 +4,7 @@ either the next config file starts or the program exits after both config files 
 
 import os
 
-from tabbedshellmenus.menu import Menu
+import tabbedshellmenus.menu as menumod
 
 import glob
 
@@ -17,28 +17,42 @@ CONFIG_FILE_NAMES = [x for x in CONFIG_FILE_NAMES if not x.startswith("blank")]
 
 def main(config_filename):
     # use staticmethod to read yaml
-    config = Menu.safe_read_yaml(os.path.join(THIS_FOLDER, config_filename))
+    config = menumod.Menu.safe_read_yaml(os.path.join(THIS_FOLDER, config_filename))
 
     # instantiate
-    menu = Menu(config)
+    menu = menumod.Menu(config)
 
     # run, echoing back results
     while True:
-        tab_number, tab, value = menu.run()
+        returned = menu.run()
+        if isinstance(returned, tuple):  # normally wouldn't have to do this, it's because this script
+                                         # is cycling through different kinds of config files
+            tab_return = returned[0]
+            # find tab number for output
+            for tab_number, tab in enumerate(config['tabs']):
+                if tab['header_choice_displayed_and_accepted'] == tab_return:
+                    break
+            else:
+                raise AssertionError('Somehow invalid tab choice was returned')
+            value_return = returned[1]
+        else:
+            tab_return = None
+            value_return = returned
+        
         print("")
-        print(f"RETURNED TAB = {tab} (#{tab_number})")
-        print(f"RETURNED VALUE = {value}")
+        if tab_return:
+            print(f"RETURNED TAB = {tab_return} (#{tab_number})")
+        print(f"RETURNED VALUE = {value_return}")
 
-        if value == "quit":
+        if value_return == "quit":
             print("\nQuitting!\n")
             return
 
 
-print(__name__)
-
 if __name__ == "__main__":
-    for fn in CONFIG_FILE_NAMES:
-        print("\n##########")
-        print(f"# Using config file {fn}")
-        print("##########\n")
+    for config_file_num, fn in enumerate(CONFIG_FILE_NAMES):
+        msg = "# using config file {}/{}: {}".format(config_file_num + 1, len(CONFIG_FILE_NAMES), fn)
+        print("\n" + ("#" * len(msg)))
+        print(msg)
+        print(("#" * len(msg)) + '\n')
         main(fn)
