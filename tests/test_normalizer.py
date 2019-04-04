@@ -7,6 +7,6 @@ from copy import deepcopy
 
 import pytest
 
-import tabbedshellmenus.normalization as normalization
+import tabbedshellmenus.normalizer as normalizer
 
 pass
