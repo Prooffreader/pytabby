@@ -17,12 +17,12 @@ config = {'case_sensitive': ,
 #
 # config = {'case_sensitive': ,  # optional, boolean, default False
 #           'screen_width': ,  # optional, integer, default 80
-#           'tabs': [{'header_choice_displayed_and_accepted': '',  # all choices can be string length 1+ or int
-#                     'header_description': '',  # can be None
-#                     'long_description': '',  # this key is optional, it is displayed only when changing tebs
-#                     'items': [{'choice_displayed': '',  # any string
-#                                'choice_description': '',  # any string
-#                                'valid_entries': [''],  # strs and/or ints
-#                                'returns': '' }  # str or int
+#           'tabs': [{'header_choice_displayed_and_accepted': '',  # required, will be changed to str if not already str
+#                     'header_description': '',  # optional, default None, will be changed to str if present, not None and not already str
+#                     'long_description': '',  # optional, default None, will be changed to str if present, not None and not already str
+#                     'items': [{'choice_displayed': '',  # required, will be changed to str if not already str
+#                                'choice_description': '',  # required, will be changed to str if not already str
+#                                'valid_entries': [''],  # list, can have multiple entries, each will be changed to str if not already str
+#                                'returns': '' }  # required, will be changed to str if not already str
 #                     ]}]
 #          }

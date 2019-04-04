@@ -1,7 +1,7 @@
 %YAML 1.2
 ---
-case_sensitive: True  # optional, default is False
-screen_width: 80  # optional, default
+case_sensitive: True  # optional, boolean, default False
+screen_width: 80  # optional, integer, default 80
 # Note since there is only one tab and no headers, there is no 'tab' key here unlike in the multiple tabs example.
 # However, this example will still work if there is the one unnecessary 'tab' key, with the 'items' key a value of
 # the 'tabs' key, **so long as there are no other values of the tabs key**, i.e. the 2-3 other keys --

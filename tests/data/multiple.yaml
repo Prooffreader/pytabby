@@ -4,8 +4,8 @@
 # Needless to say, it is a little unlikely a Python shell program will have these particular choices.
 # But it does not tie the example down to one use case, and makes testing easier because it's obvious
 # what to expect.
-case_sensitive: False  # optional, default
-screen_width: 80  # optional, default
+case_sensitive: False  # optional, boolean, default False
+screen_width: 80  # optional, integer, default 80
 tabs:
   - header_choice_displayed_and_accepted: fi  # two letters so it doesn't conflict with Edit tab's find
     header_description: File  # can be None

@@ -18,12 +18,12 @@ tabs:
 # case_sensitive:  # optional, boolean, default false
 # screen_width:  # optional, integer, default 80
 # tabs:
-#   - header_choice_displayed_and_accepted:  # required, will be changed to str if not already
-#     header_description: File  # optional, default None, will be changed to str if present and not already
-#     long_description: Changing to File tab  # optional, default None, will be changed to str if present and not already
+#   - header_choice_displayed_and_accepted:  # required, will be changed to str if not already str
+#     header_description: File  # optional, default None, will be changed to str if present, not None and not already str
+#     long_description: Changing to File tab  # optional, default None, will be changed to str if present, not None and not already str
 #     items:
-#       - choice_displayed:  # required, will be changed to str if not already
-#         choice_description:  # required, will be changed to str if not already
+#       - choice_displayed:  # required, will be changed to str if not already str
+#         choice_description:  # required, will be changed to str if not already str
 #         valid_entries:
-#           -   # can have multiple entries, will be changed to str if not already
-#         returns:  # will be changed to str if not already
+#           -   # list/array, can have multiple entries, each will be changed to str if not already str
+#         returns:  # will be changed to str if not already str
