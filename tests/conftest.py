@@ -36,12 +36,9 @@ from pathlib import Path
 from random import choice
 
 import pytest
-import yaml  # imported due to Menu class dependency
 
-from tabbedshellmenus.menu import Menu
+import tabbedshellmenus.menu as menu
 from tabbedshellmenus.validators import _determine_schema_type
-
-_ = yaml  # just to get rid of pyflakes warning
 
 
 def yaml_paths():
@@ -60,7 +57,7 @@ YAML_PATHS = sorted([path for path in yaml_paths()])
 
 # constants for input_config_dict fixture
 YAML_IDS = [os.path.split(os.path.splitext(path)[0])[1] for path in YAML_PATHS]
-TEST_CONFIGS = [Menu.safe_read_yaml(path) for path in YAML_PATHS]
+TEST_CONFIGS = [menu.Menu.safe_read_yaml(path) for path in YAML_PATHS]
 
 
 def pretest_yaml_ids():

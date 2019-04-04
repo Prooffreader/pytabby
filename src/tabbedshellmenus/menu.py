@@ -7,10 +7,11 @@
 
 import json
 
-import yaml
+from ruamel.yaml import YAML
 
 from . import validators
 from . import formatting
+from . import normalization
 from . import tab
 from .tab import Tab
 
@@ -32,14 +33,12 @@ class Menu:
         self.config = config
         # validate config
         validators.validate_all(self.config)
+        # normalize config
+        self.config = normalization.normalize(self.config)
         self.current_tab_number = start_tab_number
-        self.case_sensitive = self.config.get("case_sensitive", False)
         self.screen_width = self.config.get("screen_width", 80)
-        # self.config_tabs are the contents of config['tabs'] OR the config['items'] if schema type is single
-        # without 'tabs' key (i.e. it normalizes the contents of the schemas)
-        self.config_tabs = tab.make_config_tabs(self.config)
         self.has_multiple_tabs = len(self.config_tabs) > 1
-        assert self.current_tab_number < len(self.config_tabs)
+        assert self.current_tab_number < len(self.config['tabs'])
         self._create_tab_objects()
 
     @staticmethod
@@ -51,8 +50,9 @@ class Menu:
         :returns: config to pass to instantiate Menu
         :rtype: dict
         """
+        yaml = YAML(typ='safe')
         with open(path_to_yaml, "r") as f:
-            dict_ = yaml.safe_load(f)
+            dict_ = yaml.load(f.read())
         return dict_
 
     @staticmethod
