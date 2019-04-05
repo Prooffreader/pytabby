@@ -14,11 +14,11 @@ def create_tab_objects(config):
     This will be an empty list for a single tab
     """
     tab_selectors = []
-    for tab in config['tabs']:
+    for tab in config["tabs"]:
         if tab.get("header_choice_displayed_and_accepted", None):
             tab_selectors.append(tab["header_choice_displayed_and_accepted"])
     tabs = []
-    for tab in config['tabs']:
+    for tab in config["tabs"]:
         tabs.append(Tab(tab, tab_selectors))
     return tabs
 

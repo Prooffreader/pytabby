@@ -12,7 +12,7 @@ def format_menu(config, current_number, line_length):
     :returns: menu to display to stdout
     :rtype: str
     """
-    tabs = config['tabs']
+    tabs = config["tabs"]
     menu = [""]
     if len(tabs) > 1:
         menu += _format_headers(tabs, current_number, line_length)

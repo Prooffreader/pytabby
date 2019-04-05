@@ -11,10 +11,10 @@ from copy import deepcopy
 
 
 def _add_tabs_key_if_needed(config):
-    if 'tabs' not in config.keys():
-        assert 'items' in config.keys()  # sanity check
-        config['tabs'] = deepcopy(config['items'])
-        del config['items']
+    if "tabs" not in config.keys():
+        assert "items" in config.keys()  # sanity check
+        config["tabs"] = deepcopy(config["items"])
+        del config["items"]
         return config
     else:
         return config
@@ -25,24 +25,26 @@ def _walk_stringize_and_case(config):  # noqa: C901
     1. Converts to string if not None
     2. If case_sensitive is False, converts to lowercase
     """
-    case_sensitive = config['case_sensitive']
-    for i, tab in enumerate(config['tabs']):
+    case_sensitive = config["case_sensitive"]
+    for i, tab in enumerate(config["tabs"]):
         for k, v in tab.items():
-            if k != 'items' and v is not None:
-                config['tabs'][i][k] = str(tab[k])
+            if k != "items" and v is not None:
+                config["tabs"][i][k] = str(tab[k])
                 if not case_sensitive:
-                    config['tabs'][i][k] = config['tabs'][i][k].lower()
-        for j, item in enumerate(config['tabs'][i]['items']):
+                    config["tabs"][i][k] = config["tabs"][i][k].lower()
+        for j, item in enumerate(config["tabs"][i]["items"]):
             for k, v in item.items():
-                if k != 'valid_entries':
-                    config['tabs'][i]['items'][j][k] = str(v)
+                if k != "valid_entries":
+                    config["tabs"][i]["items"][j][k] = str(v)
                     if not case_sensitive:
-                        config['tabs'][i]['items'][j][k] = config['tabs'][i]['items'][j][k].lower()
+                        config["tabs"][i]["items"][j][k] = config["tabs"][i]["items"][j][k].lower()
                 else:
                     for n, member in enumerate(v):
-                        config['tabs'][i]['items'][j]['valid_entries'][n] = str(member)
+                        config["tabs"][i]["items"][j]["valid_entries"][n] = str(member)
                         if not case_sensitive:
-                            config['tabs'][i]['items'][j]['valid_entries'][n] = config['tabs'][i]['items'][j]['valid_entries'][n].lower()
+                            config["tabs"][i]["items"][j]["valid_entries"][n] = config["tabs"][i]["items"][j][
+                                "valid_entries"
+                            ][n].lower()
     return config
 
 
@@ -51,7 +53,3 @@ def normalize(config):
     config = _add_tabs_key_if_needed(config)
     config = _walk_stringize_and_case(config)
     return config
-                
-
-            
-        

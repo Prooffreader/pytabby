@@ -13,6 +13,7 @@ from collections import Counter
 class InvalidInputError(ValueError):
     pass
 
+
 error_messages = []  # will be mutated by functions
 
 
@@ -21,15 +22,19 @@ class _ValidSchemas:
 
     def __init__(self):
         self.outer_schema_multiple_or_single_with_key = Schema(
-            {Optional("case_sensitive"): bool, 
-             Optional("screen_width"): And(int, lambda x: x > 0), 
-             "tabs": And(list, lambda x: len(x) > 0)}
+            {
+                Optional("case_sensitive"): bool,
+                Optional("screen_width"): And(int, lambda x: x > 0),
+                "tabs": And(list, lambda x: len(x) > 0),
+            }
         )
 
         self.outer_schema_single_without_key = Schema(
-            {Optional("case_sensitive"): bool, 
-             Optional("screen_width"): And(int, lambda x: x > 0), 
-             "items": And(Or(list, tuple), lambda x: len(x) > 0)}
+            {
+                Optional("case_sensitive"): bool,
+                Optional("screen_width"): And(int, lambda x: x > 0),
+                "items": And(Or(list, tuple), lambda x: len(x) > 0),
+            }
         )
 
         self.tab_schema_multiple = Schema(
@@ -46,7 +51,7 @@ class _ValidSchemas:
                 Forbidden("header_choice_displayed_and_accepted"): object,
                 Forbidden("header_description"): object,
                 Forbidden("long_description"): object,
-                "items": And(Or(list, tuple), lambda x: len(x) > 0)
+                "items": And(Or(list, tuple), lambda x: len(x) > 0),
             }
         )
 
@@ -61,20 +66,23 @@ class _ValidSchemas:
 
         self.entry_schema = Schema(lambda x: x and len(str(x)) > 0)
 
+
 def _extract_class(class_repr):
     return class_repr.replace("<class '", "").replace("'>", "")
 
-def  _validate_schema_part(error_messages, schema_, to_validate, prefix=None):
+
+def _validate_schema_part(error_messages, schema_, to_validate, prefix=None):
     """Mutates error_messages if error found"""
     try:
         _ = schema_.validate(to_validate)
     except Exception as e:
-        error_type = _extract_class(str(e.__class__)) + ': '
-        error_description = str(e).replace('\n', ' ')
+        error_type = _extract_class(str(e.__class__)) + ": "
+        error_description = str(e).replace("\n", " ")
         if not prefix:
-            prefix = ''
+            prefix = ""
         error_message = prefix + error_type + error_description
         error_messages.append(error_message)
+
 
 def _determine_schema_type(config):
     """Determines which of three valid schema types applies to input dict.
@@ -109,13 +117,13 @@ def validate_schema(error_messages, config):  # noqa: C901
     if schema_type == "multiple":
         _validate_schema_part(error_messages, valid_schemas.outer_schema_multiple_or_single_with_key, config)
         for tab_num, tab in enumerate(config["tabs"]):
-            prefix = 'tab#{0}: '.format(tab_num)
+            prefix = "tab#{0}: ".format(tab_num)
             _validate_schema_part(error_messages, valid_schemas.tab_schema_multiple, tab, prefix)
             for item_num, item in enumerate(tab["items"]):
-                prefix = 'tab#{0},item#{1}: '.format(tab_num, item_num)
+                prefix = "tab#{0},item#{1}: ".format(tab_num, item_num)
                 _validate_schema_part(error_messages, valid_schemas.item_schema, item, prefix)
                 for entry_num, entry in enumerate(item["valid_entries"]):
-                    prefix = 'tab#{0},item#{1},valid_entry#{2}: '.format(tab_num, item_num, entry_num)
+                    prefix = "tab#{0},item#{1},valid_entry#{2}: ".format(tab_num, item_num, entry_num)
                     _validate_schema_part(error_messages, valid_schemas.entry_schema, entry, prefix)
     elif schema_type == "single_with_key":
         _validate_schema_part(error_messages, valid_schemas.outer_schema_multiple_or_single_with_key, config)
@@ -125,7 +133,7 @@ def validate_schema(error_messages, config):  # noqa: C901
             prefix = "sole tab,item#{0}: ".format(item_num)
             _validate_schema_part(error_messages, valid_schemas.item_schema, item, prefix)
             for entry_num, entry in enumerate(item["valid_entries"]):
-                prefix = 'sole tab,item#{0},valid_entry#{1}: '.format(item_num, entry_num)
+                prefix = "sole tab,item#{0},valid_entry#{1}: ".format(item_num, entry_num)
                 _validate_schema_part(error_messages, valid_schemas.entry_schema, entry, prefix)
     elif schema_type == "single_without_key":
         _validate_schema_part(error_messages, valid_schemas.outer_schema_single_without_key, config)
@@ -133,7 +141,7 @@ def validate_schema(error_messages, config):  # noqa: C901
             prefix = "item#{0}: ".format(item_num)
             _validate_schema_part(error_messages, valid_schemas.item_schema, item, prefix)
             for entry_num, entry in enumerate(item["valid_entries"]):
-                prefix = 'item#{0},valid_entry#{1}: '.format(item_num, entry_num)
+                prefix = "item#{0},valid_entry#{1}: ".format(item_num, entry_num)
                 _validate_schema_part(error_messages, valid_schemas.entry_schema, entry, prefix)
 
 
@@ -155,9 +163,6 @@ def _count_for_overlap(items_):
     return multiples
 
 
-
-
-
 def validate_no_return_value_overlap(error_messages, config):
     """Validates that all return values in every tab are unique. Mutates error_messages with all errors found
 
@@ -171,10 +176,7 @@ def validate_no_return_value_overlap(error_messages, config):
         multiples = _count_for_overlap(returns)
         if multiples:
             if "header_choice_displayed_and_accepted" in tab.keys():
-                error_messages.append(
-                    "In tab#{0}, there are repeated return values: {1}.".format(
-                        tab_num, multiples)
-                )
+                error_messages.append("In tab#{0}, there are repeated return values: {1}.".format(tab_num, multiples))
             else:
                 error_messages.append("In the single tab, there are repeated return values: {0}".format(multiples))
 
@@ -187,35 +189,39 @@ def validate_no_input_value_overlap(error_messages, config):
     NOTE: Mutates error_messages
     NOTE: Case sensitivity casts all inputs to lowercase, which can create overlap
     """
-    case_sensitive = config.get('case_sensitive', False)
+    case_sensitive = config.get("case_sensitive", False)
     schema_type = _determine_schema_type(config)
     tabs = _config_tabs(config)
     error_messages = []
     for tab_num, tab in enumerate(tabs):
         choices = []
-        if schema_type == 'multiple':
+        if schema_type == "multiple":
             choices.append(tab["header_choice_displayed_and_accepted"])
-        for item in tab['items']:
+        for item in tab["items"]:
             for entry in item["valid_entries"]:
                 choices.append(entry)
         if case_sensitive:
             choices = [choice.lower() for choice in choices]
         multiples = _count_for_overlap(choices)
         if multiples:
-            if not config.get('case_sensitive', False):
-                case_sensitive_message = (' Note case sensitive is false, so values have been changed to lower-case, '
-                                        'which can create overlap')
+            if not config.get("case_sensitive", False):
+                case_sensitive_message = (
+                    " Note case sensitive is false, so values have been changed to lower-case, "
+                    "which can create overlap"
+                )
             else:
-                case_sensitive_message = ''
-            if schema_type == 'multiple':
+                case_sensitive_message = ""
+            if schema_type == "multiple":
                 error_messages.append(
                     "In tab#{0}, there are repeated input values including tab selectors: {1}.{2}".format(
-                        tab_num, multiples, case_sensitive_message)
+                        tab_num, multiples, case_sensitive_message
+                    )
                 )
             else:
                 error_messages.append(
                     "In single tab, there are repeated input values: {0}.{1}".format(
-                        multiples, case_sensitive_message)
+                        multiples, case_sensitive_message
+                    )
                 )
 
 
@@ -228,4 +234,4 @@ def validate_all(config):
         printed_message = ["", "Errors:"]
         for i, message in enumerate(error_messages):
             printed_message.append("{0}. {1}".format(i, message))
-        raise InvalidInputError('\n'.join(printed_message))
+        raise InvalidInputError("\n".join(printed_message))

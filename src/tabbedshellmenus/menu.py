@@ -38,10 +38,10 @@ class Menu:
         self.config = normalizer.normalize(self.config)
         self.current_tab_number = start_tab_number
         self.screen_width = self.config.get("screen_width", 80)
-        self.has_multiple_tabs = len(self.config['tabs']) > 1
-        assert self.current_tab_number < len(self.config['tabs'])
+        self.has_multiple_tabs = len(self.config["tabs"]) > 1
+        assert self.current_tab_number < len(self.config["tabs"])
         self._create_tab_objects()
-        self.case_sensitive = config.get('case_sensitive', False)  # for user input
+        self.case_sensitive = config.get("case_sensitive", False)  # for user input
 
     @staticmethod
     def safe_read_yaml(path_to_yaml):

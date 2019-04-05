@@ -35,12 +35,12 @@ def test__determine_schema_type(input_config_dict_and_id):
 
 def test_regression_ValidSchemas(data_regression):
     """Must stringify because contains schema objects"""
-    if platform.system == 'Linux':
+    if platform.system == "Linux":
         data = str(validators._ValidSchemas().__dict__)
         # remove specific memory addresses
-        data = re.sub(' at 0x[a-f0-9]+>', 'at 0xSOME_MEMORY_ADDRESS>', data)
+        data = re.sub(" at 0x[a-f0-9]+>", "at 0xSOME_MEMORY_ADDRESS>", data)
         # convert because apparently data_regression must use dict
-        data = {"data": data} 
+        data = {"data": data}
         data_regression.check(data)
     else:
         assert 1 == 1
