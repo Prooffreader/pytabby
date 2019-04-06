@@ -35,9 +35,9 @@ from __future__ import division
 from __future__ import unicode_literals
 from __future__ import absolute_import
 
+import glob
 import os
 from string import ascii_lowercase, ascii_uppercase
-from pathlib import Path
 from random import choice
 
 import pytest
@@ -53,9 +53,10 @@ def yaml_paths():
     The contents of this folder can be changed without breaking the test suite, as long as they are valid yaml
     with valid schemas.
     """
-    path_to_here = Path(os.path.realpath(__file__))
-    data_path = path_to_here.parent / "data"
-    yaml_paths = [str(x) for x in data_path.glob("*.yaml")]
+    path_to_here = os.path.realpath(__file__)
+    this_dir = os.path.split(path_to_here)[0]
+    data_path = os.path.join(this_dir, "data")
+    yaml_paths = [x for x in glob.glob(os.path.join(data_path, "*.yaml"))]
     return yaml_paths
 
 
