@@ -14,4 +14,41 @@ import pytest
 
 import tabbedshellmenus.normalizer as normalizer
 
-pass
+# _walk_stringize_and_case(config):
+# normalize_config
+
+@pytest.mark.function
+@pytest.mark.run(order=1)
+def test__add_tabs_key_if_needed_multiple_nochange(input_config_multiple_only):
+    """This function should not change a multiple or single_with_key schema type"""
+    c = deepcopy(input_config_multiple_only)
+    cprime = normalizer._add_tabs_key_if_needed(deepcopy(c))
+    assert c == cprime
+
+@pytest.mark.function
+@pytest.mark.run(order=1)
+def test__add_tabs_key_if_needed_single_with_key_nochange(input_config_single_with_key_only):
+    """This function should not change a multiple or single_with_key schema type"""
+    c = deepcopy(input_config_single_with_key_only)
+    cprime = normalizer._add_tabs_key_if_needed(deepcopy(c))
+    assert c == cprime
+
+@pytest.mark.regression
+@pytest.mark.run(order=1)
+def test_regress__add_tabs_single_wo_key(data_regression, input_config_single_without_key_only):
+    """Should switch items to tabs"""
+    c = deepcopy(input_config_single_without_key_only)
+    c = normalizer._add_tabs_key_if_needed(c)
+    assert 'tabs' in c.keys()
+    assert 'items' not in c.keys()
+    data_regression.check(c)
+
+@pytest.mark.regression
+@pytest.mark.run(order=1)
+def test_regress_normalize_all(data_regression, input_config_dict):
+    """The function _walk_stringize_and_case() is not tested because the only other 'private' function
+    is necessary for it to work, and the function normalize just wraps these two functions anyway"""
+    c = deepcopy(input_config_dict)
+    c = normalizer.normalize(c)
+    data_regression.check(c)
+
