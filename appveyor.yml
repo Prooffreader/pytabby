@@ -33,6 +33,26 @@ environment:
       PYTHON_ARCH: "64"
       DEVREQUIREMENTS: "requirements-dev.txt"
 
+    - PYTHON: "C:\\Python35"
+      PYTHON_VERSION: "3.5.x" # currently 2.7.9
+      PYTHON_ARCH: "32"
+      DEVREQUIREMENTS: "requirements-dev-py27or35.txt"
+
+    - PYTHON: "C:\\Python35-x64"
+      PYTHON_VERSION: "3.5.x" # currently 2.7.9
+      PYTHON_ARCH: "64"
+      DEVREQUIREMENTS: "requirements-dev-py27or35.txt"
+
+    - PYTHON: "C:\\Python27"
+      PYTHON_VERSION: "2.7.x" # currently 2.7.9
+      PYTHON_ARCH: "32"
+      DEVREQUIREMENTS: "requirements-dev-py27or35.txt"
+
+    - PYTHON: "C:\\Python27-x64"
+      PYTHON_VERSION: "2.7.x" # currently 2.7.9
+      PYTHON_ARCH: "64"
+      DEVREQUIREMENTS: "requirements-dev-py27or35.txt"
+
 install:
   # If there is a newer build queued for the same PR, cancel this one.
   # The AppVeyor 'rollout builds' option is supposed to serve the same
