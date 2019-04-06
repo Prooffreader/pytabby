@@ -9,7 +9,7 @@ NOTE: When ruamel.yaml v15 API gets finalized, yaml reader code will have to cha
 
 import json
 
-from ruamel import yaml
+import yaml
 
 from . import validators
 from . import formatting
