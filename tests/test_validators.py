@@ -84,7 +84,8 @@ def test_regression__ValidSchemas(data_regression):
     """Must stringify because contains schema objects which do not serialize"""
     data = str(validators._ValidSchemas().__dict__)
     # remove specific memory addresses
-    data = re.sub(" at 0x[a-fA-F0-9]+>", "at 0xSOME_MEMORY_ADDRESS>", data)
+    data = re.sub("at 0x.+?>", "at 0xSOME_MEMORY_ADDRESS>", data)
+    data = re.sub('[^a-zA-Z0-9 _]', '', data)
     data = data.split(' ')
     # convert because apparently data_regression must use dict
     data = {"data": data}
