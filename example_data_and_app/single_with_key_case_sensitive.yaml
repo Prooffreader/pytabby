@@ -1,7 +1,7 @@
 %YAML 1.1
 ---
-case_sensitive: True  # optional, default is False
-screen_width: 80  # optional, default
+case_sensitive: True  # optional, boolean, default False
+screen_width: 80  # optional, integer, default 80
 # Note that there is only one tab and no headers.
 # This example will still work with its one unnecessary 'tab' key, with the 'items' key a value of
 # the 'tabs' key, **because there are no other values of the tabs key**, i.e. the 2-3 other keys --
@@ -18,11 +18,10 @@ screen_width: 80  # optional, default
 # It's only an example.
 tabs:
   - items:
-      - choice_displayed: 'n'  # Because of YAML syntax, 'n' has to be in quotes to distinguish it from a boolean.
-                              # Using a code editor with syntax highlighting helps find these edge cases!
+      - choice_displayed: n # YAML 1.1 would interpret this as false, so we're using YAML 1.2 read with ruamel.yaml
         choice_description: Next directory
         valid_entries: 
-          - 'n'
+          - n
         returns: next_dir
       - choice_displayed: p
         choice_description: Previous directory
@@ -36,7 +35,7 @@ tabs:
         returns: up_dir
       - choice_displayed: e
         choice_description: Enter directory (if one is current selection)  # Note there is no way to 'silence' menu
-                                                                          # Items as yet. On the wishlist!
+                                                                           # Items as yet. On the wishlist!
         valid_entries: 
           - e
         returns: enter_dir

@@ -1,4 +1,4 @@
-%YAML 1.1
+%YAML 1.2
 ---
 case_sensitive:
 screen_width:
@@ -17,13 +17,13 @@ tabs:
 #
 # case_sensitive:  # optional, boolean, default false
 # screen_width:  # optional, integer, default 80
-# tabs:  # put nothing here!
-#   - header_choice_displayed_and_accepted:  # all choices can be string length 1+ or int
-#     header_description: File  # can be None
-#     long_description: Changing to File tab  # this key is optional, it is displayed only when changing tebs
-#     items:  # put nothing here!
-#       - choice_displayed:  # any string
-#         choice_description:  # any string
-#         valid_entries:  # put nothing here
-#           - o  # str or int; can have multiple entries
-#         returns:  # str or int
+# tabs:
+#   - header_choice_displayed_and_accepted:  # required, will be changed to str if not already str
+#     header_description: File  # optional, default None, will be changed to str if present, not None and not already str
+#     long_description: Changing to File tab  # optional, default None, will be changed to str if present, not None and not already str
+#     items:
+#       - choice_displayed:  # required, will be changed to str if not already str
+#         choice_description:  # required, will be changed to str if not already str
+#         valid_entries:
+#           -   # list/array, can have multiple entries, each will be changed to str if not already str
+#         returns:  # will be changed to str if not already str

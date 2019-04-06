@@ -1,15 +1,22 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Functions to validate inputs and configs"""
+"""Functions to validate inputs and configs. Note that this creates one exception listing all errors encountered"""
 
-# pylama:ignore=W293,W291,W391,E302,E128,E127 (will be fixed by black)
+# pylama:ignore=E114,E117,E127,E128,E231,E272,E302,E303,E501,W291,W292,W293,W391 (will be fixed by black)
 
-from schema import Schema, Or, Optional, And
+import re
+
+from schema import Schema, Or, Optional, And, Forbidden
+
+from collections import Counter
 
 
-class ValueOverlapError(ValueError):
+class InvalidInputError(ValueError):
     pass
+
+
+error_messages = []  # will be mutated by functions
 
 
 class _ValidSchemas:
@@ -17,34 +24,67 @@ class _ValidSchemas:
 
     def __init__(self):
         self.outer_schema_multiple_or_single_with_key = Schema(
-            {Optional("case_sensitive"): bool, Optional("screen_width"): int, "tabs": And(list, lambda x: len(x) > 0)}
+            {
+                Optional("case_sensitive"): bool,
+                Optional("screen_width"): And(int, lambda x: x > 0),
+                "tabs": And(list, lambda x: len(x) > 0),
+            }
         )
 
         self.outer_schema_single_without_key = Schema(
-            {"case_sensitive": bool, Optional("screen_width"): int, "items": And(list, lambda x: len(x) > 0)}
+            {
+                Optional("case_sensitive"): bool,
+                Optional("screen_width"): And(int, lambda x: x > 0),
+                "items": And(Or(list, tuple), lambda x: len(x) > 0),
+            }
         )
 
         self.tab_schema_multiple = Schema(
             {
-                "header_choice_displayed_and_accepted": And(Or(int, str), lambda x: len(str(x)) > 0),
-                "header_description": And(Or(str, None), lambda x: x is None or len(x) > 0),
-                Optional("long_description"): And(str, lambda x: len(x) > 0),
-                "items": And(list, lambda x: len(x) > 0),
+                "header_choice_displayed_and_accepted": lambda x: len(str(x)) > 0,
+                Optional("header_description"): lambda x: (x or x is None) or len(str(x)) > 0,
+                Optional("long_description"): lambda x: (x or x is None) or len(str(x)) > 0,
+                "items": And(Or(list, tuple), lambda x: len(x) > 0),
             }
         )
 
-        self.tab_schema_single = Schema({"items": And(list, lambda x: len(x) > 0)})
+        self.tab_schema_single_with_key = Schema(
+            {
+                Forbidden("header_choice_displayed_and_accepted"): object,
+                Forbidden("header_description"): object,
+                Forbidden("long_description"): object,
+                "items": And(Or(list, tuple), lambda x: len(x) > 0),
+            }
+        )
 
         self.item_schema = Schema(
             {
-                "choice_displayed": And(Or(int, str), lambda x: len(str(x)) > 0),
-                "choice_description": And(str, lambda x: len(x) > 0),
-                "valid_entries": And(list, lambda x: len(x) > 0),
-                "returns": And(Or(int, str), lambda x: len(str(x)) > 0),
+                "choice_displayed": lambda x: x and len(str(x)) > 0,
+                "choice_description": lambda x: x and len(str(x)) > 0,
+                "valid_entries": And(Or(list, tuple), lambda x: len(x) > 0),
+                "returns": lambda x: x and len(str(x)) > 0,
             }
         )
 
-        self.entry_schema = Schema(And(Or(int, str), lambda x: len(str(x)) > 0))
+        self.entry_schema = Schema(lambda x: x and len(str(x)) > 0)
+
+
+def _extract_class(class_repr):
+    """Helper function to prettify error messages"""
+    return class_repr.replace("<class '", "").replace("'>", "")
+
+
+def _validate_schema_part(error_messages, schema_, to_validate, prefix=None):
+    """Mutates error_messages if error found"""
+    try:
+        _ = schema_.validate(to_validate)
+    except Exception as e:
+        error_type = _extract_class(str(e.__class__)) + ": "
+        error_description = str(e).replace("\n", " ")
+        if not prefix:
+            prefix = ""
+        error_message = prefix + error_type + error_description
+        error_messages.append(error_message)
 
 
 def _determine_schema_type(config):
@@ -57,160 +97,157 @@ def _determine_schema_type(config):
     3. single tab without tab key ('single_without_key')
     note that single tabs should have no header-related keys; this is checked in the Schema portion
 
-    :param config: A dict
-    :type dict: dict
-    :returns: type of schema
-    :rtype: str
-
+    Returns None if cannot find a valid schema_tyoe
     """
+    schema_type = None
     if "tabs" in config.keys():
-        if len(config["tabs"]) > 1:
+        if len(config["tabs"]) > 1 and 'items' not in config.keys():
             schema_type = "multiple"
-        else:
+        elif 'items' not in config.keys():
             schema_type = "single_with_key"
-    else:
+    elif 'tabs' not in config.keys():
         schema_type = "single_without_key"
     return schema_type
 
 
-def validate_schema(config):  # noqa: C901
-    """Validates that the dict passed to the Menu instance has the expected schema.
+def _validate_schema(error_messages, config):  # noqa: C901
+    """Validates that the dict passed to the Menu instance has the expected schema. Mutates error_messages by
+    appending all errors found
 
     Examples of valid schemas can be seen in the examples/ folder of the git repo, or in the docs.
-    There are two kinds of schemas, one with headers (i.e. with multiple tabs) and one without headers (i.e.
-    with only one tab, which may be omitted or may be present as a 'tabs' key in the schema).
-
-    :param config: config dict past from menu.Menu instance
-    :type dict: dict
-    :returns: None
-    :raises: :class:`schema:SchemaError` if config departs from valid schema
+    There are three kinds of schemas, one with multiple tabs, one with a single tab, and one with an implicit single
+    tab that skips the redundant 'tabs' key
     """
-    try:
-        schema_type = _determine_schema_type(config)
-        valid_schemas = _ValidSchemas()
-        if schema_type == "multiple":
-            _ = valid_schemas.outer_schema_multiple_or_single_with_key.validate(config)
-            for tab in config["tabs"]:
-                _ = valid_schemas.tab_schema_multiple.validate(tab)
-                for item in tab["items"]:
-                    _ = valid_schemas.item_schema.validate(item)
-                    for entry in item["valid_entries"]:
-                        _ = valid_schemas.entry_schema.validate(entry)
-        elif schema_type == "single_with_key":
-            _ = valid_schemas.outer_schema_multiple_or_single_with_key.validate(config)
-            try:
-                assert len(config["tabs"]) == 1
-            except AssertionError:
-                raise Schema.SchemaError
-            _ = valid_schemas.tab_schema_single.validate(config["tabs"][0])
-            for item in config["tabs"][0]["items"]:
-                _ = valid_schemas.item_schema.validate(item)
-                for entry in item["valid_entries"]:
-                    _ = valid_schemas.entry_schema.validate(entry)
-        elif schema_type == "single_without_key":
-            _ = valid_schemas.outer_schema_single_without_key.validate(config)
-            for item in config["items"]:
-                _ = valid_schemas.item_schema.validate(item)
-                for entry in item["valid_entries"]:
-                    _ = valid_schemas.entry_schema.validate(entry)
-        else:
-            raise ValueError(f"schema_type {schema_type} is invalid")
-    except Exception as e:
-        raise e
+    schema_type = _determine_schema_type(config)
+    valid_schemas = _ValidSchemas()
+    if schema_type == "multiple":
+        _validate_schema_part(error_messages, valid_schemas.outer_schema_multiple_or_single_with_key, config)
+        for tab_num, tab in enumerate(config["tabs"]):
+            prefix = "tab#{0}: ".format(tab_num)
+            _validate_schema_part(error_messages, valid_schemas.tab_schema_multiple, tab, prefix)
+            for item_num, item in enumerate(tab["items"]):
+                prefix = "tab#{0},item#{1}: ".format(tab_num, item_num)
+                _validate_schema_part(error_messages, valid_schemas.item_schema, item, prefix)
+                for entry_num, entry in enumerate(item["valid_entries"]):
+                    prefix = "tab#{0},item#{1},valid_entry#{2}: ".format(tab_num, item_num, entry_num)
+                    _validate_schema_part(error_messages, valid_schemas.entry_schema, entry, prefix)
+    elif schema_type == "single_with_key":
+        _validate_schema_part(error_messages, valid_schemas.outer_schema_multiple_or_single_with_key, config)
+        prefix = "sole tab: "
+        _validate_schema_part(error_messages, valid_schemas.tab_schema_single_with_key, config["tabs"][0], prefix)
+        for item_num, item in enumerate(config["tabs"][0]["items"]):
+            prefix = "sole tab,item#{0}: ".format(item_num)
+            _validate_schema_part(error_messages, valid_schemas.item_schema, item, prefix)
+            for entry_num, entry in enumerate(item["valid_entries"]):
+                prefix = "sole tab,item#{0},valid_entry#{1}: ".format(item_num, entry_num)
+                _validate_schema_part(error_messages, valid_schemas.entry_schema, entry, prefix)
+    elif schema_type == "single_without_key":
+        _validate_schema_part(error_messages, valid_schemas.outer_schema_single_without_key, config)
+        for item_num, item in enumerate(config["items"]):
+            prefix = "item#{0}: ".format(item_num)
+            _validate_schema_part(error_messages, valid_schemas.item_schema, item, prefix)
+            for entry_num, entry in enumerate(item["valid_entries"]):
+                prefix = "item#{0},valid_entry#{1}: ".format(item_num, entry_num)
+                _validate_schema_part(error_messages, valid_schemas.entry_schema, entry, prefix)
 
 
 def _config_tabs(config):
-    """Finds (or creates) 'tabs' list from config dict for following tests
-
-    :param config: config dict passed to Menu constructor
-    :type config: dict
-    :returns: list under 'tabs' key, explicit or implied
-    'rtype': list
+    """Returns 'tabs' list unless single_without_key, in which case it manufactures one
     """
     schema_type = _determine_schema_type(config)
     if schema_type == "single_without_key":
-        config["tabs"] = [{}]
-        config["tabs"][0]["items"] = config["items"]
+        return [{'items': config['items']}]
     return config["tabs"]
 
 
-def validate_no_return_value_overlap(config):
-    """Validates that all return values in every tab are unique.
+def _count_for_overlap(items_):
+    """counts items, returns multiple values only or empty set"""
+    counter = Counter(items_)
+    multiples = [x for x in counter.most_common() if x[1] > 1]
+    return multiples
 
-    NOTE: Raises exception at first discovered tab with return value overlap, does not continue checking
-    
-    :param config: config dict passed to Menu constructor
-    :type config: dict
-    :returns: None
-    :raises: :class:`ValueOverlapError` if return values overlap, giving tab (if applicable) and values
+
+def _validate_no_return_value_overlap(error_messages, config):
+    """Validates that all return values in every tab are unique. Mutates error_messages with all errors found
+
+    NOTE: mutates error_messages
+    NOTE: Checks all tabs, so can result in long error message
+    NOTE: Case insensitivity does not affect return values
     """
-    try:
-        tabs = _config_tabs(config)
-        for tab in tabs:
-            returns = [x["returns"] for x in tab["items"]]
-            assert len(returns) == len(set(returns))
-    except AssertionError:
-        if "header_choice_displayed_and_accepted" in tab.keys():
-            raise ValueOverlapError(
-                f'in tab {tab["header_choice_displayed_and_accepted"]}, there are repeated '
-                + f"return values: {returns}"
-            )
-        else:
-            raise ValueOverlapError(f"in the single tab, there are repeated return values: {returns}")
+    tabs = _config_tabs(config)
+    for tab_num, tab in enumerate(tabs):
+        returns = [x["returns"] for x in tab["items"]]
+        multiples = _count_for_overlap(returns)
+        if multiples:
+            if "header_choice_displayed_and_accepted" in tab.keys():
+                error_messages.append("In tab#{0}, there are repeated return values: {1}.".format(tab_num, multiples))
+            else:
+                error_messages.append("In the single tab, there are repeated return values: {0}".format(multiples))
 
 
-def validate_no_input_value_overlap(config):
+def _validate_no_input_value_overlap(error_messages, config):
     """Validates that the potential inputs on each tab are unambiguous, i.e. that any entry will either lead
     to another tab OR to returning a unique value OR the current tab's input value (this could have gone either
-    way, I chose not to accept duplicate tab name and input in that tab)
+    way, I chose not to accept duplicate tab name and input in that tab for the sake of consistency rather than
+    freeing up one possible input in a sort of weird edge case)
 
-    NOTE: Raises exception at first tab found with overlapping inputs, does not continue checking
-    
-    :param config: config dict passed to Menu constructor
-    :type config: dict
-    :returns: None
-    :raises: :class:`ValueOverlapError` if input values overlap, giving tab (if applicable) and values
+    NOTE: Mutates error_messages
+    NOTE: Case insensitivity casts all inputs to lowercase, which can create overlap
     """
-    try:
-        case_sensitive = config.get("case_sensitive", False)
-        tabs = _config_tabs(config)
-        tab_values = []
+    case_sensitive = config.get("case_sensitive", False)
+    schema_type = _determine_schema_type(config)
+    tabs = _config_tabs(config)
+    starting_choices = []
+    # get tab header choices if multiple tabs
+    if schema_type == "multiple":
         for tab in tabs:
-            header_choice = tab.get("header_choice_displayed_and_accepted", None)
-            if header_choice:
-                if not case_sensitive:
-                    header_choice = header_choice.lower()
-                tab_values.append(header_choice)
-        for tab in tabs:
-            input_values = tab_values[:]
-            for item in tab["items"]:
-                valid_entries = item["valid_entries"]
-                if not case_sensitive:
-                    valid_entries = [x.lower() if isinstance(x, str) else x for x in valid_entries]
-                input_values += valid_entries
-                assert len(input_values) == len(set(input_values))
-    except AssertionError:
-        if header_choice:
-            raise ValueOverlapError(
-                f"in tab {header_choice}, there are repeated input values: {sorted(input_values)},"
-                + f"including other tabs. Note case_sensitive={case_sensitive}"
-            )
-        else:
-            raise ValueOverlapError(
-                f"in the single tab, there are repeated input values: {sorted(input_values)},"
-                + f"Note case_sensitive={case_sensitive}"
-            )
+            starting_choices.append(tab["header_choice_displayed_and_accepted"])
+    for tab_num, tab in enumerate(tabs):
+        choices = starting_choices[:]
+        for item in tab["items"]:
+            for entry in item["valid_entries"]:
+                choices.append(entry)
+        if not case_sensitive:
+            choices = [str(choice).lower() for choice in choices]
+        multiples = _count_for_overlap(choices)
+        if multiples:
+            if not case_sensitive:
+                case_sensitive_message = (
+                    " Note case sensitive is false, so values have been changed to lower-case, "
+                    "which can create overlap"
+                )
+            else:
+                case_sensitive_message = ""
+            if schema_type == "multiple":
+                error_messages.append(
+                    "In tab#{0}, there are repeated input values including tab selectors: {1}.{2}".format(
+                        tab_num, multiples, case_sensitive_message
+                    )
+                )
+            else:
+                error_messages.append(
+                    "In single tab, there are repeated input values: {0}.{1}".format(
+                        multiples, case_sensitive_message
+                    )
+                )
 
 
-class InvalidInputError(Exception):
-    pass
+def _shorten_long_schema_error_messages(error_messages):
+    """The schema packages puts the entire schema in the error message; this function removes it."""
+    for i, message in enumerate(error_messages):
+        if re.search('in {.+}$', message):
+            error_messages[i] = re.sub('in {.+}$', 'in config', message)
 
 
 def validate_all(config):
     """Runs above non-underscored functions on input"""
-    try:
-        validate_schema(config)
-        validate_no_input_value_overlap(config)
-        validate_no_return_value_overlap(config)
-    except Exception:
-        raise InvalidInputError
+    error_messages = []
+    _validate_schema(error_messages, config)
+    _validate_no_input_value_overlap(error_messages, config)
+    _validate_no_return_value_overlap(error_messages, config)
+    if error_messages:
+        _shorten_long_schema_error_messages(error_messages)
+        printed_message = ["", "Errors:"]
+        for i, message in enumerate(error_messages):
+            printed_message.append("{0}. {1}".format(i, message))
+        raise InvalidInputError("\n".join(printed_message))
