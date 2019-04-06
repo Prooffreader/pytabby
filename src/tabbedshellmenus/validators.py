@@ -5,6 +5,11 @@
 
 # pylama:ignore=E114,E117,E127,E128,E231,E272,E302,E303,E501,W291,W292,W293,W391 (will be fixed by black)
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
+from __future__ import absolute_import
+
 import re
 
 from schema import Schema, Or, Optional, And, Forbidden
@@ -101,11 +106,11 @@ def _determine_schema_type(config):
     """
     schema_type = None
     if "tabs" in config.keys():
-        if len(config["tabs"]) > 1 and 'items' not in config.keys():
+        if len(config["tabs"]) > 1 and "items" not in config.keys():
             schema_type = "multiple"
-        elif 'items' not in config.keys():
+        elif "items" not in config.keys():
             schema_type = "single_with_key"
-    elif 'tabs' not in config.keys():
+    elif "tabs" not in config.keys():
         schema_type = "single_without_key"
     return schema_type
 
@@ -156,7 +161,7 @@ def _config_tabs(config):
     """
     schema_type = _determine_schema_type(config)
     if schema_type == "single_without_key":
-        return [{'items': config['items']}]
+        return [{"items": config["items"]}]
     return config["tabs"]
 
 
@@ -235,8 +240,8 @@ def _validate_no_input_value_overlap(error_messages, config):
 def _shorten_long_schema_error_messages(error_messages):
     """The schema packages puts the entire schema in the error message; this function removes it."""
     for i, message in enumerate(error_messages):
-        if re.search('in {.+}$', message):
-            error_messages[i] = re.sub('in {.+}$', 'in config', message)
+        if re.search("in {.+}$", message):
+            error_messages[i] = re.sub("in {.+}$", "in config", message)
 
 
 def validate_all(config):

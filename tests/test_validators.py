@@ -3,12 +3,18 @@
 
 # pylama:ignore=E114,E117,E127,E128,E231,E272,E302,E303,E501,W291,W292,W293,W391 (will be fixed by black)
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
+from __future__ import absolute_import
+
 from copy import deepcopy
 import platform
 import pytest
 
 import tabbedshellmenus.validators as validators
 import re
+
 
 @pytest.mark.function
 @pytest.mark.run(order=1)
@@ -28,6 +34,7 @@ def test_fn__determine_schema_type(input_config_dict_and_id):
         if schema_type.endswith("_without_key"):
             assert id_.find("without_key") != -1
 
+
 @pytest.mark.function
 @pytest.mark.run(order=2)
 def test_fn__validate_schema(input_config_dict):
@@ -35,6 +42,7 @@ def test_fn__validate_schema(input_config_dict):
     error_messages = []
     validators._validate_schema(error_messages, input_config_dict)
     assert not error_messages
+
 
 @pytest.mark.breaking
 @pytest.mark.run(order=-2)  # because if something screws up config, it will show late
@@ -47,25 +55,27 @@ def test_schema_type_change(input_config_dict_and_id):
     try:  # TODO: remove when test passes
         assert schema_type in ("multiple", "single_with_key", "single_without_key")
     except AssertionError:
-        import pdb;pdb.set_trace()
+        import pdb
+
+        pdb.set_trace()
     if schema_type == "multiple":
         c = deepcopy(config)
-        c['tabs'] = {'tabs': c['tabs'][0]}
+        c["tabs"] = {"tabs": c["tabs"][0]}
         new_type = validators._determine_schema_type(c)
-        assert new_type == 'single_with_key'
-    elif schema_type == 'single_with_key':
+        assert new_type == "single_with_key"
+    elif schema_type == "single_with_key":
         c = deepcopy(config)
-        c['items'] = c['tabs'][0]['items']
-        del c['tabs']
+        c["items"] = c["tabs"][0]["items"]
+        del c["tabs"]
         new_type = validators._determine_schema_type(c)
-        assert new_type == 'single_without_key'
+        assert new_type == "single_without_key"
     else:
-        assert schema_type == 'single_without_key'  # sanity check
+        assert schema_type == "single_without_key"  # sanity check
         c = deepcopy(config)
-        c['tabs'] = [{'items': [c['items']]}]
-        del c['items']
+        c["tabs"] = [{"items": [c["items"]]}]
+        del c["items"]
         new_type = validators._determine_schema_type(c)
-        assert new_type == 'single_with_key'
+        assert new_type == "single_with_key"
 
 
 @pytest.mark.regression
@@ -92,10 +102,7 @@ def test_regression__ValidSchemas(data_regression):
     "command,error_message",
     [
         ("c['new_header'] = 'something'", "Wrong key 'new header'"),
-        (
-            "del c['tabs'][0]['items'][0]['choice_displayed']",
-            "Missing key: 'choice_displayed'",
-        ),
+        ("del c['tabs'][0]['items'][0]['choice_displayed']", "Missing key: 'choice_displayed'"),
         ("c['tabs'][0]['items'][0]['valid_entries'] = []", "should evaluate to True"),
     ],
     ids=["unexpected_top_level_header", "no_tabs.items.choice_displayed", "tabs.items.valid_entries_is_empty_list"],
@@ -107,6 +114,7 @@ def test_some_fail_scenarios_multiple(input_config_multiple_only, command, error
     error_messages = []
     validators._validate_schema(error_messages, c)
     assert any([x.find(error_message) for x in error_messages])
+
 
 @pytest.mark.breaking
 @pytest.mark.run(order=5)
@@ -125,6 +133,7 @@ def test_optional_top_level_keys_multiple(input_config_multiple_only):
         validators._validate_schema(error_messages, c)
         assert not error_messages
 
+
 @pytest.mark.breaking
 @pytest.mark.run(order=5)
 def test_optional_long_description_multiple(input_config_multiple_only):
@@ -141,6 +150,7 @@ def test_optional_long_description_multiple(input_config_multiple_only):
     validators._validate_schema(error_messages, c)
     assert not error_messages
 
+
 @pytest.mark.breaking
 @pytest.mark.run(order=5)
 def test_wrong_types_top_level_keys_multiple(input_config_multiple_only):
@@ -155,14 +165,13 @@ def test_wrong_types_top_level_keys_multiple(input_config_multiple_only):
         assert any([x.find("string' should be instance of '{}'".format(msg)) for x in error_messages])
 
 
-
 @pytest.mark.breaking
 @pytest.mark.run(order=5)
 def test_any_type_long_description_multiple(input_config_multiple_only):
     """Test that any type will work for long description, as it will be coerced to string in normalizer."""
     c = deepcopy(input_config_multiple_only)
     for value in [True, 10, 2.54, validators.InvalidInputError]:  # exception used just as an example of a class
-                                                                  # which can be coerced to a string like any object
+        # which can be coerced to a string like any object
         error_messages = []
         validators._validate_schema(error_messages, c)
         assert not error_messages
@@ -177,14 +186,8 @@ def test_any_type_long_description_multiple(input_config_multiple_only):
             "c['tabs'][0]['header_choice_displayed_and_accepted']='somestring'",
             "Wrong key 'header_choice_displayed_and_accepted' in",
         ),
-        (
-            "c['tabs'][0]['header_description']='somestring'",
-            "Wrong key 'header_description' in",
-        ),
-        (
-            "c['tabs'][0]['long_description']='somestring'",
-            "Wrong key 'long_description' in",
-        ),
+        ("c['tabs'][0]['header_description']='somestring'", "Wrong key 'header_description' in"),
+        ("c['tabs'][0]['long_description']='somestring'", "Wrong key 'long_description' in"),
     ],
     ids=[
         "should_not_have_header_choice_displayed_and_accepted",
@@ -200,6 +203,7 @@ def test_some_fail_scenarios_single_with_key(input_config_single_with_key_only, 
     validators._validate_schema(error_messages, c)
     assert any([x.find(error_message) for x in error_messages])
 
+
 @pytest.mark.breaking
 @pytest.mark.run(order=5)
 def test_no_multiple_tabs_in_single_with_key(input_config_single_with_key_only, random_string):
@@ -208,12 +212,14 @@ def test_no_multiple_tabs_in_single_with_key(input_config_single_with_key_only, 
     'header_choice_displayed_and_accepted' and 'header_description'
     """  # TODO: why is only the first reported in error_messages?
     tab = {
-        "items": [{
-            "choice_displayed": "a_{}".format(random_string),
-            "choice_description": "b_{}".format(random_string),
-            "valid_entries": ["c_{}".format(random_string)],
-            "returns": "d_".format(random_string)
-        }]
+        "items": [
+            {
+                "choice_displayed": "a_{}".format(random_string),
+                "choice_description": "b_{}".format(random_string),
+                "valid_entries": ["c_{}".format(random_string)],
+                "returns": "d_".format(random_string),
+            }
+        ]
     }
     c = deepcopy(input_config_single_with_key_only)
     error_messages = []
@@ -222,8 +228,11 @@ def test_no_multiple_tabs_in_single_with_key(input_config_single_with_key_only, 
     c["tabs"].append(tab)
     error_messages = []
     validators._validate_schema(error_messages, c)
-    assert any([x.find("Missing key: 'header_choice_displayed_and_accepted'") != -1 for x in error_messages])
+    # These are split up because Python 2 has u'header_choice... and I don't feel like fixing it
+    assert any([x.find("Missing key: ") != -1 for x in error_messages])
+    assert any([x.find("'header_choice_displayed_and_accepted'") != -1 for x in error_messages])
     # assert any([x.find("Missing key: 'header_description'") != -1 for x in error_messages])
+
 
 @pytest.mark.function
 @pytest.mark.run(order=1)
@@ -231,6 +240,7 @@ def test_fn__config_tabs(input_config_dict):
     """Hard to make this non tautological"""
     tabs = validators._config_tabs(input_config_dict)
     assert isinstance(tabs[0]["items"], list)
+
 
 @pytest.mark.function
 @pytest.mark.run(order=1)
@@ -240,6 +250,7 @@ def test_fn__validate_no_return_value_overlap(input_config_dict):
     validators._validate_no_return_value_overlap(error_messages, input_config_dict)
     assert not error_messages
 
+
 @pytest.mark.function
 @pytest.mark.run(order=1)
 def test_fn__validate_no_input_value_overlap(input_config_dict):
@@ -247,6 +258,7 @@ def test_fn__validate_no_input_value_overlap(input_config_dict):
     error_messages = []
     validators._validate_no_input_value_overlap(error_messages, input_config_dict)
     assert not error_messages
+
 
 @pytest.mark.breaking
 @pytest.mark.run(order=5)
@@ -256,18 +268,22 @@ def test_validate_no_return_value_overlap_fail(input_config_multiple_only):
     c["tabs"][0]["items"] += [c["tabs"][0]["items"][-1]]
     error_messages = []
     validators._validate_no_return_value_overlap(error_messages, c)
-    assert any([x.find('there are repeated return values') != -1 for x in error_messages])
+    assert any([x.find("there are repeated return values") != -1 for x in error_messages])
+
 
 @pytest.mark.breaking
 @pytest.mark.run(order=5)
-def test_validate_no_input_value_overlap_fail_within_an_item(input_config_multiple_only, input_config_single_with_key_only):
+def test_validate_no_input_value_overlap_fail_within_an_item(
+    input_config_multiple_only, input_config_single_with_key_only
+):
     """Add a duplicate valid_input value within an item"""
     for input_ in (input_config_multiple_only, input_config_single_with_key_only):
         c = deepcopy(input_)
         c["tabs"][0]["items"] += [c["tabs"][0]["items"][-1]]
         error_messages = []
         validators._validate_no_input_value_overlap(error_messages, c)
-        assert any([x.find('there are repeated input values') != -1  for x in error_messages])
+        assert any([x.find("there are repeated input values") != -1 for x in error_messages])
+
 
 @pytest.mark.breaking
 @pytest.mark.run(order=5)
@@ -278,7 +294,8 @@ def test__validate_no_input_value_overlap_fail_between_item_and_tab(input_config
     c["tabs"][1]["items"][0]["valid_entries"] += [extra_value]
     error_messages = []
     validators._validate_no_input_value_overlap(error_messages, c)
-    assert any([x.find('there are repeated input values') != -1  for x in error_messages])
+    assert any([x.find("there are repeated input values") != -1 for x in error_messages])
+
 
 @pytest.mark.breaking
 @pytest.mark.run(order=5)
@@ -291,8 +308,8 @@ def test_validate_case_sensitive(config_stub_without_tabs, input_config_case_sen
     else:
         # check multiple items valid entries
         c = deepcopy(config_stub_without_tabs)
-        c['case_sensitive'] = True
-        c['tabs'] = tabs
+        c["case_sensitive"] = True
+        c["tabs"] = tabs
         c["tabs"][0]["items"][0]["valid_choices"] = [random_string]
         c["tabs"][0]["items"][1]["valid_choices"] = [random_string.lower()]
         error_messages = []
@@ -306,6 +323,7 @@ def test_validate_case_sensitive(config_stub_without_tabs, input_config_case_sen
             validators._validate_no_input_value_overlap(error_messages, c)
             assert not error_messages
 
+
 @pytest.mark.breaking
 @pytest.mark.run(order=5)
 def test__validate_case_insensitive(input_config_case_insensitive_only, config_stub_without_tabs, random_string):
@@ -317,23 +335,24 @@ def test__validate_case_insensitive(input_config_case_insensitive_only, config_s
     else:
         # check multiple items valid entries
         c = deepcopy(config_stub_without_tabs)
-        c['case_sensitive'] = False
-        c['tabs'] = tabs
+        c["case_sensitive"] = False
+        c["tabs"] = tabs
         c["tabs"][0]["items"][0]["valid_entries"] = [random_string]
         c["tabs"][0]["items"][1]["valid_entries"] = [random_string.lower()]
         error_messages = []
         validators._validate_no_input_value_overlap(error_messages, c)
-        assert any([x.find('repeated input values') != -1 for x in error_messages])
-        assert any([x.find('Note case sensitive is false') != -1 for x in error_messages])
+        assert any([x.find("repeated input values") != -1 for x in error_messages])
+        assert any([x.find("Note case sensitive is false") != -1 for x in error_messages])
         # check with multiple tabs
         if len(c["tabs"]) > 1:
-            new_string = 'a' + random_string
+            new_string = "a" + random_string
             c["tabs"][0]["items"][1]["valid_entries"] = [new_string]
             c["tabs"][1]["header_choice_displayed_and_accepted"] = new_string.lower()
             error_messages = []
             validators._validate_no_input_value_overlap(error_messages, c)
-            assert any([x.find('repeated input values including tab selectors') != -1 for x in error_messages])
-            assert any([x.find('Note case sensitive is false') != -1 for x in error_messages])
+            assert any([x.find("repeated input values including tab selectors") != -1 for x in error_messages])
+            assert any([x.find("Note case sensitive is false") != -1 for x in error_messages])
+
 
 @pytest.mark.integration
 @pytest.mark.run(order=-1)

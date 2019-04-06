@@ -5,6 +5,11 @@
 
 # pylama:ignore=W293,W291,W391,E302,E128 (will be fixed by black)
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
+from __future__ import absolute_import
+
 
 def create_tab_objects(config):
     """Creates Tab objects in list in order of config['tabs'].

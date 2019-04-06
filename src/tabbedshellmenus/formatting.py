@@ -3,6 +3,11 @@
 
 """Contains functions used to format shell text output"""
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
+from __future__ import absolute_import
+
 # pylama:ignore=W293,W291,W391,E302,E128 (will be fixed by black)
 
 
@@ -26,7 +31,7 @@ def format_menu(config, current_number, line_length):
         choice = item["choice_displayed"]
         desc = item["choice_description"]
         spacer = " " * (max_choice_len - len(choice))
-        menu.append(f"[{choice}{spacer}] {desc}")
+        menu.append("[{0}{1}] {2}".format(choice, spacer, desc))
     return "\n".join(menu)
 
 
@@ -55,7 +60,7 @@ def _format_headers(tabs, current_number, line_length):
             end = "]"
         else:
             end = ""
-        new_top_entry = f"{start}{abbrev}{spacer}{desc}{end}"
+        new_top_entry = "{0}{1}{2}{3}{4}".format(start, abbrev, spacer, desc, end)
         if current_line_length + len(new_top_entry) > line_length - 1:
             top_text.append("\n")
             bottom_text.append("\n")

@@ -2,6 +2,11 @@
 The only action taken is the choices are printed to stdout, unless the 'quit' item is selected, in which case
 either the next config file starts or the program exits after both config files have been run"""
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
+from __future__ import absolute_import
+
 import os
 
 import tabbedshellmenus.menu as menumod
@@ -26,23 +31,23 @@ def main(config_filename):
     while True:
         returned = menu.run()
         if isinstance(returned, tuple):  # normally wouldn't have to do this, it's because this script
-                                         # is cycling through different kinds of config files
+            # is cycling through different kinds of config files
             tab_return = returned[0]
             # find tab number for output
-            for tab_number, tab in enumerate(config['tabs']):
-                if tab['header_choice_displayed_and_accepted'] == tab_return:
+            for tab_number, tab in enumerate(config["tabs"]):
+                if tab["header_choice_displayed_and_accepted"] == tab_return:
                     break
             else:
-                raise AssertionError('Somehow invalid tab choice was returned')
+                raise AssertionError("Somehow invalid tab choice was returned")
             value_return = returned[1]
         else:
             tab_return = None
             value_return = returned
-        
+
         print("")
         if tab_return:
-            print(f"RETURNED TAB = {tab_return} (#{tab_number})")
-        print(f"RETURNED VALUE = {value_return}")
+            print("RETURNED TAB = {0} (#{1})".format(tab_return, tab_number))
+        print("RETURNED VALUE = {0}".format(value_return))
 
         if value_return == "quit":
             print("\nQuitting!\n")
@@ -54,5 +59,5 @@ if __name__ == "__main__":
         msg = "# using config file {}/{}: {}".format(config_file_num + 1, len(CONFIG_FILE_NAMES), fn)
         print("\n" + ("#" * len(msg)))
         print(msg)
-        print(("#" * len(msg)) + '\n')
+        print(("#" * len(msg)) + "\n")
         main(fn)
