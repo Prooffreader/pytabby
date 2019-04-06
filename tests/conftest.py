@@ -45,7 +45,8 @@ import pytest
 import tabbedshellmenus.menu as menu
 from tabbedshellmenus.validators import _determine_schema_type
 
-pytest_plugins = ('regressions',)
+pytest_plugins = ("regressions",)
+
 
 def yaml_paths():
     """Retrieves paths of input yaml config files used to instantiate the menu.Menu class from tests/data.
@@ -118,7 +119,7 @@ def make_type_dict():
 
 
 TYPE_DICT = make_type_dict()
-print('valid test cases found for all three schema types (multiple, single_with_key, single_without_key)')
+print("valid test cases found for all three schema types (multiple, single_with_key, single_without_key)")
 
 
 @pytest.fixture(scope="function", params=TYPE_DICT["multiple"]["configs"], ids=TYPE_DICT["multiple"]["ids"])
@@ -142,11 +143,11 @@ def input_config_single_with_key_only(request):
     """Returns config dicts only if they are the 'single_with_key' type"""
     return request.param
 
+
 @pytest.fixture(scope="function")
 def config_stub_without_tabs():
     """Makes a config stub without tabs that tabs can be attached to for tests"""
-    return {'case_sensitive': True,
-            'screen_width': 80}
+    return {"case_sensitive": True, "screen_width": 80}
 
 
 def make_case_sensitivity_dict():
@@ -177,8 +178,10 @@ def ensure_valid_test_cases_exist_for_case_in_sensitivity():
                 found_valid = True
         assert found_valid, "No valid test case found for {}".format(k)
 
+
 ensure_valid_test_cases_exist_for_case_in_sensitivity()
-print('valid test cases found for both case insensitive and case sensitive configs')
+print("valid test cases found for both case insensitive and case sensitive configs")
+
 
 @pytest.fixture(
     scope="function", params=CASE_DICT["case_sensitive"]["configs"], ids=CASE_DICT["case_sensitive"]["ids"]
@@ -204,4 +207,3 @@ def random_string():
         thestring.append(choice(ascii_lowercase))
         thestring.append(choice(ascii_uppercase))
     return "".join(thestring)
-
