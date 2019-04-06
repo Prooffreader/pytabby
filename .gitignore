@@ -1,11 +1,9 @@
-# Because no Python version specified
-Pipfile.lock
-
 # custom for development
 *.ipynb
 .vscode/
 runblack.sh
 temp_*.py
+pip-wheel-metadata/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
