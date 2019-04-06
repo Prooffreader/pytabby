@@ -1,2 +1,2 @@
-PyYAML==5.1
-schema==0.7.0
+PyYAML
+schema
