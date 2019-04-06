@@ -1,0 +1,45 @@
+case_sensitive: true
+screen_width: 80
+tabs:
+- items:
+  - choice_description: Next directory
+    choice_displayed: n
+    returns: next_dir
+    valid_entries:
+    - n
+  - choice_description: Previous directory
+    choice_displayed: p
+    returns: prev_dir
+    valid_entries:
+    - p
+  - choice_description: Up a directory
+    choice_displayed: u
+    returns: up_dir
+    valid_entries:
+    - u
+  - choice_description: Enter directory (if one is current selection)
+    choice_displayed: e
+    returns: enter_dir
+    valid_entries:
+    - e
+  - choice_description: Open file (if one is current selection)
+    choice_displayed: o
+    returns: open_file
+    valid_entries:
+    - o
+  - choice_description: Delete file (if one is current selection)
+    choice_displayed: d
+    returns: del_file
+    valid_entries:
+    - d
+  - choice_description: Delete directory and contents (if one is current selection)
+    choice_displayed: D
+    returns: del_dir
+    valid_entries:
+    - D
+  - choice_description: Quit
+    choice_displayed: QX
+    returns: quit
+    valid_entries:
+    - Q
+    - X

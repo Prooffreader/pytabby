@@ -1,0 +1,17 @@
+'
+
+  [n] next directory
+
+  [p] previous directory
+
+  [u] up a directory
+
+  [e] enter directory (if one is current selection)
+
+  [o] open file (if one is current selection)
+
+  [d] delete file (if one is current selection)
+
+  [x] delete directory and contents (if one is current selection)
+
+  [q] quit'

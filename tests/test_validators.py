@@ -79,21 +79,17 @@ def test_schema_type_change(input_config_dict_and_id):
 
 
 @pytest.mark.regression
-@pytest.mark.run(order=5)
+@pytest.mark.run(order=1)
 def test_regression__ValidSchemas(data_regression):
     """Must stringify because contains schema objects which do not serialize"""
-    if platform.system == "Linux":
-        data = str(validators._ValidSchemas().__dict__)
-        # remove specific memory addresses
-        data = re.sub(" at 0x[a-f0-9]+>", "at 0xSOME_MEMORY_ADDRESS>", data)
-        # convert because apparently data_regression must use dict
-        data = {"data": data}
-        data_regression.check(data)
-    else:
-        assert 1 == 1
-        # TODO: check Windows and Darwin
-        # Note this was done because test was failing in Appveyor,
-        # it produced a different `data` dict
+    data = str(validators._ValidSchemas().__dict__)
+    # remove specific memory addresses
+    data = re.sub("at 0x.+?>", "at 0xSOME_MEMORY_ADDRESS>", data)
+    data = re.sub('[^a-zA-Z0-9 _]', '', data)
+    data = data.split(' ')
+    # convert because apparently data_regression must use dict
+    data = {"data": data}
+    data_regression.check(data)
 
 
 @pytest.mark.breaking
