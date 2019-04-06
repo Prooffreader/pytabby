@@ -12,7 +12,7 @@ from __future__ import absolute_import
 
 
 def create_tab_objects(config):
-    """Creates Tab objects in list in order of config['tabs'].
+    """Creates Tab objects in list in order of (normalized) config['tabs'].
 
     NOTE: tab_selectors is list (in tab order) of entries that select tabs
     needed because along with items[:]valid_entries, these are valid entries.
