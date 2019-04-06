@@ -228,7 +228,9 @@ def test_no_multiple_tabs_in_single_with_key(input_config_single_with_key_only, 
     c["tabs"].append(tab)
     error_messages = []
     validators._validate_schema(error_messages, c)
-    assert any([x.find("Missing key: 'header_choice_displayed_and_accepted'") != -1 for x in error_messages])
+    # These are split up because Python 2 has u'header_choice... and I don't feel like fixing it
+    assert any([x.find("Missing key: ") != -1 for x in error_messages])
+    assert any([x.find("'header_choice_displayed_and_accepted'") != -1 for x in error_messages])
     # assert any([x.find("Missing key: 'header_description'") != -1 for x in error_messages])
 
 
