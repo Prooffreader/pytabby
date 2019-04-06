@@ -40,6 +40,7 @@ import pytest
 import tabbedshellmenus.menu as menu
 from tabbedshellmenus.validators import _determine_schema_type
 
+pytest_plugins = ('regressions',)
 
 def yaml_paths():
     """Retrieves paths of input yaml config files used to instantiate the menu.Menu class from tests/data.
@@ -69,7 +70,7 @@ def pretest_yaml_ids():
 
 
 pretest_yaml_ids()
-print("pretest_yaml_ids test passed")
+print("config yamls all follow naming convention")
 
 
 def pretest_configs_are_dicts():
@@ -79,10 +80,10 @@ def pretest_configs_are_dicts():
 
 
 pretest_configs_are_dicts()
-print("pretest_configs_are_dicts passed")
+print("config yamls convert to dicts")
 
 
-@pytest.fixture(scope="session", params=TEST_CONFIGS, ids=YAML_IDS)
+@pytest.fixture(scope="function", params=TEST_CONFIGS, ids=YAML_IDS)
 def input_config_dict(request):
     """Returns config dicts of all files in /tests/data to run tests on.
     Since they are session-scoped, they should not be changed by tests."""
@@ -112,16 +113,17 @@ def make_type_dict():
 
 
 TYPE_DICT = make_type_dict()
+print('valid test cases found for all three schema types (multiple, single_with_key, single_without_key)')
 
 
-@pytest.fixture(scope="session", params=TYPE_DICT["multiple"]["configs"], ids=TYPE_DICT["multiple"]["ids"])
+@pytest.fixture(scope="function", params=TYPE_DICT["multiple"]["configs"], ids=TYPE_DICT["multiple"]["ids"])
 def input_config_multiple_only(request):
     """Returns config dicts only if they are the 'multiple' type"""
     return request.param
 
 
 @pytest.fixture(
-    scope="session", params=TYPE_DICT["single_without_key"]["configs"], ids=TYPE_DICT["single_without_key"]["ids"]
+    scope="function", params=TYPE_DICT["single_without_key"]["configs"], ids=TYPE_DICT["single_without_key"]["ids"]
 )
 def input_config_single_without_key_only(request):
     """Returns config dicts only if they are the 'single_without_key' type"""
@@ -129,22 +131,25 @@ def input_config_single_without_key_only(request):
 
 
 @pytest.fixture(
-    scope="session", params=TYPE_DICT["single_with_key"]["configs"], ids=TYPE_DICT["single_with_key"]["ids"]
+    scope="function", params=TYPE_DICT["single_with_key"]["configs"], ids=TYPE_DICT["single_with_key"]["ids"]
 )
 def input_config_single_with_key_only(request):
     """Returns config dicts only if they are the 'single_with_key' type"""
     return request.param
 
+@pytest.fixture(scope="function")
+def config_stub_without_tabs():
+    """Makes a config stub without tabs that tabs can be attached to for tests"""
+    return {'case_sensitive': True,
+            'screen_width': 80}
+
 
 def make_case_sensitivity_dict():
-    """looks at 'case_sensitive' key to split configs into separate fixtures. Ensures there is at least one of each.
-    Does not use single_without_tab type, just to keep things easier"""
+    """looks at 'case_sensitive' key to split configs into separate fixtures. Ensures there is at least one of each."""
     case_dict = {}
     for type_ in ["case_sensitive", "case_insensitive"]:
         case_dict[type_] = {"configs": [], "ids": []}
     for config, id_ in zip(TEST_CONFIGS, YAML_IDS):
-        if config.get("items", None):
-            continue
         if config["case_sensitive"]:
             case_dict["case_sensitive"]["configs"].append(config)
             case_dict["case_sensitive"]["ids"].append(id_)
@@ -158,7 +163,7 @@ def make_case_sensitivity_dict():
 
 CASE_DICT = make_case_sensitivity_dict()
 
-# ensure they each have at least one config with at least one tab key with at least two items
+# ensure they each have at least one config with at least one tab key with at least two items for test_validators
 def ensure_valid_test_cases_exist_for_case_in_sensitivity():
     for k in ["case_sensitive", "case_insensitive"]:
         found_valid = False
@@ -167,9 +172,11 @@ def ensure_valid_test_cases_exist_for_case_in_sensitivity():
                 found_valid = True
         assert found_valid, "No valid test case found for {}".format(k)
 
+ensure_valid_test_cases_exist_for_case_in_sensitivity()
+print('valid test cases found for both case insensitive and case sensitive configs')
 
 @pytest.fixture(
-    scope="session", params=CASE_DICT["case_sensitive"]["configs"], ids=CASE_DICT["case_sensitive"]["ids"]
+    scope="function", params=CASE_DICT["case_sensitive"]["configs"], ids=CASE_DICT["case_sensitive"]["ids"]
 )
 def input_config_case_sensitive_only(request):
     """Returns config dicts only if they are case_sensitive"""
@@ -177,7 +184,7 @@ def input_config_case_sensitive_only(request):
 
 
 @pytest.fixture(
-    scope="session", params=CASE_DICT["case_insensitive"]["configs"], ids=CASE_DICT["case_insensitive"]["ids"]
+    scope="function", params=CASE_DICT["case_insensitive"]["configs"], ids=CASE_DICT["case_insensitive"]["ids"]
 )
 def input_config_case_insensitive_only(request):
     """Returns config dicts only if they are case_sensitive"""
@@ -193,9 +200,3 @@ def random_string():
         thestring.append(choice(ascii_uppercase))
     return "".join(thestring)
 
-
-# @pytest.fixture(scope="session", params=TEST_CONFIGS, ids=YAML_IDS)
-# def all_tabs():
-#     """A bit backwards because this will fail if some upstream tests would fail, but it's the easiest approach
-#     for test_formatting"""
-#     menu = M

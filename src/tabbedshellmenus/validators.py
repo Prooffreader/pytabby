@@ -3,7 +3,9 @@
 
 """Functions to validate inputs and configs. Note that this creates one exception listing all errors encountered"""
 
-# pylama:ignore=W293,W291,W391,E302,E128,E305,E127,E303 (will be fixed by black)
+# pylama:ignore=E114,E117,E127,E128,E231,E272,E302,E303,E501,W291,W292,W293,W391 (will be fixed by black)
+
+import re
 
 from schema import Schema, Or, Optional, And, Forbidden
 
@@ -68,6 +70,7 @@ class _ValidSchemas:
 
 
 def _extract_class(class_repr):
+    """Helper function to prettify error messages"""
     return class_repr.replace("<class '", "").replace("'>", "")
 
 
@@ -93,18 +96,21 @@ def _determine_schema_type(config):
     2. single tab with tab key ('single_with_key')
     3. single tab without tab key ('single_without_key')
     note that single tabs should have no header-related keys; this is checked in the Schema portion
+
+    Returns None if cannot find a valid schema_tyoe
     """
+    schema_type = None
     if "tabs" in config.keys():
-        if len(config["tabs"]) > 1:
+        if len(config["tabs"]) > 1 and 'items' not in config.keys():
             schema_type = "multiple"
-        else:
+        elif 'items' not in config.keys():
             schema_type = "single_with_key"
-    else:
+    elif 'tabs' not in config.keys():
         schema_type = "single_without_key"
     return schema_type
 
 
-def validate_schema(error_messages, config):  # noqa: C901
+def _validate_schema(error_messages, config):  # noqa: C901
     """Validates that the dict passed to the Menu instance has the expected schema. Mutates error_messages by
     appending all errors found
 
@@ -146,13 +152,11 @@ def validate_schema(error_messages, config):  # noqa: C901
 
 
 def _config_tabs(config):
-    """Finds (or creates) 'tabs' list from config dict for following tests.
-    Creates one from top level 'items' if type is single_without_key
+    """Returns 'tabs' list unless single_without_key, in which case it manufactures one
     """
     schema_type = _determine_schema_type(config)
     if schema_type == "single_without_key":
-        config["tabs"] = [{}]
-        config["tabs"][0]["items"] = config["items"]
+        return [{'items': config['items']}]
     return config["tabs"]
 
 
@@ -163,14 +167,14 @@ def _count_for_overlap(items_):
     return multiples
 
 
-def validate_no_return_value_overlap(error_messages, config):
+def _validate_no_return_value_overlap(error_messages, config):
     """Validates that all return values in every tab are unique. Mutates error_messages with all errors found
 
+    NOTE: mutates error_messages
     NOTE: Checks all tabs, so can result in long error message
     NOTE: Case insensitivity does not affect return values
     """
     tabs = _config_tabs(config)
-    error_messages = []
     for tab_num, tab in enumerate(tabs):
         returns = [x["returns"] for x in tab["items"]]
         multiples = _count_for_overlap(returns)
@@ -181,30 +185,33 @@ def validate_no_return_value_overlap(error_messages, config):
                 error_messages.append("In the single tab, there are repeated return values: {0}".format(multiples))
 
 
-def validate_no_input_value_overlap(error_messages, config):
+def _validate_no_input_value_overlap(error_messages, config):
     """Validates that the potential inputs on each tab are unambiguous, i.e. that any entry will either lead
     to another tab OR to returning a unique value OR the current tab's input value (this could have gone either
-    way, I chose not to accept duplicate tab name and input in that tab)
+    way, I chose not to accept duplicate tab name and input in that tab for the sake of consistency rather than
+    freeing up one possible input in a sort of weird edge case)
 
     NOTE: Mutates error_messages
-    NOTE: Case sensitivity casts all inputs to lowercase, which can create overlap
+    NOTE: Case insensitivity casts all inputs to lowercase, which can create overlap
     """
     case_sensitive = config.get("case_sensitive", False)
     schema_type = _determine_schema_type(config)
     tabs = _config_tabs(config)
-    error_messages = []
+    starting_choices = []
+    # get tab header choices if multiple tabs
+    if schema_type == "multiple":
+        for tab in tabs:
+            starting_choices.append(tab["header_choice_displayed_and_accepted"])
     for tab_num, tab in enumerate(tabs):
-        choices = []
-        if schema_type == "multiple":
-            choices.append(tab["header_choice_displayed_and_accepted"])
+        choices = starting_choices[:]
         for item in tab["items"]:
             for entry in item["valid_entries"]:
                 choices.append(entry)
-        if case_sensitive:
-            choices = [choice.lower() for choice in choices]
+        if not case_sensitive:
+            choices = [str(choice).lower() for choice in choices]
         multiples = _count_for_overlap(choices)
         if multiples:
-            if not config.get("case_sensitive", False):
+            if not case_sensitive:
                 case_sensitive_message = (
                     " Note case sensitive is false, so values have been changed to lower-case, "
                     "which can create overlap"
@@ -225,12 +232,21 @@ def validate_no_input_value_overlap(error_messages, config):
                 )
 
 
+def _shorten_long_schema_error_messages(error_messages):
+    """The schema packages puts the entire schema in the error message; this function removes it."""
+    for i, message in enumerate(error_messages):
+        if re.search('in {.+}$', message):
+            error_messages[i] = re.sub('in {.+}$', 'in config', message)
+
+
 def validate_all(config):
     """Runs above non-underscored functions on input"""
-    validate_schema(error_messages, config)
-    validate_no_input_value_overlap(error_messages, config)
-    validate_no_return_value_overlap(error_messages, config)
+    error_messages = []
+    _validate_schema(error_messages, config)
+    _validate_no_input_value_overlap(error_messages, config)
+    _validate_no_return_value_overlap(error_messages, config)
     if error_messages:
+        _shorten_long_schema_error_messages(error_messages)
         printed_message = ["", "Errors:"]
         for i, message in enumerate(error_messages):
             printed_message.append("{0}. {1}".format(i, message))
