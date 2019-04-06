@@ -30,6 +30,11 @@ This conftest.py produces the following fixtures containing config dicts out of 
 
 # pylama:ignore=W293,W291,W391,E302,E128 (will be fixed by black)
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
+from __future__ import absolute_import
+
 import os
 from string import ascii_lowercase, ascii_uppercase
 from pathlib import Path

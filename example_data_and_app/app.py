@@ -2,6 +2,11 @@
 The only action taken is the choices are printed to stdout, unless the 'quit' item is selected, in which case
 either the next config file starts or the program exits after both config files have been run"""
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
+from __future__ import absolute_import
+
 import os
 
 import tabbedshellmenus.menu as menumod
@@ -41,8 +46,8 @@ def main(config_filename):
         
         print("")
         if tab_return:
-            print(f"RETURNED TAB = {tab_return} (#{tab_number})")
-        print(f"RETURNED VALUE = {value_return}")
+            print("RETURNED TAB = {0} (#{1})".format(tab_return, tab_number))
+        print("RETURNED VALUE = {0}".format(value_return))
 
         if value_return == "quit":
             print("\nQuitting!\n")

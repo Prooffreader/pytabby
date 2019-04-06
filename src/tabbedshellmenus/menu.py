@@ -7,6 +7,11 @@ NOTE: When ruamel.yaml v15 API gets finalized, yaml reader code will have to cha
 
 # pylama:ignore=W293,W291,W391,E302 (will be fixed by black)
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
+from __future__ import absolute_import
+
 import json
 
 import yaml
@@ -77,11 +82,11 @@ class Menu:
         # print message about new selection
         new_tab = self.tabs[new_number]
         if new_tab.head_choice:
-            msg = [f"Change tab to {new_tab.head_choice}"]
+            msg = ["Change tab to {0}".format(new_tab.head_choice)]
             if new_tab.head_desc:
-                msg.append(f": {new_tab.head_desc}")
+                msg.append(": {0}".format(new_tab.head_desc))
             if new_tab.head_desc_long:
-                msg.append(f"\n{new_tab.head_desc_long}")
+                msg.append("\n{0}".format(new_tab.head_desc_long))
             print("".join(msg))
         self.current_tab_number = new_number
 
@@ -95,7 +100,7 @@ class Menu:
         received_valid_input = False
         prompt = "?"
         while not received_valid_input:
-            selection = input(f"{prompt}: ")  # monkeypatch for testing
+            selection = input("{0}: ".format(prompt))  # monkeypatch for testing
             if not self.case_sensitive:
                 selection = selection.lower()
             return_dict = self.tabs[self.current_tab_number].process_input(selection)

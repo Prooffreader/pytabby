@@ -5,6 +5,11 @@
 
 # pylama:ignore=E114,E117,E127,E128,E231,E272,E302,E303,E501,W291,W292,W293,W391 (will be fixed by black)
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
+from __future__ import absolute_import
+
 import re
 
 from schema import Schema, Or, Optional, And, Forbidden

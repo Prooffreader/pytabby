@@ -7,6 +7,11 @@
 (This ordering is chosen because if the config doesn't pass validation, the user will have to fix it as they
 see it, not as it looks after validation)"""
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
+from __future__ import absolute_import
+
 from copy import deepcopy
 
 
