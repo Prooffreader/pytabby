@@ -79,10 +79,10 @@ def test_schema_type_change(input_config_dict_and_id):
 
 
 @pytest.mark.regression
-@pytest.mark.run(order=5)
+@pytest.mark.run(order=1)
 def test_regression__ValidSchemas(data_regression):
     """Must stringify because contains schema objects which do not serialize"""
-    if platform.system == "Linux":
+    if platform.system() == "Linux":
         data = str(validators._ValidSchemas().__dict__)
         # remove specific memory addresses
         data = re.sub(" at 0x[a-f0-9]+>", "at 0xSOME_MEMORY_ADDRESS>", data)
