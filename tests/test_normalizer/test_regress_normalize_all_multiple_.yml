@@ -1,0 +1,133 @@
+case_sensitive: false
+screen_width: 80
+tabs:
+- header_choice_displayed_and_accepted: fi
+  header_description: file
+  items:
+  - choice_description: open
+    choice_displayed: o
+    returns: open
+    valid_entries:
+    - o
+  - choice_description: close
+    choice_displayed: w,c
+    returns: close
+    valid_entries:
+    - w
+    - c
+  - choice_description: save
+    choice_displayed: s
+    returns: save
+    valid_entries:
+    - s
+  - choice_description: save as
+    choice_displayed: sa
+    returns: save_as
+    valid_entries:
+    - sa
+  - choice_description: preferences
+    choice_displayed: p
+    returns: preferences
+    valid_entries:
+    - p
+  - choice_description: quit
+    choice_displayed: q,x
+    returns: quit
+    valid_entries:
+    - q
+    - x
+    - quit
+  long_description: changing to file tab
+- header_choice_displayed_and_accepted: e
+  header_description: edit
+  items:
+  - choice_description: undo
+    choice_displayed: z
+    returns: undo
+    valid_entries:
+    - z
+  - choice_description: redo
+    choice_displayed: y
+    returns: redo
+    valid_entries:
+    - y
+  - choice_description: cut
+    choice_displayed: x
+    returns: cut
+    valid_entries:
+    - x
+  - choice_description: copy
+    choice_displayed: c
+    returns: copy
+    valid_entries:
+    - c
+  - choice_description: paste
+    choice_displayed: v
+    returns: paste
+    valid_entries:
+    - v
+  - choice_description: find
+    choice_displayed: f
+    returns: find
+    valid_entries:
+    - f
+  - choice_description: find again
+    choice_displayed: g
+    returns: find_again
+    valid_entries:
+    - g
+  - choice_description: replace
+    choice_displayed: r
+    returns: replace
+    valid_entries:
+    - r
+  long_description: you have just selected the edit menu
+- header_choice_displayed_and_accepted: vw
+  header_description: view
+  items:
+  - choice_description: cat
+    choice_displayed: cat
+    returns: cat
+    valid_entries:
+    - cat
+  - choice_description: head
+    choice_displayed: head
+    returns: head
+    valid_entries:
+    - head
+  - choice_description: tail
+    choice_displayed: tail
+    returns: tail
+    valid_entries:
+    - tail
+- header_choice_displayed_and_accepted: h
+  header_description: help
+  items:
+  - choice_description: documentation
+    choice_displayed: d
+    returns: docs
+    valid_entries:
+    - d
+  - choice_description: about
+    choice_displayed: a
+    returns: about
+    valid_entries:
+    - a
+- header_choice_displayed_and_accepted: '0'
+  header_description: integer
+  items:
+  - choice_description: choice
+    choice_displayed: '1'
+    returns: '1'
+    valid_entries:
+    - '1'
+  - choice_description: choice
+    choice_displayed: '2'
+    returns: '2'
+    valid_entries:
+    - '2'
+  - choice_description: choice
+    choice_displayed: '3'
+    returns: '3'
+    valid_entries:
+    - '3'

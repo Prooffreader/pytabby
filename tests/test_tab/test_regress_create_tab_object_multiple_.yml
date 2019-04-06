@@ -1,0 +1,181 @@
+data:
+- head_choice: fi
+  head_desc: File
+  head_desc_long: Changing to File tab
+  input2result:
+    c:
+      return_value: close
+      type: return
+    e:
+      new_number: 1
+      type: change_tab
+    fi:
+      new_number: 0
+      type: change_tab
+    h:
+      new_number: 3
+      type: change_tab
+    o:
+      return_value: open
+      type: return
+    p:
+      return_value: preferences
+      type: return
+    q:
+      return_value: quit
+      type: return
+    quit:
+      return_value: quit
+      type: return
+    s:
+      return_value: save
+      type: return
+    sa:
+      return_value: save_as
+      type: return
+    vw:
+      new_number: 2
+      type: change_tab
+    w:
+      return_value: close
+      type: return
+    x:
+      return_value: quit
+      type: return
+  selectors:
+  - fi
+  - e
+  - vw
+  - h
+- head_choice: e
+  head_desc: Edit
+  head_desc_long: You have just selected the edit menu
+  input2result:
+    C:
+      return_value: copy
+      type: return
+    Z:
+      return_value: undo
+      type: return
+    e:
+      new_number: 1
+      type: change_tab
+    f:
+      return_value: find
+      type: return
+    fi:
+      new_number: 0
+      type: change_tab
+    g:
+      return_value: find_again
+      type: return
+    h:
+      new_number: 3
+      type: change_tab
+    r:
+      return_value: replace
+      type: return
+    v:
+      return_value: paste
+      type: return
+    vw:
+      new_number: 2
+      type: change_tab
+    x:
+      return_value: cut
+      type: return
+    y:
+      return_value: redo
+      type: return
+  selectors:
+  - fi
+  - e
+  - vw
+  - h
+- head_choice: vw
+  head_desc: View
+  head_desc_long: null
+  input2result:
+    cat:
+      return_value: cat
+      type: return
+    e:
+      new_number: 1
+      type: change_tab
+    fi:
+      new_number: 0
+      type: change_tab
+    h:
+      new_number: 3
+      type: change_tab
+    head:
+      return_value: head
+      type: return
+    tail:
+      return_value: tail
+      type: return
+    vw:
+      new_number: 2
+      type: change_tab
+  selectors:
+  - fi
+  - e
+  - vw
+  - h
+- head_choice: h
+  head_desc: Help
+  head_desc_long: null
+  input2result:
+    a:
+      return_value: about
+      type: return
+    d:
+      return_value: docs
+      type: return
+    e:
+      new_number: 1
+      type: change_tab
+    fi:
+      new_number: 0
+      type: change_tab
+    h:
+      new_number: 3
+      type: change_tab
+    vw:
+      new_number: 2
+      type: change_tab
+  selectors:
+  - fi
+  - e
+  - vw
+  - h
+- head_choice: 0
+  head_desc: Integer
+  head_desc_long: null
+  input2result:
+    fi:
+      new_number: 0
+      type: change_tab
+    e:
+      new_number: 1
+      type: change_tab
+    vw:
+      new_number: 2
+      type: change_tab
+    h:
+      new_number: 3
+      type: change_tab
+    1:
+      return_value: 1
+      type: return
+    2:
+      return_value: 2
+      type: return
+    3:
+      return_value: 3
+      type: return
+  selectors:
+  - fi
+  - e
+  - vw
+  - h

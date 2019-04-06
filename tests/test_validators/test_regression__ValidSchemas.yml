@@ -1,0 +1,22 @@
+data: '{''outer_schema_multiple_or_single_with_key'': Schema({Optional(''case_sensitive''):
+  <class ''bool''>, Optional(''screen_width''): And(<class ''int''>, <function _ValidSchemas.__init__.<locals>.<lambda>at
+  0xSOME_MEMORY_ADDRESS>), ''tabs'': And(<class ''list''>, <function _ValidSchemas.__init__.<locals>.<lambda>at
+  0xSOME_MEMORY_ADDRESS>)}), ''outer_schema_single_without_key'': Schema({Optional(''case_sensitive''):
+  <class ''bool''>, Optional(''screen_width''): And(<class ''int''>, <function _ValidSchemas.__init__.<locals>.<lambda>at
+  0xSOME_MEMORY_ADDRESS>), ''items'': And(Or(<class ''list''>, <class ''tuple''>),
+  <function _ValidSchemas.__init__.<locals>.<lambda>at 0xSOME_MEMORY_ADDRESS>)}),
+  ''tab_schema_multiple'': Schema({''header_choice_displayed_and_accepted'': <function
+  _ValidSchemas.__init__.<locals>.<lambda>at 0xSOME_MEMORY_ADDRESS>, Optional(''header_description''):
+  <function _ValidSchemas.__init__.<locals>.<lambda>at 0xSOME_MEMORY_ADDRESS>, Optional(''long_description''):
+  <function _ValidSchemas.__init__.<locals>.<lambda>at 0xSOME_MEMORY_ADDRESS>, ''items'':
+  And(Or(<class ''list''>, <class ''tuple''>), <function _ValidSchemas.__init__.<locals>.<lambda>at
+  0xSOME_MEMORY_ADDRESS>)}), ''tab_schema_single_with_key'': Schema({Forbidden(''header_choice_displayed_and_accepted''):
+  <class ''object''>, Forbidden(''header_description''): <class ''object''>, Forbidden(''long_description''):
+  <class ''object''>, ''items'': And(Or(<class ''list''>, <class ''tuple''>), <function
+  _ValidSchemas.__init__.<locals>.<lambda>at 0xSOME_MEMORY_ADDRESS>)}), ''item_schema'':
+  Schema({''choice_displayed'': <function _ValidSchemas.__init__.<locals>.<lambda>at
+  0xSOME_MEMORY_ADDRESS>, ''choice_description'': <function _ValidSchemas.__init__.<locals>.<lambda>at
+  0xSOME_MEMORY_ADDRESS>, ''valid_entries'': And(Or(<class ''list''>, <class ''tuple''>),
+  <function _ValidSchemas.__init__.<locals>.<lambda>at 0xSOME_MEMORY_ADDRESS>), ''returns'':
+  <function _ValidSchemas.__init__.<locals>.<lambda>at 0xSOME_MEMORY_ADDRESS>}), ''entry_schema'':
+  Schema(<function _ValidSchemas.__init__.<locals>.<lambda>at 0xSOME_MEMORY_ADDRESS>)}'
