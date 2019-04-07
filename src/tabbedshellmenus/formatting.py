@@ -13,7 +13,7 @@ from __future__ import absolute_import
 
 def format_menu(config, current_number, line_length):
     """Creates menu to be displayed to user, called from menu.Menu only
-    
+
     :returns: menu to display to stdout
     :rtype: str
     """
