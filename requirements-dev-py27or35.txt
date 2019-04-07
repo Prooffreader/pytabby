@@ -1,9 +1,6 @@
 pytest
 pytest-cov
-pytest-flakes
 pytest-ordering
 pytest-regressions
 Sphinx
 doc8
-coverage
-pylama
