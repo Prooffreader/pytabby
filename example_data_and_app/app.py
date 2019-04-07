@@ -9,7 +9,7 @@ from __future__ import absolute_import
 
 import os
 
-import tabbedshellmenus.menu as menumod
+from tabbedshellmenus import Menu
 
 import glob
 
@@ -22,10 +22,10 @@ CONFIG_FILE_NAMES = [x for x in CONFIG_FILE_NAMES if not x.startswith("blank")]
 
 def main(config_filename):
     # use staticmethod to read yaml
-    config = menumod.Menu.safe_read_yaml(os.path.join(THIS_FOLDER, config_filename))
+    config = Menu.safe_read_yaml(os.path.join(THIS_FOLDER, config_filename))
 
     # instantiate
-    menu = menumod.Menu(config)
+    menu = Menu(config)
 
     # run, echoing back results
     while True:
