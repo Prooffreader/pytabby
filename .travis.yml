@@ -10,7 +10,8 @@ install:
   - 'pip install tox-travis'
 script: tox
 after_success:
-  - coveralls
+  - coverage xml
+  - python-codacy-coverage -r coverage.xml
 # script: 'python -m pytest'
 # --cov=pyblizzard tests --cov-report=xml'
 # after_success:
