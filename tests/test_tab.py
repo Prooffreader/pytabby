@@ -25,7 +25,7 @@ def freeze_tab(tab_dict):
     lst.append(":SELECTORS:")
     for item in tab_dict["selectors"]:
         lst.append(item)
-    keys = sorted(tab_dict["input2result"].keys(), key=lambda x: str(x))
+    keys = sorted(tab_dict["input2result"].keys(), key=str)
     # TODO: ^ shouldn't they already be strings if they've been normalized?
     for k in keys:
         lst.append(":INPUT2RESULT:")

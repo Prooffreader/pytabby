@@ -44,7 +44,8 @@ class Menu:
         self.current_tab_number = start_tab_number
         self.screen_width = self.config.get("screen_width", 80)
         self.has_multiple_tabs = len(self.config["tabs"]) > 1
-        assert self.current_tab_number < len(self.config["tabs"])
+        if not self.current_tab_number < len(self.config["tabs"]):
+            raise AssertionError
         self._create_tab_objects()
         self.case_sensitive = config.get("case_sensitive", False)  # for user input
 
