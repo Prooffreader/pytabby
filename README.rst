@@ -7,23 +7,19 @@ tabbedshellmenus [in development]
 .. image:: https://ci.appveyor.com/api/projects/status/preqq0h4peiad07a?svg=true
     :target: https://ci.appveyor.com/project/Prooffreader/tabbedshellmenus
 
-.. image:: https://api.codacy.com/project/badge/Coverage/dae598fbe5b04b0e90e9e2080bb68c11
-    :target: https://www.codacy.com/app/Prooffreader/tabbedshellmenus?utm_source=github.com&utm_medium=referral&utm_content=Prooffreader/tabbedshellmenus&utm_campaign=Badge_Coverage)
+.. image:: https://coveralls.io/repos/github/Prooffreader/tabbedshellmenus/badge.svg?branch=master
+    :target: https://coveralls.io/github/Prooffreader/tabbedshellmenus?branch=master
 
 .. image:: https://api.codacy.com/project/badge/Grade/dae598fbe5b04b0e90e9e2080bb68c11
     :target: https://www.codacy.com/app/Prooffreader/tabbedshellmenus?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Prooffreader/tabbedshellmenus&amp;utm_campaign=Badge_Grade)
 
 .. image:: https://img.shields.io/badge/python-2.7%7C3.5%7C3.6%7C3.7-blue.svg
-    :target: http://dtdata.io
 
 .. image:: https://img.shields.io/badge/platform-linux--64%7Cwin--32%7Cwin--64-lightgrey.svg
-    :target: http://dtdata.io
 
 .. image:: https://img.shields.io/badge/pypi%20package-tbd-brightgreen.svg
-    :target: http://dtdata.io
 
 .. image:: https://img.shields.io/badge/implementation-cpython-blue.svg
-    :target: http://dtdata.io
 
 A flexible **tabbed* menu system to run in the shell and control
 program flow interactively

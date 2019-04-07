@@ -1,71 +1,19 @@
-# language: python
-# dist: xenial
-# python:
-#   - '3.7'
-#   - '3.6'
-# install:
-#   - 'pip install -r requirements.txt'
-#   - 'pip install -r requirements-dev.txt'
-#   - 'pip install .'
-#   - 'pip install tox-travis'
-# script: tox
-# after_success:
-#   - coverage xml
-#   - python-codacy-coverage -r coverage.xml
+language: python
+dist: xenial
+python:
+  - '3.7'
+  - '3.6'
+install:
+  - 'pip install -r requirements.txt'
+  - 'pip install -r requirements-dev.txt'
+  - 'pip install .'
+  - 'pip install tox-travis'
+script: tox
+after_success:
+  - coverage xml
+  - python-codacy-coverage -r coverage.xml
 # script: 'python -m pytest'
 # --cov=pyblizzard tests --cov-report=xml'
 # after_success:
 #  - 'python-codacy-coverage -r coverage.xml'
 
-
-dist: xenial
-
-
-language: python
-
-
-# branches:
-#   only:
-#     - master
-
-
-#
-#  test matrix is spelled out explicitly here.
-#
-#
-matrix:
-  include:
-    - python: 3.7
-      env: TOXENV=pylama
-
-    - python: 2.7
-      env: TOXENV=coverageoff-py27
-
-    - python: 3.5
-      env: TOXENV=coverageoff-py35
-
-    - python: 3.6
-      env: TOXENV=coverageoff-py36
-
-    - python: 3.7
-      env: TOXENV=coverageon-py37,codecov
-
-    # - python: 2.7
-    #   env: TOXENV=docs
-    # - python: 2.7
-    #   env: TOXENV=docs-linkcheck
-
-  # allow_failures:
-    # - env: TOXENV=coverage-py27,codecov
-    # - env: ...
-
-    # This depends on external web sites, so it's allowed to fail.
-    # - env: TOXENV=docs-linkcheck
-
-
-install:
-  - ./.travis/install
-
-
-script:
-  - ./.travis/run tox
