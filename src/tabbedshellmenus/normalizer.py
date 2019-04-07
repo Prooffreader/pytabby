@@ -18,7 +18,7 @@ from copy import deepcopy
 def _add_tabs_key_if_needed(config):
     if "tabs" not in config.keys():
         assert "items" in config.keys()  # sanity check
-        config["tabs"] = [{'items': deepcopy(config["items"])}]
+        config["tabs"] = [{"items": deepcopy(config["items"])}]
         del config["items"]
         return config
     else:
@@ -32,6 +32,7 @@ def _walk_stringize_and_case(config):  # noqa: C901
     """
     new = {}
     c = config
+
     def strcase(thing, change_case=False, none_allowed=False):
         if none_allowed and thing is None:
             return None
@@ -39,29 +40,29 @@ def _walk_stringize_and_case(config):  # noqa: C901
             return str(thing).lower()
         else:
             return str(thing)
-        
-    for k in ['case_sensitive', 'screen_width']:    
+
+    for k in ["case_sensitive", "screen_width"]:
         new[k] = c[k]
     new["tabs"] = []
     for tab in c["tabs"]:
         new_tab = {}
         for k1, v1 in tab.items():
-            if k1 == 'header_choice_displayed_and_accepted':
+            if k1 == "header_choice_displayed_and_accepted":
                 new_tab[k1] = strcase(v1, True)
-            elif k1 in ['header_description', 'long_description']:
-                new_tab[k1] = strcase(v1, False, True) 
-            new_tab['items'] = []
-            for item in tab['items']:
+            elif k1 in ["header_description", "long_description"]:
+                new_tab[k1] = strcase(v1, False, True)
+            new_tab["items"] = []
+            for item in tab["items"]:
                 new_item = {}
                 for k2, v2 in item.items():
-                    if k2 in ['choice_displayed', 'choice_description', 'returns']:
+                    if k2 in ["choice_displayed", "choice_description", "returns"]:
                         new_item[k2] = strcase(v2)
                     else:
                         new_entries = []
-                        for entry in item['valid_entries']:
+                        for entry in item["valid_entries"]:
                             new_entries.append(strcase(entry, True))
-                        new_item['valid_entries'] = new_entries
-                new_tab['items'].append(new_item)
+                        new_item["valid_entries"] = new_entries
+                new_tab["items"].append(new_item)
         new["tabs"].append(new_tab)
     return new
 
