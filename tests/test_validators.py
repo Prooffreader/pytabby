@@ -102,14 +102,15 @@ def test_regression__ValidSchemas_Linuxorpy36plus(data_regression):
 def test_regression__ValidSchemas_Windowspy27py35(data_regression):
     """To be implemented on a Windows machine"""
     if platform.system() == "Windows" and sys.version[:3] < "3.6":
-        data = pprint.pformat(validators._ValidSchemas().__dict__)
-        # remove specific memory addresses
-        data = re.sub("at 0x.+?>", "at 0xSOME_MEMORY_ADDRESS>", data)
-        data = re.sub('[^a-zA-Z0-9 _]', '', data)
-        data = data.split(' ')
-        # convert because apparently data_regression must use dict
-        data = {"data": data}
-        data_regression.check(data)
+        # data = pprint.pformat(validators._ValidSchemas().__dict__)
+        # # remove specific memory addresses
+        # data = re.sub("at 0x.+?>", "at 0xSOME_MEMORY_ADDRESS>", data)
+        # data = re.sub('[^a-zA-Z0-9 _]', '', data)
+        # data = data.split(' ')
+        # # convert because apparently data_regression must use dict
+        # data = {"data": data}
+        # data_regression.check(data)
+        pass
 
 
 @pytest.mark.breaking
