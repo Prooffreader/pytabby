@@ -86,7 +86,7 @@ def test_regression__ValidSchemas(data_regression):
     This test fails on Windows in Python 3.5 and 2.7 for some reason; as long
     as it passes the other Windows versions tests and all the Linux tests,
     I'm not concerned."""
-    if (platform.system() == 'Linux' or (platform.system () == "Windows" and sys.version[:3] >= 3.6)):
+    if (platform.system() == 'Linux' or (platform.system () == "Windows" and sys.version[:3] >= "3.6")):
         data = str(validators._ValidSchemas().__dict__)
         # remove specific memory addresses
         data = re.sub("at 0x.+?>", "at 0xSOME_MEMORY_ADDRESS>", data)
