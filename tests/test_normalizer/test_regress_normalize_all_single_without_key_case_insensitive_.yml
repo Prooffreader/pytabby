@@ -1,44 +1,56 @@
-case_sensitive: false
-screen_width: 80
-tabs:
-- items:
-  - choice_description: next directory
-    choice_displayed: n
-    returns: next_dir
-    valid_entries:
-    - n
-  - choice_description: previous directory
-    choice_displayed: p
-    returns: prev_dir
-    valid_entries:
-    - p
-  - choice_description: up a directory
-    choice_displayed: u
-    returns: up_dir
-    valid_entries:
-    - u
-  - choice_description: enter directory (if one is current selection)
-    choice_displayed: e
-    returns: enter_dir
-    valid_entries:
-    - e
-  - choice_description: open file (if one is current selection)
-    choice_displayed: o
-    returns: open_file
-    valid_entries:
-    - o
-  - choice_description: delete file (if one is current selection)
-    choice_displayed: d
-    returns: del_file
-    valid_entries:
-    - d
-  - choice_description: delete directory and contents (if one is current selection)
-    choice_displayed: x
-    returns: del_dir
-    valid_entries:
-    - x
-  - choice_description: quit
-    choice_displayed: q
-    returns: quit
-    valid_entries:
-    - q
+data:
+- ':OUTER_LEVEL:'
+- false
+- 80
+- ':TAB:'
+- n/a
+- n/a
+- n/a
+- ':ITEM:'
+- n
+- Next directory
+- next_dir
+- ':ENTRIES:'
+- n
+- ':ITEM:'
+- p
+- Previous directory
+- prev_dir
+- ':ENTRIES:'
+- p
+- ':ITEM:'
+- u
+- Up a directory
+- up_dir
+- ':ENTRIES:'
+- u
+- ':ITEM:'
+- e
+- Enter directory (if one is current selection)
+- enter_dir
+- ':ENTRIES:'
+- e
+- ':ITEM:'
+- o
+- Open file (if one is current selection)
+- open_file
+- ':ENTRIES:'
+- o
+- ':ITEM:'
+- d
+- Delete file (if one is current selection)
+- del_file
+- ':ENTRIES:'
+- d
+- ':ITEM:'
+- X
+- Delete directory and contents (if one is current selection)
+- del_dir
+- ':ENTRIES:'
+- x
+- ':ITEM:'
+- Q
+- Quit
+- quit
+- ':ENTRIES:'
+- q

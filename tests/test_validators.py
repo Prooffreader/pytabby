@@ -10,11 +10,17 @@ from __future__ import absolute_import
 
 from copy import deepcopy
 import platform
-import pytest
+import pprint
+import re
 import sys
 
+import pytest
+
 import tabbedshellmenus.validators as validators
-import re
+
+
+
+
 
 
 @pytest.mark.function
@@ -53,12 +59,7 @@ def test_schema_type_change(input_config_dict_and_id):
     # if id_.find('single_without') != -1:
     #     import pdb;pdb.set_trace()  # TODO: Delete this if test passes
     schema_type = validators._determine_schema_type(config)
-    try:  # TODO: remove when test passes
-        assert schema_type in ("multiple", "single_with_key", "single_without_key")
-    except AssertionError:
-        import pdb
-
-        pdb.set_trace()
+    assert schema_type in ("multiple", "single_with_key", "single_without_key")
     if schema_type == "multiple":
         c = deepcopy(config)
         c["tabs"] = {"tabs": c["tabs"][0]}
@@ -88,12 +89,11 @@ def test_regression__ValidSchemas(data_regression):
     I'm not concerned."""
     # Try one last time with sorted results
     # if (platform.system() == 'Linux' or (platform.system () == "Windows" and sys.version[:3] >= "3.6")):
-    #     data = str(validators._ValidSchemas().__dict__)
-        # remove specific memory addresses
+    data = pprint.pformat(validators._ValidSchemas().__dict__)
+    # remove specific memory addresses
     data = re.sub("at 0x.+?>", "at 0xSOME_MEMORY_ADDRESS>", data)
     data = re.sub('[^a-zA-Z0-9 _]', '', data)
     data = data.split(' ')
-    data.sort()
     # convert because apparently data_regression must use dict
     data = {"data": data}
     data_regression.check(data)

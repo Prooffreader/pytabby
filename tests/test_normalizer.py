@@ -14,18 +14,24 @@ import pytest
 
 import tabbedshellmenus.normalizer as normalizer
 
-def sort_dict_to_list(d):
-    """In order to make regression tests work in Python <3.6"""
-    keys = sorted(d.keys())
-    new_list = []
-    for k in keys:
-        value = d[k]
-        if isinstance(value, dict):
-            value = sort_dict(value)
-        elif isinstance(value, list):
-            value.sort()
-        new_list.append([k, value])
-    return new_list
+def freeze_config(normalized_config):
+    lst = [':OUTER_LEVEL:']
+    c = normalized_config
+    for k in ['case_sensitive', 'screen_width']:
+        lst.append(c[k])
+    lst.append(':TAB:')
+    for tab in c['tabs']:
+        for k1 in ['header_choice_displayed_and_accepted', 'header_description', 'long_description']:
+            lst.append(tab.get(k1, 'n/a'))
+        for item in tab['items']:
+            lst.append(':ITEM:')
+            for k2 in ['choice_displayed', 'choice_description', 'returns']:
+                lst.append(item[k2])
+            lst.append(':ENTRIES:')
+            for entry in item['valid_entries']:
+                lst.append(entry)
+    return lst
+
 
 @pytest.mark.function
 @pytest.mark.run(order=1)
@@ -51,7 +57,7 @@ def test_regress__add_tabs_single_wo_key(data_regression, input_config_single_wi
     c = normalizer._add_tabs_key_if_needed(c)
     assert 'tabs' in c.keys()
     assert 'items' not in c.keys()
-    c = sort_dict_to_list(c)
+    c = freeze_config(c)
     data = {'data': c}
     data_regression.check(data)
 
@@ -62,7 +68,7 @@ def test_regress_normalize_all(data_regression, input_config_dict):
     is necessary for it to work, and the function normalize just wraps these two functions anyway"""
     c = deepcopy(input_config_dict)
     c = normalizer.normalize(c)
-    c = sort_dict_to_list(c)
+    c = freeze_config(c)
     data = {'data': c}
     data_regression.check(data)
 

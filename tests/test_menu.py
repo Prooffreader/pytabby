@@ -12,4 +12,16 @@ from __future__ import division
 from __future__ import unicode_literals
 from __future__ import absolute_import
 
-pass
+
+def sort_dict_to_list(d):
+    """In order to make regression tests work in Python <3.6"""
+    keys = sorted(d.keys(), key=lambda x: str(x))
+    new_list = []
+    for k in keys:
+        value = d[k]
+        if isinstance(value, dict):
+            value = sort_dict_to_list(value)
+        elif isinstance(value, list):
+            value.sort()
+        new_list.append([k, value])
+    return new_list

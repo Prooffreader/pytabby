@@ -25,7 +25,8 @@ def test_regress__format_headers(data_regression, input_config_multiple_only):
     tab_num = 1  # minimum non-first ordinal of a multiple tab layout
     c = deepcopy(input_config_multiple_only)
     result = formatting._format_headers(c['tabs'], tab_num, 80)
-    data_regression.check(result)
+    data = {'data': result}
+    data_regression.check(data)
 
 @pytest.mark.regression
 @pytest.mark.run(order=3)
@@ -39,5 +40,6 @@ def test_regress__format_menu(data_regression, input_config_dict_and_id):
         tab_num = 0
         if id_.find('without') != -1:
             c = normalizer.normalize(c)
-    result = formatting.format_menu(c, tab_num, 80)
-    data_regression.check(result)
+    result = formatting.format_menu(c, tab_num, 80).split('\n')
+    data = {'data': result}
+    data_regression.check(data)

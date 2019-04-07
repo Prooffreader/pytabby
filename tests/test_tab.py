@@ -17,18 +17,23 @@ import pytest
 import tabbedshellmenus.normalizer as normalizer
 import tabbedshellmenus.tab as tab
 
-def sort_dict_to_list(d):
-    """In order to make regression tests work in Python <3.6"""
-    keys = sorted(d.keys())
-    new_list = []
+def freeze_tab(tab_dict):
+    lst = [':HEADS:']
+    for k in ['head_choice', 'head_desc', 'head_desc_long']:
+        lst.append(tab_dict[k])
+    lst.append(':SELECTORS:')
+    for item in tab_dict['selectors']:
+        lst.append(item)
+    keys = sorted(tab_dict['input2result'].keys(), key=lambda x: str(x))
+    # TODO: ^ shouldn't they already be strings if they've been normalized?
     for k in keys:
-        value = d[k]
-        if isinstance(value, dict):
-            value = sort_dict(value)
-        elif isinstance(value, list):
-            value.sort()
-        new_list.append([k, value])
-    return new_list
+        lst.append(':INPUT2RESULT:')
+        lst.append(k)
+        result = tab_dict['input2result'][k]
+        lst.append(result['type'])
+        lst.append(result.get('new_number', 'n/a'))
+        lst.append(result.get('return_value', 'n/a'))
+    return lst
 
 
 @pytest.mark.regression
@@ -40,6 +45,7 @@ def test_regress_create_tab_object(data_regression, input_config_dict_and_id):
     if id_.find('without') != -1:
         c = normalizer.normalize(c)
     tabs = tab.create_tab_objects(c)
-    tab_dicts = [sort_dict_to_list(x.__dict__) for x in tabs]
-    data = {'data': sorted(tab_dicts)}
+    data = {}
+    for i, tab_instance in enumerate(tabs):
+        data[i] = freeze_tab(tab_instance.__dict__)
     data_regression.check(data)
