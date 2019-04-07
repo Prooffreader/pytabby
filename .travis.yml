@@ -12,19 +12,19 @@ matrix:
     - python: '2.7'
       install:
         - 'pip install -r requirements.txt'
-        - 'pip install -r requirements-dev-py2735.txt'
+        - 'pip install -r requirements-dev-py27to36.txt'
         - 'pip install .'
       script: pytest
     - python: '3.5'
       install:
         - 'pip install -r requirements.txt'
-        - 'pip install -r requirements-dev-py2735.txt'
+        - 'pip install -r requirements-dev-py27to36.txt'
         - 'pip install .'
       script: pytest
     - python: '3.6'
       install:
         - 'pip install -r requirements.txt'
-        - 'pip install -r requirements-dev-py2735.txt'
+        - 'pip install -r requirements-dev-py27to36.txt'
         - 'pip install .'
       script: pytest
     - python: '3.7'
