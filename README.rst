@@ -10,6 +10,9 @@ tabbedshellmenus [in development]
 .. image:: https://coveralls.io/repos/github/Prooffreader/tabbedshellmenus/badge.svg?branch=master
     :target: https://coveralls.io/github/Prooffreader/tabbedshellmenus?branch=master
 
+.. image:: https://api.codacy.com/project/badge/Grade/dae598fbe5b04b0e90e9e2080bb68c11
+    :target: https://www.codacy.com/app/Prooffreader/tabbedshellmenus?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Prooffreader/tabbedshellmenus&amp;utm_campaign=Badge_Grade)
+
 .. image:: https://img.shields.io/badge/python-2.7%7C3.5%7C3.6%7C3.7-blue.svg
 
 .. image:: https://img.shields.io/badge/platform-linux--64%7Cwin--32%7Cwin--64-lightgrey.svg
