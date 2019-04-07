@@ -27,30 +27,43 @@ def _add_tabs_key_if_needed(config):
 
 def _walk_stringize_and_case(config):  # noqa: C901
     """Walks the various contents of config and:
-    1. Converts to string if not None
-    2. If case_sensitive is False, converts to lowercase
+    1. Converts to string if not None where appropriate
+    2. If case_sensitive is False, converts to lowercase where appropriate
     """
-    case_sensitive = config["case_sensitive"]
-    for i, tab in enumerate(config["tabs"]):
-        for k, v in tab.items():
-            if k != "items" and v is not None:
-                config["tabs"][i][k] = str(tab[k])
-                if not case_sensitive:
-                    config["tabs"][i][k] = config["tabs"][i][k].lower()
-        for j, item in enumerate(config["tabs"][i]["items"]):
-            for k, v in item.items():
-                if k != "valid_entries":
-                    config["tabs"][i]["items"][j][k] = str(v)
-                    if not case_sensitive:
-                        config["tabs"][i]["items"][j][k] = config["tabs"][i]["items"][j][k].lower()
-                else:
-                    for n, member in enumerate(v):
-                        config["tabs"][i]["items"][j]["valid_entries"][n] = str(member)
-                        if not case_sensitive:
-                            config["tabs"][i]["items"][j]["valid_entries"][n] = config["tabs"][i]["items"][j][
-                                "valid_entries"
-                            ][n].lower()
-    return config
+    new = {}
+    c = config
+    def strcase(thing, change_case=False, none_allowed=False):
+        if none_allowed and thing is None:
+            return None
+        if change_case and not config["case_sensitive"]:
+            return str(thing).lower()
+        else:
+            return str(thing)
+        
+    for k in ['case_sensitive', 'screen_width']:    
+        new[k] = c[k]
+    new["tabs"] = []
+    for tab in c["tabs"]:
+        new_tab = {}
+        for k1, v1 in tab.items():
+            if k1 == 'header_choice_displayed_and_accepted':
+                new_tab[k1] = strcase(v1, True)
+            elif k1 in ['header_description', 'long_description']:
+                new_tab[k1] = strcase(v1, False, True) 
+            new_tab['items'] = []
+            for item in tab['items']:
+                new_item = {}
+                for k2, v2 in item.items():
+                    if k2 in ['choice_displayed', 'choice_description', 'returns']:
+                        new_item[k2] = strcase(v2)
+                    else:
+                        new_entries = []
+                        for entry in item['valid_entries']:
+                            new_entries.append(strcase(entry, True))
+                        new_item['valid_entries'] = new_entries
+                new_tab['items'].append(new_item)
+        new["tabs"].append(new_tab)
+    return new
 
 
 def normalize(config):
