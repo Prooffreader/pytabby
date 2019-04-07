@@ -11,6 +11,7 @@ from __future__ import absolute_import
 from copy import deepcopy
 import platform
 import pytest
+import sys
 
 import tabbedshellmenus.validators as validators
 import re
