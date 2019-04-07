@@ -14,8 +14,18 @@ import pytest
 
 import tabbedshellmenus.normalizer as normalizer
 
-# _walk_stringize_and_case(config):
-# normalize_config
+def sort_dict_to_list(d):
+    """In order to make regression tests work in Python <3.6"""
+    keys = sorted(d.keys())
+    new_list = []
+    for k in keys:
+        value = d[k]
+        if isinstance(value, dict):
+            value = sort_dict(value)
+        elif isinstance(value, list):
+            value.sort()
+        new_list.append([k, value])
+    return new_list
 
 @pytest.mark.function
 @pytest.mark.run(order=1)
@@ -41,7 +51,9 @@ def test_regress__add_tabs_single_wo_key(data_regression, input_config_single_wi
     c = normalizer._add_tabs_key_if_needed(c)
     assert 'tabs' in c.keys()
     assert 'items' not in c.keys()
-    data_regression.check(c)
+    c = sort_dict_to_list(c)
+    data = {'data': c}
+    data_regression.check(data)
 
 @pytest.mark.regression
 @pytest.mark.run(order=1)
@@ -50,5 +62,7 @@ def test_regress_normalize_all(data_regression, input_config_dict):
     is necessary for it to work, and the function normalize just wraps these two functions anyway"""
     c = deepcopy(input_config_dict)
     c = normalizer.normalize(c)
-    data_regression.check(c)
+    c = sort_dict_to_list(c)
+    data = {'data': c}
+    data_regression.check(data)
 
