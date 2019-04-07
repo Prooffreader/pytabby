@@ -18,11 +18,11 @@ LIST ON CONFIG FIXTURES:
 This conftest.py produces the following fixtures containing config dicts out of .yaml files in tests/data:
 1. input_config_dict: all dicts from .yaml files
 2. input_config_dict_and_id: tuple of (dict, id) from all .yaml, only to test validators._determine_schema_type()
-3. input_config_multiple_only: all dicts from .yaml files which return 'multiple' from 
+3. input_config_multiple_only: all dicts from .yaml files which return 'multiple' from
    validators._determine_schema_type()
-4. input_config_single_with_key_only: all dicts from .yaml files which return 'single_with_key' from 
+4. input_config_single_with_key_only: all dicts from .yaml files which return 'single_with_key' from
    validators._determine_schema_type()
-5. input_config_single_without_key_only: all dicts from .yaml files which return 'single_without_key' from 
+5. input_config_single_without_key_only: all dicts from .yaml files which return 'single_without_key' from
    validators._determine_schema_type()
 6. input_config_case_sensitive_only: all dicts from .yaml files where first-level key "case_sensitive" is True
 6. input_config_case_insensitive_only: all dicts from .yaml files where first-level key "case_sensitive" is False
@@ -37,8 +37,6 @@ from __future__ import absolute_import
 
 import glob
 import os
-from string import ascii_lowercase, ascii_uppercase
-from random import choice
 
 import pytest
 
@@ -71,9 +69,11 @@ TEST_CONFIGS = [menu.Menu.safe_read_yaml(path) for path in YAML_PATHS]
 def pretest_yaml_ids():
     """Make sure yaml files in /test/data follow naming convention in that folders' README."""
     for yaml_id in YAML_IDS:
-        assert yaml_id.find("multiple") != -1 or yaml_id.find("single") != -1
+        if yaml_id.find("multiple") == -1 and yaml_id.find("single") == -1:
+            raise AssertionError
         if yaml_id.find("single") != -1:
-            assert yaml_id.find("with_key") != -1 or yaml_id.find("without_key") != -1
+            if yaml_id.find("with_key") == -1 and yaml_id.find("without_key") == -1:
+                raise AssertionError
 
 
 pretest_yaml_ids()
@@ -83,7 +83,8 @@ print("config yamls all follow naming convention")
 def pretest_configs_are_dicts():
     """Sanity check, ensure we are passing dicts"""
     for config in TEST_CONFIGS:
-        assert isinstance(config, dict)
+        if not isinstance(config, dict):
+            raise AssertionError
 
 
 pretest_configs_are_dicts()
@@ -111,11 +112,13 @@ def make_type_dict():
         type_dict[type_] = {"configs": [], "ids": []}
     for config, id_ in zip(TEST_CONFIGS, YAML_IDS):
         type_ = _determine_schema_type(config)
-        assert type_ in ["multiple", "single_with_key", "single_without_key"]  # in case new type appears
+        if type_ not in ["multiple", "single_with_key", "single_without_key"]:  # in case new type appears
+            raise AssertionError
         type_dict[type_]["configs"].append(config)
         type_dict[type_]["ids"].append(id_)
     for type_ in ["multiple", "single_with_key", "single_without_key"]:
-        assert len(type_dict[type_]) > 0
+        if not len(type_dict[type_]) > 0:
+            raise AssertionError
     return type_dict
 
 
@@ -164,7 +167,8 @@ def make_case_sensitivity_dict():
             case_dict["case_insensitive"]["configs"].append(config)
             case_dict["case_insensitive"]["ids"].append(id_)
     for type_ in ["case_sensitive", "case_insensitive"]:
-        assert len(case_dict[type_]) > 0
+        if not len(case_dict[type_]) > 0:
+            raise AssertionError
     return case_dict
 
 
@@ -177,7 +181,8 @@ def ensure_valid_test_cases_exist_for_case_in_sensitivity():
         for config in CASE_DICT[k]["configs"]:
             if "tabs" in config.keys() and len(config["tabs"][0]["items"]) > 1:
                 found_valid = True
-        assert found_valid, "No valid test case found for {}".format(k)
+        if not found_valid:
+            raise AssertionError("No valid test case found for {}".format(k))
 
 
 ensure_valid_test_cases_exist_for_case_in_sensitivity()
@@ -202,10 +207,20 @@ def input_config_case_insensitive_only(request):
 
 @pytest.fixture(scope="function")
 def random_string():
-    """Sixteen alternating uppercase and lowercase letters to avoid magic strings"""
-    thestring = []
-    for i in range(8):
-        thestring.append(choice(ascii_lowercase))
-        thestring.append(choice(ascii_uppercase))
-    return "".join(thestring)
-
+    """stringified urandom bytes with alphanumerics only and alternating upper and lower case alphabeticals"""
+    astr = str(os.urandom(10))
+    # capitalize every other alphabetic and remove non-alphanumeric
+    n = 0
+    new = []
+    for char in astr:
+        if char.isalpha():
+            n += 1
+            if n % 2 == 0:
+                new.append(char.upper())
+            else:
+                new.append(char.lower())
+        else:
+            if char.isalnum():
+                new.append(char)
+    new.extend("aBc")  # just in case no alphas are included
+    return "".join(new)

@@ -40,7 +40,8 @@ def test__add_tabs_key_if_needed_multiple_nochange(input_config_multiple_only):
     """This function should not change a multiple or single_with_key schema type"""
     c = deepcopy(input_config_multiple_only)
     cprime = normalizer._add_tabs_key_if_needed(deepcopy(c))
-    assert c == cprime
+    if not c == cprime:
+        raise AssertionError
 
 
 @pytest.mark.function
@@ -49,7 +50,8 @@ def test__add_tabs_key_if_needed_single_with_key_nochange(input_config_single_wi
     """This function should not change a multiple or single_with_key schema type"""
     c = deepcopy(input_config_single_with_key_only)
     cprime = normalizer._add_tabs_key_if_needed(deepcopy(c))
-    assert c == cprime
+    if not c == cprime:
+        raise AssertionError
 
 
 @pytest.mark.regression
@@ -58,8 +60,10 @@ def test_regress__add_tabs_single_wo_key(data_regression, input_config_single_wi
     """Should switch items to tabs"""
     c = deepcopy(input_config_single_without_key_only)
     c = normalizer._add_tabs_key_if_needed(c)
-    assert "tabs" in c.keys()
-    assert "items" not in c.keys()
+    if "tabs" not in c.keys():
+        raise AssertionError
+    if "items" in c.keys():
+        raise AssertionError
     c = freeze_config(c)
     data = {"data": c}
     data_regression.check(data)

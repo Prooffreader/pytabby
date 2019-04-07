@@ -17,7 +17,8 @@ from copy import deepcopy
 
 def _add_tabs_key_if_needed(config):
     if "tabs" not in config.keys():
-        assert "items" in config.keys()  # sanity check
+        if "items" not in config.keys():  # sanity check
+            raise AssertionError
         config["tabs"] = [{"items": deepcopy(config["items"])}]
         del config["items"]
         return config

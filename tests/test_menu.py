@@ -15,7 +15,7 @@ from __future__ import absolute_import
 
 def sort_dict_to_list(d):
     """In order to make regression tests work in Python <3.6"""
-    keys = sorted(d.keys(), key=lambda x: str(x))
+    keys = sorted(d.keys(), key=str)
     new_list = []
     for k in keys:
         value = d[k]
