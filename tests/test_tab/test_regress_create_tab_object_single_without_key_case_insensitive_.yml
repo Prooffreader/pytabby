@@ -1,30 +1,46 @@
-data:
-- head_choice: null
-  head_desc: null
-  head_desc_long: null
-  input2result:
-    d:
-      return_value: del_file
-      type: return
-    e:
-      return_value: enter_dir
-      type: return
-    n:
-      return_value: next_dir
-      type: return
-    o:
-      return_value: open_file
-      type: return
-    p:
-      return_value: prev_dir
-      type: return
-    q:
-      return_value: quit
-      type: return
-    u:
-      return_value: up_dir
-      type: return
-    x:
-      return_value: del_dir
-      type: return
-  selectors: []
+0:
+- ':HEADS:'
+- null
+- null
+- null
+- ':SELECTORS:'
+- ':INPUT2RESULT:'
+- d
+- return
+- n/a
+- del_file
+- ':INPUT2RESULT:'
+- e
+- return
+- n/a
+- enter_dir
+- ':INPUT2RESULT:'
+- n
+- return
+- n/a
+- next_dir
+- ':INPUT2RESULT:'
+- o
+- return
+- n/a
+- open_file
+- ':INPUT2RESULT:'
+- p
+- return
+- n/a
+- prev_dir
+- ':INPUT2RESULT:'
+- q
+- return
+- n/a
+- quit
+- ':INPUT2RESULT:'
+- u
+- return
+- n/a
+- up_dir
+- ':INPUT2RESULT:'
+- x
+- return
+- n/a
+- del_dir

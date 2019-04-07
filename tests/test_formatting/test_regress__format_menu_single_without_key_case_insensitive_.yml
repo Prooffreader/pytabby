@@ -1,17 +1,10 @@
-'
-
-  [n] next directory
-
-  [p] previous directory
-
-  [u] up a directory
-
-  [e] enter directory (if one is current selection)
-
-  [o] open file (if one is current selection)
-
-  [d] delete file (if one is current selection)
-
-  [x] delete directory and contents (if one is current selection)
-
-  [q] quit'
+data:
+- ''
+- '[n] Next directory'
+- '[p] Previous directory'
+- '[u] Up a directory'
+- '[e] Enter directory (if one is current selection)'
+- '[o] Open file (if one is current selection)'
+- '[d] Delete file (if one is current selection)'
+- '[X] Delete directory and contents (if one is current selection)'
+- '[Q] Quit'

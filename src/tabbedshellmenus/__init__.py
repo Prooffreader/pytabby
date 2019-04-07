@@ -1,11 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Blank __init__.py file"""
+"""Just puts menu.Menu into the package namespace"""
 
-from __future__ import print_function
-from __future__ import division
-from __future__ import unicode_literals
-from __future__ import absolute_import
-
-pass
+from . import menu
+from .menu import Menu

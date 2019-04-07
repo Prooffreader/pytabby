@@ -208,3 +208,4 @@ def random_string():
         thestring.append(choice(ascii_lowercase))
         thestring.append(choice(ascii_uppercase))
     return "".join(thestring)
+

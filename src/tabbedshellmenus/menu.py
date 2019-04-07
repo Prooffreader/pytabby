@@ -25,7 +25,7 @@ from . import tab
 class Menu:
     """Base class to import to create a menu
 
-    Contains staticmethods 'safe_read_yaml' and 'read_json' to create expected config dict from config files. Dict's 
+    Contains staticmethods 'safe_read_yaml' and 'read_json' to create expected config dict from config files. Dict's
     schema is validated before use. (see examples or tests/data directory in repo )
 
     :param config: nested data structure containing all info used to make menu
@@ -112,8 +112,8 @@ class Menu:
 
     def run(self):
         """Called by user, runs menu until valid selection from a tab is made, and returns value
-        
-        :returns: if there is more than one tab, returns tuple of (tab selector, return value). 
+
+        :returns: if there is more than one tab, returns tuple of (tab selector, return value).
                   If there is only one tab, returns return value only.
         :rtype: either (str, str) or str
         """

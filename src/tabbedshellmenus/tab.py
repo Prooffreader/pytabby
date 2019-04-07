@@ -30,7 +30,7 @@ def create_tab_objects(config):
 
 class Tab:
     """Tab class to represent individual tabs in Menu class
-    
+
     :param tab_dict: passed from menu constructor from config
     :type tab_dict: dict
     :param tab_selectors: all inputs that select tabs

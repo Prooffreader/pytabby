@@ -7,11 +7,25 @@ tabbedshellmenus [in development]
 .. image:: https://ci.appveyor.com/api/projects/status/preqq0h4peiad07a?svg=true
     :target: https://ci.appveyor.com/project/Prooffreader/tabbedshellmenus
 
-A non-opinionated, flexible TABBED menu system to run in the shell and control
+.. image:: https://coveralls.io/repos/github/Prooffreader/tabbedshellmenus/badge.svg?branch=master
+    :target: https://coveralls.io/github/Prooffreader/tabbedshellmenus?branch=master
+
+.. image:: https://api.codacy.com/project/badge/Grade/dae598fbe5b04b0e90e9e2080bb68c11
+    :target: https://www.codacy.com/app/Prooffreader/tabbedshellmenus?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Prooffreader/tabbedshellmenus&amp;utm_campaign=Badge_Grade)
+
+.. image:: https://img.shields.io/badge/python-2.7%7C3.5%7C3.6%7C3.7-blue.svg
+
+.. image:: https://img.shields.io/badge/platform-linux--64%7Cwin--32%7Cwin--64-lightgrey.svg
+
+.. image:: https://img.shields.io/badge/pypi%20package-tbd-brightgreen.svg
+
+.. image:: https://img.shields.io/badge/implementation-cpython-blue.svg
+
+A flexible **tabbed* menu system to run in the shell and control
 program flow interactively
 
 NOTE:
-- the config files can use integers instead of strings for several fields, but
+- the config files can use values other than strings for input and output fields, but
 internally they are always converted to strings and the return value for
 Menu.run() is always a string, e.g. '1'.
 
@@ -21,20 +35,11 @@ Dependencies:
 - pyyaml
 - schema
 
-NOTE:
-- dev-requirements.txt added from edited pip freeze
-
 
 TODO:
- - see what happens if one tab but headers defined; ignore or invalid schema?
- - add test case multiple tabs but one has no headers
- - add case sensitive/insensitive test cases
  - test None as header_description and long_description
- - check that ints work as choices and return values
- - mark tests as smoke, unit, regression, integration, etc. @pytest.mark.label,
-   can have >1. Change order in tox.ini? Don't forget to search for unmarked
 
 
  WISH LIST:
  - a way to dynamically silence certain menu items, probably by passing a list
-   of return values
+   of silenced tab names and return values
