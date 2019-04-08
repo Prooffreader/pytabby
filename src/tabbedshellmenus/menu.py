@@ -32,7 +32,7 @@ class Menu:
     :type config: dict
     :param config: start_tab_number: the (zero-based) position of the starting selected tab; handy when saving
                    state between Menu instantiations. Default 0
-    "type config: int
+    :type config: int
     """
 
     def __init__(self, config, start_tab_number=0):
@@ -44,10 +44,13 @@ class Menu:
         self.current_tab_number = start_tab_number
         self.screen_width = self.config.get("screen_width", 80)
         self.has_multiple_tabs = len(self.config["tabs"]) > 1
+        # ensure start_tab_number is valid
         if not self.current_tab_number < len(self.config["tabs"]):
             raise AssertionError
         self._create_tab_objects()
-        self.case_sensitive = config.get("case_sensitive", False)  # for user input
+        # this attribute is to change user input where required;
+        # the config contents have already been altered
+        self.case_sensitive = config.get("case_sensitive", False)
 
     @staticmethod
     def safe_read_yaml(path_to_yaml):
