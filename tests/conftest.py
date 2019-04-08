@@ -14,7 +14,7 @@ If a yaml is 'single', it must have 'with_key' or 'without_key' indicating wheth
 Other than that, yaml files can contain other words to differentiate them or multiply them in future tests
 This naming convention is used to test validators_.determine_schema_type()
 
-LIST ON CONFIG FIXTURES:
+LIST OF CONFIG FIXTURES:
 This conftest.py produces the following fixtures containing config dicts out of .yaml files in tests/data:
 1. input_config_dict: all dicts from .yaml files
 2. input_config_dict_and_id: tuple of (dict, id) from all .yaml, only to test validators._determine_schema_type()
@@ -25,10 +25,11 @@ This conftest.py produces the following fixtures containing config dicts out of 
 5. input_config_single_without_key_only: all dicts from .yaml files which return 'single_without_key' from
    validators._determine_schema_type()
 6. input_config_case_sensitive_only: all dicts from .yaml files where first-level key "case_sensitive" is True
-6. input_config_case_insensitive_only: all dicts from .yaml files where first-level key "case_sensitive" is False
+7. input_config_case_insensitive_only: all dicts from .yaml files where first-level key "case_sensitive" is False
+8. menu_instance: an instance of the Menu class
 """
 
-# pylama:ignore=W293,W291,W391,E302,E128 (will be fixed by black)
+
 
 from __future__ import print_function
 from __future__ import division
@@ -40,14 +41,14 @@ import os
 
 import pytest
 
-import tabbedshellmenus.menu as menu
+from tabbedshellmenus import Menu
 from tabbedshellmenus.validators import _determine_schema_type
 
 pytest_plugins = ("regressions",)
 
 
 def yaml_paths():
-    """Retrieves paths of input yaml config files used to instantiate the menu.Menu class from tests/data.
+    """Retrieves paths of input yaml config files used to instantiate the Menu class from tests/data.
     The contents of this folder can be changed without breaking the test suite, as long as they are valid yaml
     with valid schemas.
     """
@@ -63,7 +64,7 @@ YAML_PATHS = sorted([path for path in yaml_paths()])
 
 # constants for input_config_dict fixture
 YAML_IDS = [os.path.split(os.path.splitext(path)[0])[1] for path in YAML_PATHS]
-TEST_CONFIGS = [menu.Menu.safe_read_yaml(path) for path in YAML_PATHS]
+TEST_CONFIGS = [Menu.safe_read_yaml(path) for path in YAML_PATHS]
 
 
 def pretest_yaml_ids():
@@ -224,3 +225,8 @@ def random_string():
                 new.append(char)
     new.extend("aBc")  # just in case no alphas are included
     return "".join(new)
+
+@pytest.fixture(scope="class", params=TEST_CONFIGS, ids=YAML_IDS)
+def menu_instance(request):
+    """Returns an instance of tabbedshellmenus.menu.Menu for each config"""
+    return Menu(request.param)
