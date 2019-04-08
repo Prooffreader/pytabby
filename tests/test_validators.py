@@ -105,26 +105,27 @@ def test_regression__ValidSchemas_py36plus(data_regression):
 def test_regression__ValidSchemas_py27(data_regression):
     """Sorted because as long as it passes in Python 3.6+ this is just extra"""
     if sys.version[:3] == "2.7":
-        data = pprint.pformat(validators._ValidSchemas().__dict__).lower().replace('_', '\n')
+        data = pprint.pformat(validators._ValidSchemas().__dict__).lower().replace("_", "\n")
         # remove specific memory addresses
         data = re.sub("at 0x.+?>", "", data)
-        data = re.sub('[^a-zA-Z0-9]', '\n', data)
-        data = re.sub('u', '', data)
-        data = sorted(set(data.split('\n')))
+        data = re.sub("[^a-zA-Z0-9]", "\n", data)
+        data = re.sub("u", "", data)
+        data = sorted(set(data.split("\n")))
         # convert because apparently data_regression must use dict
         data = {"data": data}
         data_regression.check(data)
+
 
 @pytest.mark.regression
 @pytest.mark.run(order=1)
 def test_regression__ValidSchemas_py35(data_regression):
     """Sorted because as long as it passes in Python 3.6+ this is just extra"""
     if sys.version[:3] == "3.5":
-        data = pprint.pformat(validators._ValidSchemas().__dict__).lower().replace('_', '\n')
+        data = pprint.pformat(validators._ValidSchemas().__dict__).lower().replace("_", "\n")
         # remove specific memory addresses
         data = re.sub("at 0x.+?>", "", data)
-        data = re.sub('[^a-zA-Z0-9]', '\n', data)
-        data = sorted(set(data.split('\n')))
+        data = re.sub("[^a-zA-Z0-9]", "\n", data)
+        data = sorted(set(data.split("\n")))
         # convert because apparently data_regression must use dict
         data = {"data": data}
         data_regression.check(data)
@@ -300,7 +301,7 @@ def test_fn__validate_no_return_value_overlap(input_config_dict):
     """Expect pass on valid input data"""
     error_messages = []
     validators._validate_no_return_value_overlap(error_messages, input_config_dict)
-    if not all([x.find('there are repeated return values') == -1 for x in error_messages]):
+    if not all([x.find("there are repeated return values") == -1 for x in error_messages]):
         raise AssertionError
 
 
@@ -310,7 +311,7 @@ def test_fn__validate_no_input_value_overlap(input_config_dict):
     """Expect pass on valid input data"""
     error_messages = []
     validators._validate_no_input_value_overlap(error_messages, input_config_dict)
-    if not all([x.find('repeated input values') == -1 for x in error_messages]):
+    if not all([x.find("repeated input values") == -1 for x in error_messages]):
         raise AssertionError
 
 

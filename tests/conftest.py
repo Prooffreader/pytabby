@@ -30,7 +30,6 @@ This conftest.py produces the following fixtures containing config dicts out of 
 """
 
 
-
 from __future__ import print_function
 from __future__ import division
 from __future__ import unicode_literals
@@ -225,6 +224,7 @@ def random_string():
                 new.append(char)
     new.extend("aBc")  # just in case no alphas are included
     return "".join(new)
+
 
 @pytest.fixture(scope="class", params=TEST_CONFIGS, ids=YAML_IDS)
 def menu_instance(request):
