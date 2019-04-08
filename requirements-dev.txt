@@ -1,6 +1,7 @@
 pytest==4.4.0
 pytest-ordering==0.6
 pytest-regressions==1.0.5
+pytest-cov
 black==19.3b0
 Sphinx==2.0.0
 doc8==0.8.0
