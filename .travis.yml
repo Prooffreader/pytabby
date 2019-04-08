@@ -45,12 +45,12 @@ matrix:
         - 'pip install -r requirements.txt'
         - 'pip install -r requirements-dev.txt'
         - 'pip install .'
-      script: pytest -cov-config=.coveragerc
-                    --cov=tabbedshellmenus tests/
-                    --cov-report term
-                    --cov-report html
-                    --cov-report xml
-                    --cov-report annotate
-                    --no-cov-on-fail
+      script: pytest --cov-config=.coveragerc
+                     --cov=tabbedshellmenus tests/
+                     --cov-report term
+                     --cov-report html
+                     --cov-report xml
+                     --cov-report annotate
+                     --no-cov-on-fail
       after_success:
         - python-codacy-coverage -r coverage.xml
