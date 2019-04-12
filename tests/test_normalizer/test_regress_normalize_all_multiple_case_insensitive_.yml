@@ -1,0 +1,39 @@
+data:
+- ':OUTER_LEVEL:'
+- false
+- 80
+- ':TAB:'
+- alpha
+- None
+- n/a
+- ':ITEM:'
+- '1'
+- One
+- '1'
+- ':ENTRIES:'
+- '1'
+- one
+- ':ITEM:'
+- '2'
+- '2'
+- '2'
+- ':ENTRIES:'
+- '2'
+- two
+- beta
+- has a description
+- This one has a long description, the other one does not
+- ':ITEM:'
+- three
+- '3'
+- three
+- ':ENTRIES:'
+- '3'
+- three
+- ':ITEM:'
+- four
+- '4'
+- four!
+- ':ENTRIES:'
+- '4'
+- four
