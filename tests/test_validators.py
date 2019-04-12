@@ -1,18 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# pylama:ignore=E114,E117,E127,E128,E231,E272,E302,E303,E501,W291,W292,W293,W391 (will be fixed by black)
+"""Tests tabbedshellmenus/validators.py"""
 
-from __future__ import print_function
-from __future__ import division
-from __future__ import unicode_literals
-from __future__ import absolute_import
+from __future__ import absolute_import, division, print_function, unicode_literals
 
-from copy import deepcopy
-import platform
 import pprint
 import re
 import sys
+from copy import deepcopy
 
 import pytest
 
@@ -22,12 +18,13 @@ import tabbedshellmenus.validators as validators
 @pytest.mark.function
 @pytest.mark.run(order=1)
 def test_fn__determine_schema_type(input_config_dict_and_id):
-    """Test that each config file has a valid schema type, and check that its filename follows the convention
-    explained in conftest.py
+    """Test that each config file has a valid schema type, and check that its filename follows convention
+
+    The convention is explained in conftest.py
     """
     config, id_ = input_config_dict_and_id
     schema_type = validators._determine_schema_type(config)
-    if not schema_type in ("multiple", "single_with_key", "single_without_key"):
+    if schema_type not in ("multiple", "single_with_key", "single_without_key"):
         raise AssertionError("Unrecognized schema_type")
     if schema_type == "multiple":
         if id_.find("multiple") == -1:
@@ -46,7 +43,7 @@ def test_fn__determine_schema_type(input_config_dict_and_id):
 @pytest.mark.function
 @pytest.mark.run(order=2)
 def test_fn__validate_schema(input_config_dict):
-    """test _validate_schema. Since it depends on _determine_schema_type, order=2"""
+    """Test _validate_schema. Since it depends on _determine_schema_type, order=2"""
     error_messages = []
     validators._validate_schema(error_messages, input_config_dict)
     if error_messages:
@@ -59,7 +56,7 @@ def test_schema_type_change(input_config_dict):
     """Tests that proper schema type is returned when schema types are changed into other types."""
     config = input_config_dict
     schema_type = validators._determine_schema_type(config)
-    if not schema_type in ("multiple", "single_with_key", "single_without_key"):
+    if schema_type not in ("multiple", "single_with_key", "single_without_key"):
         raise AssertionError
     if schema_type == "multiple":
         c = deepcopy(config)
@@ -194,6 +191,7 @@ def test_optional_long_description_multiple(input_config_multiple_only):
 @pytest.mark.breaking
 @pytest.mark.run(order=5)
 def test_wrong_types_top_level_keys_multiple(input_config_multiple_only):
+    """Ensure wrong types are caught."""
     c = deepcopy(input_config_multiple_only)
     error_messages = []
     validators._validate_schema(error_messages, c)
@@ -254,9 +252,10 @@ def test_some_fail_scenarios_single_with_key(input_config_single_with_key_only, 
 @pytest.mark.run(order=5)
 def test_no_multiple_tabs_in_single_with_key(input_config_single_with_key_only, random_string):
     """Too complicated to fit in one exec statement in test_some_fail_scenarios_single_with_key.
+
     This will be recognized by the validator as a multiple tab type, but missing the keys
     'header_choice_displayed_and_accepted' and 'header_description'
-    """  # TODO: why is only the first reported in error_messages?
+    """
     tab = {
         "items": [
             {
@@ -281,9 +280,6 @@ def test_no_multiple_tabs_in_single_with_key(input_config_single_with_key_only, 
         or any([x.find("'header_choice_displayed_and_accepted'") != -1 for x in error_messages])
     ):
         raise AssertionError
-    # TODO: does this work:
-    # if any([x.find("Missing key: 'header_description'") != -1 for x in error_messages]):
-    # raise AssertionError
 
 
 @pytest.mark.function
@@ -358,8 +354,11 @@ def test__validate_no_input_value_overlap_fail_between_item_and_tab(input_config
 @pytest.mark.breaking
 @pytest.mark.run(order=5)
 def test_validate_case_sensitive(config_stub_without_tabs, input_config_case_sensitive_only, random_string):
-    """NB the test cases have to include at least one case sensitive config with
-    at least one tab with at least two items. This is verified in conf"""
+    """Tests case_sensitive configs for case sensitivity.
+
+    NB the test cases have to include at least one case sensitive config with
+    at least one tab with at least two items. This is verified in conf
+    """
     tabs = deepcopy(validators._config_tabs(input_config_case_sensitive_only))
     if len(tabs[0]["items"]) < 2:
         return  # skips these cases, conftest makes sure there is at least one that won't be skipped:
@@ -387,8 +386,11 @@ def test_validate_case_sensitive(config_stub_without_tabs, input_config_case_sen
 @pytest.mark.breaking
 @pytest.mark.run(order=5)
 def test__validate_case_insensitive(input_config_case_insensitive_only, config_stub_without_tabs, random_string):
-    """"NB the test cases have to include at least one case sensitive config with
-    at least one tab with at least two items. This is verified in conftest.py"""
+    """Tests case-insensitive configs for case insensitivity
+
+    NB the test cases have to include at least one case sensitive config with
+    at least one tab with at least two items. This is verified in conftest.py
+    """
     tabs = deepcopy(validators._config_tabs(input_config_case_insensitive_only))
     if len(tabs[0]["items"]) < 2:
         return  # skips these cases, conftest makes sure there is at least one that won't be skipped:
@@ -422,6 +424,8 @@ def test__validate_case_insensitive(input_config_case_insensitive_only, config_s
 @pytest.mark.integration
 @pytest.mark.run(order=-1)
 def test_fn_validate_all(input_config_dict):
-    """ensures each test case overall  validation passes before making them fail for different reasons
-    TODO: order this one as integration"""
+    """Ensures each test case overall  validation passes before making them fail for different reasons
+
+    TODO: order this one as integration
+    """
     validators.validate_all(input_config_dict)

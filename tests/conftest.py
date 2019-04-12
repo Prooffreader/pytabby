@@ -30,10 +30,7 @@ This conftest.py produces the following fixtures containing config dicts out of 
 """
 
 
-from __future__ import print_function
-from __future__ import division
-from __future__ import unicode_literals
-from __future__ import absolute_import
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 import glob
 import os
@@ -48,14 +45,15 @@ pytest_plugins = ("regressions",)
 
 def yaml_paths():
     """Retrieves paths of input yaml config files used to instantiate the Menu class from tests/data.
+
     The contents of this folder can be changed without breaking the test suite, as long as they are valid yaml
     with valid schemas.
     """
     path_to_here = os.path.realpath(__file__)
     this_dir = os.path.split(path_to_here)[0]
     data_path = os.path.join(this_dir, "data")
-    yaml_paths = [x for x in glob.glob(os.path.join(data_path, "*.yaml"))]
-    return yaml_paths
+    yaml_paths_ = [x for x in glob.glob(os.path.join(data_path, "*.yaml"))]
+    return yaml_paths_
 
 
 # precursor for next constants
@@ -93,8 +91,7 @@ print("config yamls convert to dicts")
 
 @pytest.fixture(scope="function", params=TEST_CONFIGS, ids=YAML_IDS)
 def input_config_dict(request):
-    """Returns config dicts of all files in /tests/data to run tests on.
-    Since they are session-scoped, they should not be changed by tests."""
+    """Returns config dicts of all files in /tests/data to run tests on."""
     return request.param
 
 
@@ -105,8 +102,10 @@ def input_config_dict_and_id(request):
 
 
 def make_type_dict():
-    """uses validators._determine_schema_type() to split up configs into separate fixtures.
-    Ensures there is at least one of each"""
+    """Uses validators._determine_schema_type() to split up configs into separate fixtures.
+
+    Ensures there is at least one of each
+    """
     type_dict = {}
     for type_ in ["multiple", "single_with_key", "single_without_key"]:
         type_dict[type_] = {"configs": [], "ids": []}
@@ -117,7 +116,7 @@ def make_type_dict():
         type_dict[type_]["configs"].append(config)
         type_dict[type_]["ids"].append(id_)
     for type_ in ["multiple", "single_with_key", "single_without_key"]:
-        if not len(type_dict[type_]) > 0:
+        if not type_dict[type_]:
             raise AssertionError
     return type_dict
 
@@ -155,7 +154,7 @@ def config_stub_without_tabs():
 
 
 def make_case_sensitivity_dict():
-    """looks at 'case_sensitive' key to split configs into separate fixtures. Ensures there is at least one of each."""
+    """Looks at 'case_sensitive' key to split configs into separate fixtures. Ensures there is at least one of each."""
     case_dict = {}
     for type_ in ["case_sensitive", "case_insensitive"]:
         case_dict[type_] = {"configs": [], "ids": []}
@@ -167,15 +166,16 @@ def make_case_sensitivity_dict():
             case_dict["case_insensitive"]["configs"].append(config)
             case_dict["case_insensitive"]["ids"].append(id_)
     for type_ in ["case_sensitive", "case_insensitive"]:
-        if not len(case_dict[type_]) > 0:
+        if not case_dict[type_]:
             raise AssertionError
     return case_dict
 
 
 CASE_DICT = make_case_sensitivity_dict()
 
-# ensure they each have at least one config with at least one tab key with at least two items for test_validators
+
 def ensure_valid_test_cases_exist_for_case_in_sensitivity():
+    """Ensures there is at least one valid test case for insensitivy and sensitivity"""
     for k in ["case_sensitive", "case_insensitive"]:
         found_valid = False
         for config in CASE_DICT[k]["configs"]:
@@ -207,7 +207,7 @@ def input_config_case_insensitive_only(request):
 
 @pytest.fixture(scope="function")
 def random_string():
-    """stringified urandom bytes with alphanumerics only and alternating upper and lower case alphabeticals"""
+    """Stringified urandom bytes with alphanumerics only and alternating upper and lower case alphabeticals"""
     astr = str(os.urandom(10))
     # capitalize every other alphabetic and remove non-alphanumeric
     n = 0

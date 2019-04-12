@@ -5,10 +5,7 @@
 
 # pylama:ignore=W293,W291,W391,E302,E128 (will be fixed by black)
 
-from __future__ import print_function
-from __future__ import division
-from __future__ import unicode_literals
-from __future__ import absolute_import
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 
 def create_tab_objects(config):
@@ -38,6 +35,13 @@ class Tab:
     """
 
     def __init__(self, tab_dict, tab_selectors):
+        """Constructor for Tab class instances.
+
+        :param tab_dict: passed from menu constructor from config
+        :type tab_dict: dict
+        :param tab_selectors: all inputs that select tabs
+        :type tab_selectors: list
+        """
         self.head_choice = tab_dict.get("header_choice_displayed_and_accepted", None)
         self.head_desc = tab_dict.get("header_description", None)
         self.head_desc_long = tab_dict.get("long_description", None)
