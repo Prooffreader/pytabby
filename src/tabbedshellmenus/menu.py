@@ -1,25 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Contains Menu class; this is the base imported class of this package
-
-NOTE: When ruamel.yaml v15 API gets finalized, yaml reader code will have to change"""
+"""Contains Menu class; this is the base imported class of this package"""
 
 # pylama:ignore=W293,W291,W391,E302 (will be fixed by black)
 
-from __future__ import print_function
-from __future__ import division
-from __future__ import unicode_literals
-from __future__ import absolute_import
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 import json
 
 import yaml
 
-from . import validators
-from . import formatting
-from . import normalizer
-from . import tab
+from . import formatting, normalizer, tab, validators
 
 
 class Menu:
@@ -36,6 +28,14 @@ class Menu:
     """
 
     def __init__(self, config, start_tab_number=0):
+        """Constructor for Menu class instances.
+
+        :param config: nested data structure containing all info used to make menu
+        :type config: dict
+        :param config: start_tab_number: the (zero-based) position of the starting selected tab; handy when saving
+                       state between Menu instantiations. Default 0
+        type config: int
+        """
         self.config = config
         # validate config
         validators.validate_all(self.config)

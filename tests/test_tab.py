@@ -1,14 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Note that tabs depend on having normalized config input."""
+"""Tests tabbedshellmenus/tab.py
 
-# pylama:ignore=W293,W291,W391,E302,E128,E127,E303,E501 (will be fixed by black)
+Note that tabs depend on having normalized config input.
+"""
 
-from __future__ import print_function
-from __future__ import division
-from __future__ import unicode_literals
-from __future__ import absolute_import
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 from copy import deepcopy
 
@@ -19,6 +17,7 @@ import tabbedshellmenus.tab as tab
 
 
 def freeze_tab(tab_dict):
+    """Makes a reproducible version of tab_dict for regression testing"""
     lst = [":HEADS:"]
     for k in ["head_choice", "head_desc", "head_desc_long"]:
         lst.append(tab_dict[k])
@@ -26,7 +25,6 @@ def freeze_tab(tab_dict):
     for item in tab_dict["selectors"]:
         lst.append(item)
     keys = sorted(tab_dict["input2result"].keys(), key=str)
-    # TODO: ^ shouldn't they already be strings if they've been normalized?
     for k in keys:
         lst.append(":INPUT2RESULT:")
         lst.append(k)

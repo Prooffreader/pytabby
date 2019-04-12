@@ -5,20 +5,18 @@
 
 # pylama:ignore=E114,E117,E127,E128,E231,E272,E302,E303,E501,W291,W292,W293,W391 (will be fixed by black)
 
-from __future__ import print_function
-from __future__ import division
-from __future__ import unicode_literals
-from __future__ import absolute_import
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 import re
-
-from schema import Schema, Or, Optional, And, Forbidden
-
 from collections import Counter
 
+from schema import And, Forbidden, Optional, Or, Schema
 
-class InvalidInputError(ValueError):
-    pass
+
+class InvalidInputError(Exception):
+    """Catchall exception for invalid input. Prints list of all errors to stderr."""
+
+    pass  # noqa
 
 
 error_messages = []  # will be mutated by functions
@@ -83,7 +81,7 @@ def _validate_schema_part(error_messages, schema_, to_validate, prefix=None):
     """Mutates error_messages if error found"""
     try:
         _ = schema_.validate(to_validate)
-    except Exception as e:
+    except Exception as e:  # noqa
         error_type = _extract_class(str(e.__class__)) + ": "
         error_description = str(e).replace("\n", " ")
         if not prefix:
@@ -94,6 +92,7 @@ def _validate_schema_part(error_messages, schema_, to_validate, prefix=None):
 
 def _determine_schema_type(config):
     """Determines which of three valid schema types applies to input dict.
+
     Used in validate_schema()
 
     Valid Types are:
@@ -115,9 +114,10 @@ def _determine_schema_type(config):
     return schema_type
 
 
-def _validate_schema(error_messages, config):  # noqa: C901
-    """Validates that the dict passed to the Menu instance has the expected schema. Mutates error_messages by
-    appending all errors found
+def _validate_schema(error_messages, config):  # noqa
+    """Validates that config has the expected schema.
+
+    Mutates error_messages by appending all errors found
 
     Examples of valid schemas can be seen in the examples/ folder of the git repo, or in the docs.
     There are three kinds of schemas, one with multiple tabs, one with a single tab, and one with an implicit single
@@ -157,8 +157,7 @@ def _validate_schema(error_messages, config):  # noqa: C901
 
 
 def _config_tabs(config):
-    """Returns 'tabs' list unless single_without_key, in which case it manufactures one
-    """
+    """Returns 'tabs' list unless single_without_key, in which case it manufactures one"""
     schema_type = _determine_schema_type(config)
     if schema_type == "single_without_key":
         return [{"items": config["items"]}]
@@ -166,7 +165,7 @@ def _config_tabs(config):
 
 
 def _count_for_overlap(items_):
-    """counts items, returns multiple values only or empty set"""
+    """Counts items, returns multiple values only or empty set"""
     counter = Counter(items_)
     multiples = [x for x in counter.most_common() if x[1] > 1]
     return multiples
@@ -191,7 +190,9 @@ def _validate_no_return_value_overlap(error_messages, config):
 
 
 def _validate_no_input_value_overlap(error_messages, config):
-    """Validates that the potential inputs on each tab are unambiguous, i.e. that any entry will either lead
+    """Validates that the potential inputs on each tab are unambiguous.
+
+    In other words, validates that any entry will either lead
     to another tab OR to returning a unique value OR the current tab's input value (this could have gone either
     way, I chose not to accept duplicate tab name and input in that tab for the sake of consistency rather than
     freeing up one possible input in a sort of weird edge case)

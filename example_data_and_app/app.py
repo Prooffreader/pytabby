@@ -1,17 +1,16 @@
-"""A simple app that goes through the two example yaml config files, first the multiple tab, then the no-tab.
+"""A simple app that shows capabilities of tabbedshellmenus.
+
+Itgoes through the two example yaml config files, first the multiple tab, then the no-tab.
 The only action taken is the choices are printed to stdout, unless the 'quit' item is selected, in which case
-either the next config file starts or the program exits after both config files have been run"""
+either the next config file starts or the program exits after both config files have been run
+"""
 
-from __future__ import print_function
-from __future__ import division
-from __future__ import unicode_literals
-from __future__ import absolute_import
+from __future__ import absolute_import, division, print_function, unicode_literals
 
+import glob
 import os
 
 from tabbedshellmenus import Menu
-
-import glob
 
 THIS_FOLDER = os.path.split(__file__)[0]
 
@@ -21,6 +20,7 @@ CONFIG_FILE_NAMES = [x for x in CONFIG_FILE_NAMES if not x.startswith("blank")]
 
 
 def main(config_filename):
+    """Main function"""
     # use staticmethod to read yaml
     config = Menu.safe_read_yaml(os.path.join(THIS_FOLDER, config_filename))
 
@@ -41,6 +41,7 @@ def main(config_filename):
                 raise AssertionError("Somehow invalid tab choice was returned")
             value_return = returned[1]
         else:
+            tab_number = -1
             tab_return = None
             value_return = returned
 

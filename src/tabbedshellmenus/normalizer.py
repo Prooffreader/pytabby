@@ -4,13 +4,12 @@
 # pylama:ignore=W293,W291,W391,E302,E305,E128,E127,E303,E501,W292 (will be fixed by black)
 
 """Functions that ensure incoming configs have the same general features AFTER validation.
-(This ordering is chosen because if the config doesn't pass validation, the user will have to fix it as they
-see it, not as it looks after validation)"""
 
-from __future__ import print_function
-from __future__ import division
-from __future__ import unicode_literals
-from __future__ import absolute_import
+(This ordering is chosen because if the config doesn't pass validation, the user will have to fix it as they
+see it, not as it looks after validation)
+"""
+
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 from copy import deepcopy
 
@@ -28,6 +27,7 @@ def _add_tabs_key_if_needed(config):
 
 def _walk_stringize_and_case(config):  # noqa: C901
     """Walks the various contents of config and:
+
     1. Converts to string if not None where appropriate
     2. If case_sensitive is False, converts to lowercase where appropriate
     """

@@ -7,10 +7,4 @@ NOTE: As it is needed there to create a pytest fixture, the static method Menu.s
 conftest.py instead of here.
 """
 
-from __future__ import print_function
-from __future__ import division
-from __future__ import unicode_literals
-from __future__ import absolute_import
-
-
-
+from __future__ import absolute_import, division, print_function, unicode_literals

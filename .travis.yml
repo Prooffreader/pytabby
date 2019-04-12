@@ -13,7 +13,7 @@ matrix:
         - 'pip install pylama'
         - 'pip install eradicate'
         - 'pip install .'
-      script: pylama src/
+      script: pylama src,tests,example_data_and_app
     - python: '2.7'
       env:
        - TRAVIS_TEST_NAME="Py27_pytest_nocov"
@@ -48,9 +48,7 @@ matrix:
       script: pytest --cov-config=.coveragerc
                      --cov=tabbedshellmenus tests/
                      --cov-report term
-                     --cov-report html
                      --cov-report xml
-                     --cov-report annotate
                      --no-cov-on-fail
       after_success:
         - python-codacy-coverage -r coverage.xml

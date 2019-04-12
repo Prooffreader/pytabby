@@ -1,12 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# pylama:ignore=W293,W291,W391,E302,E128,E127,E303,E501,W292 (will be fixed by black)
+"""Tests tabbedshellmenus.normalizer.py"""
 
-from __future__ import print_function
-from __future__ import division
-from __future__ import unicode_literals
-from __future__ import absolute_import
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 from copy import deepcopy
 
@@ -16,6 +13,7 @@ import tabbedshellmenus.normalizer as normalizer
 
 
 def freeze_config(normalized_config):
+    """Creates reproducible list for regression test"""
     lst = [":OUTER_LEVEL:"]
     c = normalized_config
     for k in ["case_sensitive", "screen_width"]:
@@ -37,7 +35,7 @@ def freeze_config(normalized_config):
 @pytest.mark.function
 @pytest.mark.run(order=1)
 def test__add_tabs_key_if_needed_multiple_nochange(input_config_multiple_only):
-    """This function should not change a multiple or single_with_key schema type"""
+    """Tested function should not change a multiple or single_with_key schema type"""
     c = deepcopy(input_config_multiple_only)
     cprime = normalizer._add_tabs_key_if_needed(deepcopy(c))
     if not c == cprime:
@@ -47,7 +45,7 @@ def test__add_tabs_key_if_needed_multiple_nochange(input_config_multiple_only):
 @pytest.mark.function
 @pytest.mark.run(order=1)
 def test__add_tabs_key_if_needed_single_with_key_nochange(input_config_single_with_key_only):
-    """This function should not change a multiple or single_with_key schema type"""
+    """Tested function hould not change a multiple or single_with_key schema type"""
     c = deepcopy(input_config_single_with_key_only)
     cprime = normalizer._add_tabs_key_if_needed(deepcopy(c))
     if not c == cprime:
@@ -72,8 +70,11 @@ def test_regress__add_tabs_single_wo_key(data_regression, input_config_single_wi
 @pytest.mark.regression
 @pytest.mark.run(order=1)
 def test_regress_normalize_all(data_regression, input_config_dict):
-    """The function _walk_stringize_and_case() is not tested because the only other 'private' function
-    is necessary for it to work, and the function normalize just wraps these two functions anyway"""
+    """Regression test instead of regular function tests.
+
+    The function _walk_stringize_and_case() is not tested because the only other 'private' function
+    is necessary for it to work, and the function normalize just wraps these two functions anyway
+    """
     c = deepcopy(input_config_dict)
     c = normalizer.normalize(c)
     c = freeze_config(c)
