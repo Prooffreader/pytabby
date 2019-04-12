@@ -89,6 +89,8 @@ TODO:
 * test whether 'header_description' appears in error messages of test_validators:test_no_multiple_tabs_in_single_with_key
 * test whether error messages are being truncated in all vv. of Python
 * check this line in test_tab: keys = sorted(tab_dict["input2result"].keys(), key=str) shouldn't they already be str if they've been normalized?
+* fix codacy coverage
+
 Wish List:
 ^^^^^^^^^^
 
