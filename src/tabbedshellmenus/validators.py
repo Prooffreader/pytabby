@@ -3,7 +3,6 @@
 
 """Functions to validate inputs and configs. Note that this creates one exception listing all errors encountered"""
 
-# pylama:ignore=E114,E117,E127,E128,E231,E272,E302,E303,E501,W291,W292,W293,W391 (will be fixed by black)
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 

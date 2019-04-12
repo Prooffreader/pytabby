@@ -5,8 +5,6 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-# pylama:ignore=W293,W291,W391,E302,E128 (will be fixed by black)
-
 
 def format_menu(config, current_number, line_length):
     """Creates menu to be displayed to user, called from menu.Menu only

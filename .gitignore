@@ -8,6 +8,7 @@ example_data_and_app/test_*.py
 pip-wheel-metadata/
 *.py,cover
 pytest.ini
+.codacyrc
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

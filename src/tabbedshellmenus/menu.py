@@ -3,7 +3,6 @@
 
 """Contains Menu class; this is the base imported class of this package"""
 
-# pylama:ignore=W293,W291,W391,E302 (will be fixed by black)
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
