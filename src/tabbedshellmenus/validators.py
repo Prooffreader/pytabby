@@ -1,7 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Functions to validate inputs and configs. Note that this creates one exception listing all errors encountered"""
+"""Functions to validate inputs and configs.
+
+Note that this creates one exception listing all errors encountered.
+Note also that this validates the input requirements *before* normalization
+"""
 
 
 from __future__ import absolute_import, division, print_function, unicode_literals
@@ -13,11 +17,10 @@ from schema import And, Forbidden, Optional, Or, Schema
 
 
 class InvalidInputError(Exception):
-    """Catchall exception for invalid input. 
-    
+    """Catchall exception for invalid input.
+
     Prints list of all errors to stderr.
     """
-    pass
 
 
 error_messages = []  # will be mutated by functions
@@ -25,8 +28,9 @@ error_messages = []  # will be mutated by functions
 
 class _ValidSchemas:
     """Data-holding class for different schema.
-    
-    Schema instances to use in dict validation. Used in validate_schema()"""
+
+    Schema instances to use in dict validation. Used in validate_schema()
+    """
 
     def __init__(self):
         self.outer_schema_multiple_or_single_with_key = Schema(
