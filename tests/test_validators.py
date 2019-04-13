@@ -226,14 +226,14 @@ def test_any_type_long_description_multiple(input_config_multiple_only):
     "command,error_message",
     [
         (
-            "c['tabs'][0]['header_choice_displayed_and_accepted']='somestring'",
-            "Forbidden key encountered: .{0,1}'header_choice_displayed_and_accepted'",
+            "c['tabs'][0]['header_entry']='somestring'",
+            "Forbidden key encountered: .{0,1}'header_entry'",
         ),
         ("c['tabs'][0]['header_description']='somestring'", "Forbidden key encountered: .{0,1}'header_description'"),
         ("c['tabs'][0]['long_description']='somestring'", "Forbidden key encountered: .{0,1}'long_description'"),
     ],
     ids=[
-        "should_not_have_header_choice_displayed_and_accepted",
+        "should_not_have_header_entry",
         "should_not_have_header_description",
         "should_not_have_long_description_which_is_optional_in_multiple",
     ],
@@ -254,7 +254,7 @@ def test_no_multiple_tabs_in_single_with_key(input_config_single_with_key_only, 
     """Too complicated to fit in one exec statement in test_some_fail_scenarios_single_with_key.
 
     This will be recognized by the validator as a multiple tab type, but missing the keys
-    'header_choice_displayed_and_accepted' and 'header_description'
+    'header_entry' and 'header_description'
     """
     tab = {
         "items": [
@@ -277,7 +277,7 @@ def test_no_multiple_tabs_in_single_with_key(input_config_single_with_key_only, 
     # These are split up because Python 2 has u'header_choice... and I don't feel like fixing it
     if not (
         any([x.find("Missing key: ") != -1 for x in error_messages])
-        or any([x.find("'header_choice_displayed_and_accepted'") != -1 for x in error_messages])
+        or any([x.find("'header_entry'") != -1 for x in error_messages])
     ):
         raise AssertionError
 
@@ -343,7 +343,7 @@ def test_validate_no_input_value_overlap_fail_within_an_item(
 def test__validate_no_input_value_overlap_fail_between_item_and_tab(input_config_multiple_only):
     """Add a tab header value to a to valid_input in an item"""
     c = deepcopy(input_config_multiple_only)
-    extra_value = c["tabs"][0]["header_choice_displayed_and_accepted"]
+    extra_value = c["tabs"][0]["header_entry"]
     c["tabs"][1]["items"][0]["valid_entries"] += [extra_value]
     error_messages = []
     validators._validate_no_input_value_overlap(error_messages, c)
@@ -376,7 +376,7 @@ def test_validate_case_sensitive(config_stub_without_tabs, input_config_case_sen
         # check with multiple tabs
         if len(c["tabs"]) > 1:
             c["tabs"][0]["items"][1]["valid_choices"] = [random_string + random_string]
-            c["tabs"][1]["header_choice_displayed_and_accepted"] = random_string.lower()
+            c["tabs"][1]["header_entry"] = random_string.lower()
             error_messages = []
             validators._validate_no_input_value_overlap(error_messages, c)
             if error_messages:
@@ -411,7 +411,7 @@ def test__validate_case_insensitive(input_config_case_insensitive_only, config_s
         if len(c["tabs"]) > 1:
             new_string = "a" + random_string
             c["tabs"][0]["items"][1]["valid_entries"] = [new_string]
-            c["tabs"][1]["header_choice_displayed_and_accepted"] = new_string.lower()
+            c["tabs"][1]["header_entry"] = new_string.lower()
             error_messages = []
             validators._validate_no_input_value_overlap(error_messages, c)
             if not (

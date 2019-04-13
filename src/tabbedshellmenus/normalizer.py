@@ -47,7 +47,7 @@ def _walk_stringize_and_case(config):  # noqa: C901
     for tab in c["tabs"]:
         new_tab = {}
         for k1, v1 in tab.items():
-            if k1 == "header_choice_displayed_and_accepted":
+            if k1 == "header_entry":
                 new_tab[k1] = strcase(v1, True)
             elif k1 in ["header_description", "long_description"]:
                 new_tab[k1] = strcase(v1, False, True)

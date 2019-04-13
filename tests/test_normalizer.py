@@ -20,7 +20,7 @@ def freeze_config(normalized_config):
         lst.append(c[k])
     lst.append(":TAB:")
     for tab in c["tabs"]:
-        for k1 in ["header_choice_displayed_and_accepted", "header_description", "long_description"]:
+        for k1 in ["header_entry", "header_description", "long_description"]:
             lst.append(tab.get(k1, "n/a"))
         for item in tab["items"]:
             lst.append(":ITEM:")

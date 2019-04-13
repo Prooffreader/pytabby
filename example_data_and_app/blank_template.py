@@ -3,7 +3,7 @@
 
 config = {'case_sensitive': ,
           'screen_width': ,
-          'tabs': [{'header_choice_displayed_and_accepted': '',
+          'tabs': [{'header_entry': '',
                     'header_description': '',
                     'long_description': '',
                     'items': [{'choice_displayed': '',
@@ -17,7 +17,7 @@ config = {'case_sensitive': ,
 #
 # config = {'case_sensitive': ,  # optional, boolean, default False
 #           'screen_width': ,  # optional, integer, default 80
-#           'tabs': [{'header_choice_displayed_and_accepted': '',  # required, will be changed to str if not already str
+#           'tabs': [{'header_entry': '',  # required, will be changed to str if not already str
 #                     'header_description': '',  # optional, default None, will be changed to str if present, not None and not already str
 #                     'long_description': '',  # optional, default None, will be changed to str if present, not None and not already str
 #                     'items': [{'choice_displayed': '',  # required, will be changed to str if not already str

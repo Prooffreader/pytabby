@@ -3,7 +3,7 @@
 case_sensitive:
 screen_width:
 tabs:
-  - header_choice_displayed_and_accepted:
+  - header_entry:
     header_description:
     long_description: 
     items:
@@ -18,7 +18,7 @@ tabs:
 # case_sensitive:  # optional, boolean, default false
 # screen_width:  # optional, integer, default 80
 # tabs:
-#   - header_choice_displayed_and_accepted:  # required, will be changed to str if not already str
+#   - header_entry:  # required, will be changed to str if not already str
 #     header_description: File  # optional, default None, will be changed to str if present, not None and not already str
 #     long_description: Changing to File tab  # optional, default None, will be changed to str if present, not None and not already str
 #     items:

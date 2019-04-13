@@ -3,7 +3,7 @@ screen_width: 80  # optional, integer, default 80
 # Note that there is only one tab and no headers.
 # This example will still work with its one unnecessary 'tab' key, with the 'items' key a value of
 # the 'tabs' key, **because there are no other values of the tabs key**, i.e. the 2-3 other keys --
-# `header_choice_displayed_and_accepted`, `header_description` or (optional) `long_description`.
+# `header_entry`, `header_description` or (optional) `long_description`.
 #
 # The reason for this design choice is that if there is only one tab defined, the program will never show a
 # header/tab bar (since with one tab by definition you can't change tabs). However, if any of the other keys are

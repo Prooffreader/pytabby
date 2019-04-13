@@ -5,14 +5,15 @@
 case_sensitive: False  # optional, boolean, default False
 screen_width: 80  # optional, integer, default 80
 tabs:
-  - header_choice_displayed_and_accepted: fi  # two letters so it doesn't conflict with Edit tab's find
-    header_description: File  # can be None
-    long_description: Changing to File tab  # this key is optional, it is displayed only when changing tebs
+  - header_entry: fi  # two letters so it doesn't conflict with Edit tab's find
+    header_description: File  # this key is optional, or it can be None
+    long_description: Changing to File tab  # this key is optional, it is displayed only when changing tabs 
+                                            # It can also be set to None
     items:
       - choice_displayed: o
         choice_description: Open
         valid_entries: 
-          - o
+          - o  # In this case, the valid_entries matches the choice_displayed, but it doesn't HAVE to. See the next item.
         returns: open
       - choice_displayed: w,c  # note I put a comma here for clarity, but it is not parsed, I could have put 
                                # anything eg "wc", "w|c", "w or c", "double-u or cee", "fizzbin", etc.
@@ -30,7 +31,7 @@ tabs:
         choice_description: Save As
         valid_entries: 
           - sa  # Note this requires the user to give a TWO-letter response, not just one, in contrast to the
-                # w OR c of close.
+                # items above it
         returns: save_as  # At this point, the outer scope calling this module would presumably have to ask for
                           # more information, e.g. a new file name and/or path
       - choice_displayed: p
@@ -38,16 +39,16 @@ tabs:
         valid_entries: 
           - p
         returns: preferences  # this might, in the outer scope, call a NEW instance of Menu
-      - choice_displayed: q,x
+      - choice_displayed: q
         choice_description: Quit
         valid_entries: 
           - q
           - x  # note I could have left this out, it does not need to match choice_displayed, although it's a good idea to
           - quit  # note this was was not specified in `choice_displayed`, it doesn't have to be
         returns: quit
-  - header_choice_displayed_and_accepted: e
-    header_description: Edit  # can be None
-    long_description: You have just selected the edit menu  # this key is optional
+  - header_entry: e
+    header_description: Edit  # can be missing or None
+    long_description: You have just selected the edit menu  # can be missing or none
     items:
       - choice_displayed: z
         choice_description: Undo
@@ -89,7 +90,7 @@ tabs:
         valid_entries: 
           - r
         returns: replace
-  - header_choice_displayed_and_accepted: vw  # Two letters so it doesn't conflict with edit's "v"/paste
+  - header_entry: vw  # Two letters so it doesn't conflict with edit's "v"/paste
     header_description: View
     items:
       - choice_displayed: cat
@@ -107,7 +108,7 @@ tabs:
         valid_entries: 
           - tail
         returns: tail
-  - header_choice_displayed_and_accepted: h
+  - header_entry: h
     header_description: Help
     items:
       - choice_displayed: d
@@ -120,7 +121,7 @@ tabs:
         valid_entries: 
           - a
         returns: about
-  - header_choice_displayed_and_accepted: 0
+  - header_entry: 0
     header_description: Integer
     items:
       - choice_displayed: 1

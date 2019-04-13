@@ -15,8 +15,8 @@ def create_tab_objects(config):
     """
     tab_selectors = []
     for tab in config["tabs"]:
-        if tab.get("header_choice_displayed_and_accepted", None):
-            tab_selectors.append(tab["header_choice_displayed_and_accepted"])
+        if tab.get("header_entry", None):
+            tab_selectors.append(tab["header_entry"])
     tabs = []
     for tab in config["tabs"]:
         tabs.append(Tab(tab, tab_selectors))
@@ -40,7 +40,7 @@ class Tab:
         :param tab_selectors: all inputs that select tabs
         :type tab_selectors: list
         """
-        self.head_choice = tab_dict.get("header_choice_displayed_and_accepted", None)
+        self.head_choice = tab_dict.get("header_entry", None)
         self.head_desc = tab_dict.get("header_description", None)
         self.head_desc_long = tab_dict.get("long_description", None)
         self.selectors = tab_selectors

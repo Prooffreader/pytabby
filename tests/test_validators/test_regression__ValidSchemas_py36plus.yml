@@ -68,7 +68,7 @@ data:
 - at
 - 0xSOME_MEMORY_ADDRESS
 - tab_schema_multiple
-- Schemaheader_choice_displayed_and_accepted
+- Schemaheader_entry
 - function
 - _ValidSchemas__init__localslambda
 - at
@@ -93,7 +93,7 @@ data:
 - at
 - 0xSOME_MEMORY_ADDRESS
 - tab_schema_single_with_key
-- SchemaForbiddenheader_choice_displayed_and_accepted
+- SchemaForbiddenheader_entry
 - class
 - object
 - Forbiddenheader_description

@@ -3,7 +3,7 @@ case_sensitive: false  # optional, boolean, default false
 screen_width: 80  # optional, integer, default 80
 tabs:
   - 
-    header_choice_displayed_and_accepted: aLpHa
+    header_entry: aLpHa
     header_description: None  # No long description
     items:
       - choice_displayed: 1
@@ -19,7 +19,7 @@ tabs:
           - tWo
         returns: 2
   - 
-    header_choice_displayed_and_accepted: BeTa
+    header_entry: BeTa
     header_description: has a description
     long_description: This one has a long description, the other one does not
     items:

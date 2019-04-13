@@ -43,7 +43,7 @@ class _ValidSchemas:
 
         self.tab_schema_multiple = Schema(
             {
-                "header_choice_displayed_and_accepted": lambda x: len(str(x)) > 0,
+                "header_entry": lambda x: len(str(x)) > 0,
                 Optional("header_description"): lambda x: (x or x is None) or len(str(x)) > 0,
                 Optional("long_description"): lambda x: (x or x is None) or len(str(x)) > 0,
                 "items": And(Or(list, tuple), lambda x: len(x) > 0),
@@ -52,7 +52,7 @@ class _ValidSchemas:
 
         self.tab_schema_single_with_key = Schema(
             {
-                Forbidden("header_choice_displayed_and_accepted"): object,
+                Forbidden("header_entry"): object,
                 Forbidden("header_description"): object,
                 Forbidden("long_description"): object,
                 "items": And(Or(list, tuple), lambda x: len(x) > 0),
@@ -182,7 +182,7 @@ def _validate_no_return_value_overlap(error_messages, config):
         returns = [x["returns"] for x in tab["items"]]
         multiples = _count_for_overlap(returns)
         if multiples:
-            if "header_choice_displayed_and_accepted" in tab.keys():
+            if "header_entry" in tab.keys():
                 error_messages.append("In tab#{0}, there are repeated return values: {1}.".format(tab_num, multiples))
             else:
                 error_messages.append("In the single tab, there are repeated return values: {0}".format(multiples))
@@ -206,7 +206,7 @@ def _validate_no_input_value_overlap(error_messages, config):
     # get tab header choices if multiple tabs
     if schema_type == "multiple":
         for tab in tabs:
-            starting_choices.append(tab["header_choice_displayed_and_accepted"])
+            starting_choices.append(tab["header_entry"])
     for tab_num, tab in enumerate(tabs):
         choices = starting_choices[:]
         for item in tab["items"]:

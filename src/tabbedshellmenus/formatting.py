@@ -35,7 +35,7 @@ def _format_headers(tabs, current_number, line_length):
     top_text = []
     bottom_text = []
     for i, tab in enumerate(tabs):
-        abbrev = tab["header_choice_displayed_and_accepted"]
+        abbrev = tab["header_entry"]
         desc = tab.get("header_description", None)
         if desc is None:
             desc = ""

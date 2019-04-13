@@ -5,7 +5,7 @@
 case_sensitive: False  # optional, boolean, default False
 screen_width: 80  # optional, integer, default 80
 tabs:
-  - header_choice_displayed_and_accepted: fi  # two letters so it doesn't conflict with Edit tab's find
+  - header_entry: fi  # two letters so it doesn't conflict with Edit tab's find
     header_description: File  # can be None
     long_description: Changing to File tab  # this key is optional, it is displayed only when changing tebs
     items:
@@ -45,7 +45,7 @@ tabs:
           - x  # note I could have left this out, it does not need to match choice_displayed, although it's a good idea to
           - quit  # note this was was not specified in `choice_displayed`, it doesn't have to be
         returns: quit
-  - header_choice_displayed_and_accepted: e
+  - header_entry: e
     header_description: Edit  # can be None
     long_description: You have just selected the edit menu  # this key is optional
     items:
@@ -89,7 +89,7 @@ tabs:
         valid_entries: 
           - r
         returns: replace
-  - header_choice_displayed_and_accepted: vw  # Two letters so it doesn't conflict with edit's "v"/paste
+  - header_entry: vw  # Two letters so it doesn't conflict with edit's "v"/paste
     header_description: View
     items:
       - choice_displayed: cat
@@ -107,7 +107,7 @@ tabs:
         valid_entries: 
           - tail
         returns: tail
-  - header_choice_displayed_and_accepted: h
+  - header_entry: h
     header_description: Help
     items:
       - choice_displayed: d
@@ -120,7 +120,7 @@ tabs:
         valid_entries: 
           - a
         returns: about
-  - header_choice_displayed_and_accepted: 0
+  - header_entry: 0
     header_description: Integer
     items:
       - choice_displayed: 1
