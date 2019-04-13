@@ -28,7 +28,8 @@ tabbedshellmenus [in development]
 .. image:: https://img.shields.io/badge/implementation-cpython-blue.svg
     :target: https://github.com/Prooffreader/tabbedshellmenus
 
-A *flexible*, **tabbed** menu system to run in the shell and control program flow interactively
+A *flexible*, **tabbed** menu system to run in the shell and control program
+flow interactively
 
 Installation
 ------------
@@ -45,7 +46,7 @@ Usage
     myconfig = Menu.safe_read_yaml('path/to/yaml')  # or Menu.read_json() or just pass a dict in the next step
     mymenu = Menu(myconfig)
     result = mymenu.run()
-    
+
     if result == 'result1':``
         do_this_interesting_thing()``
     elif result == 'result2':``
@@ -57,13 +58,21 @@ FAQ:
 ^^^^
 
 Why can't I return handlers?
-    Out of scope for this project. The Menu instance just returns strings to control program flow, you can put the handlers in if statements after a value is returned.
+    Out of scope for this project. The Menu instance just returns
+    strings to control program flow, you can put the handlers in
+    if statements after a value is returned.
 
 Why are my values coming in/out strings?
-    To keep things simple, all input and output (return) values are converted to string. So if you have config['tabs'][0]['items][0]['valid_entries'] = [1], the return value will be '1'.
+    To keep things simple, all input and output (return) values are
+    converted to string. So if you have
+    ``config['tabs'][0]['items][0]['valid_entries'] = [1]``,
+    the return value will be '1'.
 
 Why do ``items`` have both 'choice_displayed' and 'valid_entries' keys?
-    To keep things flexible, you don't have to display exactly what you'll accept as input. For example, you could display 'y/n' as the suggested answers to a yes or no question, but actually accept ['y', 'n', 'yes', 'no'], etc.
+    To keep things flexible, you don't have to display exactly
+    what you'll accept as input. For example, you could display
+    'yes/no' as the suggested answers to a yes or no question, but a
+    ctually accept ['y', 'n', 'yes', 'no'], etc.
 
 I have 'case_sensitive' == False, but my return value is still uppercase.
     'case_sensitive' only affects inputs, not outputs
@@ -79,18 +88,25 @@ Dependencies:
 TODO:
 ^^^^^
 
-* test None as header_description and header_long_description, ensure test cases have descriptions present, absent and None
+* test None as header_description and header_long_description,
+  ensure test cases have descriptions present, absent and None
 * test normalizer proper handling of lower case where appropriate
 * add another test config with other case
 * test that case sensitive doesn't affect outputs
-* test that case_sensitive doesn't affect output/return, just header_entry and valid_entries.
+* test that case_sensitive doesn't affect output/return,
+  just header_entry and valid_entries.
 * ^ change example yamls to make this clear
-* test whether 'header_description' appears in error messages of test_validators:test_no_multiple_tabs_in_single_with_key
+* test whether 'header_description' appears in error messages
+  of test_validators:test_no_multiple_tabs_in_single_with_key
 * test whether error messages are being truncated in all vv. of Python
-* check this line in test_tab: keys = sorted(tab_dict["input2result"].keys(), key=str) shouldn't they already be str if they've been normalized?
+* check this line in test_tab:
+  ``keys = sorted(tab_dict["input2result"].keys(), key=str)`` --
+  shouldn't they already be str if they've been normalized?
 * test range of screen width in validators
 
 Wish List:
 ^^^^^^^^^^
 
-* a way to dynamically silence ("grey out", if this were a GUI menu system) certain menu items, which may be desired during program flow, probably by passing a list of silenced tab names and return values
+* a way to dynamically silence ("grey out", if this were a GUI menu system)
+  certain menu items, which may be desired during program flow, probably by
+  passing a list of silenced tab names and return values
