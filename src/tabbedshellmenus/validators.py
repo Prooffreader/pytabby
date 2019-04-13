@@ -13,23 +13,27 @@ from schema import And, Forbidden, Optional, Or, Schema
 
 
 class InvalidInputError(Exception):
-    """Catchall exception for invalid input. Prints list of all errors to stderr."""
-
-    pass  # noqa
+    """Catchall exception for invalid input. 
+    
+    Prints list of all errors to stderr.
+    """
+    pass
 
 
 error_messages = []  # will be mutated by functions
 
 
 class _ValidSchemas:
-    """Data-holding class for different schema.Schema instances to use in dict validation. Used in validate_schema()"""
+    """Data-holding class for different schema.
+    
+    Schema instances to use in dict validation. Used in validate_schema()"""
 
     def __init__(self):
         self.outer_schema_multiple_or_single_with_key = Schema(
             {
                 Optional("case_sensitive"): bool,
                 Optional("screen_width"): And(int, lambda x: x > 0),
-                "tabs": And(list, lambda x: len(x) > 0),
+                "tabs": And(Or(list, tuple), lambda x: len(x) > 0),
             }
         )
 
@@ -43,9 +47,9 @@ class _ValidSchemas:
 
         self.tab_schema_multiple = Schema(
             {
-                "header_entry": lambda x: len(str(x)) > 0,
-                Optional("header_description"): lambda x: (x or x is None) or len(str(x)) > 0,
-                Optional("header_long_description"): lambda x: (x or x is None) or len(str(x)) > 0,
+                "header_entry": lambda x: x is not None and len(str(x)) > 0,
+                Optional("header_description"): lambda x: x is None or len(str(x)) > 0,
+                Optional("header_long_description"): lambda x: x is None or len(str(x)) > 0,
                 "items": And(Or(list, tuple), lambda x: len(x) > 0),
             }
         )
@@ -61,14 +65,14 @@ class _ValidSchemas:
 
         self.item_schema = Schema(
             {
-                "choice_displayed": lambda x: x and len(str(x)) > 0,
-                "choice_description": lambda x: x and len(str(x)) > 0,
+                "choice_displayed": lambda x: x is not None and len(str(x)) > 0,
+                Optional("choice_description"): lambda x: x is None or len(str(x)) > 0,
                 "valid_entries": And(Or(list, tuple), lambda x: len(x) > 0),
-                "returns": lambda x: x and len(str(x)) > 0,
+                "returns": lambda x: x is not None and len(str(x)) > 0,
             }
         )
 
-        self.entry_schema = Schema(lambda x: x and len(str(x)) > 0)
+        self.entry_schema = Schema(lambda x: x is not None and len(str(x)) > 0)
 
 
 def _extract_class(class_repr):
