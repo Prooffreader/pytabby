@@ -1,10 +1,9 @@
-# This one doesn't appear in examples and doesn't make much sense, it's just to test a few hanging coverage things
 case_sensitive: true 
 screen_width: 80 
 tabs:
   - 
-    header_entry: aLpHa
-    header_description: None  # No long description
+    header_entry: un
+    header_description: Description
     items:
       - choice_displayed: 1
         choice_description: One
@@ -19,7 +18,7 @@ tabs:
           - tWo
         returns: 2
   - 
-    header_entry: BeTa
+    header_entry: deux
     header_description: has a description
     header_long_description: This one has a long description, the other one does not
     items:
@@ -27,7 +26,7 @@ tabs:
         choice_description: 3
         valid_entries: 
           - 3
-          - threE
+          - three
         returns: three
       - choice_displayed: four
         choice_description: 4
