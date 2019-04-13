@@ -7,7 +7,7 @@ screen_width: 80  # optional, integer, default 80
 tabs:
   - header_entry: fi  # two letters so it doesn't conflict with Edit tab's find
     header_description: File  # can be None
-    long_description: Changing to File tab  # this key is optional, it is displayed only when changing tebs
+    header_long_description: Changing to File tab  # this key is optional, it is displayed only when changing tebs
     items:
       - choice_displayed: o
         choice_description: Open
@@ -47,7 +47,7 @@ tabs:
         returns: quit
   - header_entry: e
     header_description: Edit  # can be None
-    long_description: You have just selected the edit menu  # this key is optional
+    header_long_description: You have just selected the edit menu  # this key is optional
     items:
       - choice_displayed: z
         choice_description: Undo

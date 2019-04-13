@@ -21,7 +21,7 @@ tabs:
   - 
     header_entry: BeTa
     header_description: has a description
-    long_description: This one has a long description, the other one does not
+    header_long_description: This one has a long description, the other one does not
     items:
       - choice_displayed: three
         choice_description: 3

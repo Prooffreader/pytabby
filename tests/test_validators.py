@@ -171,17 +171,17 @@ def test_optional_top_level_keys_multiple(input_config_multiple_only):
 
 @pytest.mark.breaking
 @pytest.mark.run(order=5)
-def test_optional_long_description_multiple(input_config_multiple_only):
-    """Test that a tab's 'long_description' is optional"""
+def test_optional_header_long_description_multiple(input_config_multiple_only):
+    """Test that a tab's 'header_long_description' is optional"""
     c = deepcopy(input_config_multiple_only)
     error_messages = []
     validators._validate_schema(error_messages, c)
     if error_messages:
         raise AssertionError
-    if "long_description" in c["tabs"][0].keys():
-        del c["tabs"][0]["long_description"]
+    if "header_long_description" in c["tabs"][0].keys():
+        del c["tabs"][0]["header_long_description"]
     else:
-        c["tabs"][0]["long_description"] = "a long description"
+        c["tabs"][0]["header_long_description"] = "a long description"
     error_messages = []
     validators._validate_schema(error_messages, c)
     if error_messages:
@@ -208,12 +208,12 @@ def test_wrong_types_top_level_keys_multiple(input_config_multiple_only):
 
 @pytest.mark.breaking
 @pytest.mark.run(order=5)
-def test_any_type_long_description_multiple(input_config_multiple_only):
+def test_any_type_header_long_description_multiple(input_config_multiple_only):
     """Test that any type will work for long description, as it will be coerced to string in normalizer."""
     c = deepcopy(input_config_multiple_only)
     for value in [True, 10, 2.54, KeyError, None]:  # exception used just as an example of a class
         # which can be coerced to a string like any object
-        c["tabs"][0]["long_description"] = value
+        c["tabs"][0]["header_long_description"] = value
         error_messages = []
         validators._validate_schema(error_messages, c)
         if error_messages:
@@ -230,12 +230,12 @@ def test_any_type_long_description_multiple(input_config_multiple_only):
             "Forbidden key encountered: .{0,1}'header_entry'",
         ),
         ("c['tabs'][0]['header_description']='somestring'", "Forbidden key encountered: .{0,1}'header_description'"),
-        ("c['tabs'][0]['long_description']='somestring'", "Forbidden key encountered: .{0,1}'long_description'"),
+        ("c['tabs'][0]['header_long_description']='somestring'", "Forbidden key encountered: .{0,1}'header_long_description'"),
     ],
     ids=[
         "should_not_have_header_entry",
         "should_not_have_header_description",
-        "should_not_have_long_description_which_is_optional_in_multiple",
+        "should_not_have_header_long_description_which_is_optional_in_multiple",
     ],
 )
 def test_some_fail_scenarios_single_with_key(input_config_single_with_key_only, command, error_message):

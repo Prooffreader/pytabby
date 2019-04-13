@@ -45,7 +45,7 @@ class _ValidSchemas:
             {
                 "header_entry": lambda x: len(str(x)) > 0,
                 Optional("header_description"): lambda x: (x or x is None) or len(str(x)) > 0,
-                Optional("long_description"): lambda x: (x or x is None) or len(str(x)) > 0,
+                Optional("header_long_description"): lambda x: (x or x is None) or len(str(x)) > 0,
                 "items": And(Or(list, tuple), lambda x: len(x) > 0),
             }
         )
@@ -54,7 +54,7 @@ class _ValidSchemas:
             {
                 Forbidden("header_entry"): object,
                 Forbidden("header_description"): object,
-                Forbidden("long_description"): object,
+                Forbidden("header_long_description"): object,
                 "items": And(Or(list, tuple), lambda x: len(x) > 0),
             }
         )

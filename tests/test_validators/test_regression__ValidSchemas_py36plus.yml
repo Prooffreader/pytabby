@@ -78,7 +78,7 @@ data:
 - _ValidSchemas__init__localslambda
 - at
 - 0xSOME_MEMORY_ADDRESS
-- Optionallong_description
+- Optionalheader_long_description
 - function
 - _ValidSchemas__init__localslambda
 - at
@@ -99,7 +99,7 @@ data:
 - Forbiddenheader_description
 - class
 - object
-- Forbiddenlong_description
+- Forbiddenheader_long_description
 - class
 - object
 - items

@@ -42,7 +42,7 @@ class Tab:
         """
         self.head_choice = tab_dict.get("header_entry", None)
         self.head_desc = tab_dict.get("header_description", None)
-        self.head_desc_long = tab_dict.get("long_description", None)
+        self.head_desc_long = tab_dict.get("header_long_description", None)
         self.selectors = tab_selectors
         self._parse_items(tab_dict["items"])
 
