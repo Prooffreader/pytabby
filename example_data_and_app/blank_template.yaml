@@ -15,11 +15,11 @@ tabs:
 #
 # case_sensitive:  # optional, boolean, default false
 # screen_width:  # optional, integer, default 80
-# tabs:
-#   - header_entry:  # required, will be changed to str if not already str
-#     header_description:  # optional, default None
-#     header_long_description:  optional, default None
-#     items:
+# tabs:  # optional if only one tab; 'items' key can be at this level in that case
+#   - header_entry:  # required if multiple tabs, forbidden if only one tab, will be changed to str if not already str
+#     header_description:  # optional if multiple tabs, forbidden if only one tab, default None
+#     header_long_description:  # optional if multiple tabs, forbidden if only one tab, default None
+#     items:  # if only one tab, this can replace 'tabs' key
 #       - choice_displayed:  # required
 #         choice_description:  # required
 #         valid_entries:

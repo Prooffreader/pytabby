@@ -1,6 +1,6 @@
 case_sensitive: True  # optional, boolean, default False
 screen_width: 80  # optional, integer, default 80
-# Note that there is only one tab and no headers.
+# Note that there is only one tab and no header key/value pairs for that tab
 # This example will still work with its one unnecessary 'tab' key, with the 'items' key a value of
 # the 'tabs' key, **because there are no other values of the tabs key**, i.e. the 2-3 other keys --
 # `header_entry`, (optional) `header_description` or (optional) `header_long_description`.
@@ -20,8 +20,8 @@ tabs:
       - choice_displayed: n 
         choice_description: Next directory
         valid_entries: 
-          - n
-        returns: next_dir
+          - n  # will be changed to str if not already
+        returns: next_dir  # will be changed to str if not already
       - choice_displayed: p
         choice_description: Previous directory
         valid_entries: 
