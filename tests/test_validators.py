@@ -225,14 +225,12 @@ def test_any_type_header_long_description_multiple(input_config_multiple_only):
 @pytest.mark.parametrize(
     "command,error_message",
     [
+        ("c['tabs'][0]['header_entry']='somestring'", "Forbidden key encountered: .{0,1}'header_entry'"),
+        ("c['tabs'][0]['header_description']='somestring'", "Forbidden key encountered: .{0,1}'header_description'"),
         (
-            "c['tabs'][0]['header_entry']='somestring'",
-            "Forbidden key encountered: .{0,1}'header_entry'",
+            "c['tabs'][0]['header_long_description']='somestring'",
+            "Forbidden key encountered: .{0,1}'header_long_description'",
         ),
-        ("c['tabs'][0]['header_description']='somestring'", 
-        "Forbidden key encountered: .{0,1}'header_description'"),
-        ("c['tabs'][0]['header_long_description']='somestring'", 
-        "Forbidden key encountered: .{0,1}'header_long_description'"),
     ],
     ids=[
         "should_not_have_header_entry",
