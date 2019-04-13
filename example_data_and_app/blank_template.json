@@ -1,11 +1,11 @@
 {
-    "case_sensitive": ,
-    "screen_width": ,
+    "case_sensitive": false,
+    "screen_width": 80,
     "tabs": [
        {
           "header_entry": "",
           "header_description": "",
-          "long_description": "",
+          "header_long_description": "",
           "items": [
              {
                 "choice_displayed": "",

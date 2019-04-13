@@ -7,7 +7,7 @@ screen_width: 80  # optional, integer, default 80
 tabs:
   - header_entry: fi  # two letters so it doesn't conflict with Edit tab's find
     header_description: File  # this key is optional, or it can be None
-    long_description: Changing to File tab  # this key is optional, it is displayed only when changing tabs 
+    header_long_description: Changing to File tab  # this key is optional, it is displayed only when changing tabs 
                                             # It can also be set to None
     items:
       - choice_displayed: o
@@ -48,17 +48,17 @@ tabs:
         returns: quit
   - header_entry: e
     header_description: Edit  # can be missing or None
-    long_description: You have just selected the edit menu  # can be missing or none
+    header_long_description: You have just selected the edit menu  # can be missing or none
     items:
       - choice_displayed: z
         choice_description: Undo
         valid_entries: 
           - Z  # purposely made capital; because case sensitive = False, it will make no difference.
         returns: undo
-      - choice_displayed: 'y'  # needs to be in quotes otherwise YAML treats as boolean
+      - choice_displayed: y
         choice_description: Redo
         valid_entries: 
-          - 'y'
+          - y
         returns: redo
       - choice_displayed: x
         choice_description: Cut
@@ -68,7 +68,7 @@ tabs:
       - choice_displayed: c
         choice_description: Copy
         valid_entries: 
-          - C  # purposely made capital; because case sensitive = False, it will make no difference.
+          - C  
         returns: copy
       - choice_displayed: v
         choice_description: Paste
@@ -96,12 +96,12 @@ tabs:
       - choice_displayed: cat
         choice_description: cat
         valid_entries: 
-          - cat  # Note that this takes a multi-character entry
+          - cat  # Note that this takes a THREE-character entry
         returns: cat
       - choice_displayed: head
         choice_description: head
         valid_entries: 
-          - head
+          - head  # four characters
         returns: head
       - choice_displayed: tail
         choice_description: tail
@@ -125,17 +125,17 @@ tabs:
     header_description: Integer
     items:
       - choice_displayed: 1
-        choice_description: Choice #1
+        choice_description: 'Choice #1'  # needs to be wrapped in quotes or the '#' will be interpreted as a comment
         valid_entries: 
-          - 1
-        returns: 1
+          - 1  # will be changed to string
+        returns: 1  # will be changed to string
       - choice_displayed: 2
-        choice_description: Choice #2
+        choice_description: 'Choice #2'
         valid_entries: 
           - 2
         returns: 2
       - choice_displayed: 3
-        choice_description: Choice #3
+        choice_description: 'Choice #3'
         valid_entries: 
           - 3
         returns: 3

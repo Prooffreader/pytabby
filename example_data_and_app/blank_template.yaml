@@ -1,11 +1,9 @@
-%YAML 1.2
----
 case_sensitive:
 screen_width:
 tabs:
   - header_entry:
     header_description:
-    long_description: 
+    header_long_description: 
     items:
       - choice_displayed:
         choice_description:
@@ -19,11 +17,11 @@ tabs:
 # screen_width:  # optional, integer, default 80
 # tabs:
 #   - header_entry:  # required, will be changed to str if not already str
-#     header_description: File  # optional, default None, will be changed to str if present, not None and not already str
-#     long_description: Changing to File tab  # optional, default None, will be changed to str if present, not None and not already str
+#     header_description:  # optional, default None
+#     header_long_description:  optional, default None
 #     items:
-#       - choice_displayed:  # required, will be changed to str if not already str
-#         choice_description:  # required, will be changed to str if not already str
+#       - choice_displayed:  # required
+#         choice_description:  # required
 #         valid_entries:
 #           -   # list/array, can have multiple entries, each will be changed to str if not already str
 #         returns:  # will be changed to str if not already str
