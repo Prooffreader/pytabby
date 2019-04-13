@@ -3,11 +3,12 @@ screen_width: 80  # optional, integer, default 80
 # Note that there is only one tab and no headers.
 # This example will still work with its one unnecessary 'tab' key, with the 'items' key a value of
 # the 'tabs' key, **because there are no other values of the tabs key**, i.e. the 2-3 other keys --
-# `header_entry`, `header_description` or (optional) `header_long_description`.
+# `header_entry`, (optional) `header_description` or (optional) `header_long_description`.
 #
 # The reason for this design choice is that if there is only one tab defined, the program will never show a
-# header/tab bar (since with one tab by definition you can't change tabs). However, if any of the other keys are
-# present, it looks like the programmer wants multiple tabs, so it looks like having a single tab means s/he
+# header/tab bar (since with one tab by definition you can't change tabs). However, if any of the  
+# key/value pairs are present, instead of just the list of items,
+# it looks like the programmer wants multiple tabs, so it looks like having a single tab means s/he
 # accidentally forgot the other tabs, so the program won't accept it.
 #
 # I tried to come up with some plausible items for a single-menu Python shell app. The app I have in mind goes
@@ -16,7 +17,7 @@ screen_width: 80  # optional, integer, default 80
 # It's only an example.
 tabs:
   - items:
-      - choice_displayed: n # YAML 1.1 would interpret this as false, so we're using YAML 1.2 read with ruamel.yaml
+      - choice_displayed: n 
         choice_description: Next directory
         valid_entries: 
           - n

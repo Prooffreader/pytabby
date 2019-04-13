@@ -1,24 +1,12 @@
 case_sensitive: False  # optional, boolean, default False
 screen_width: 80  # optional, integer, default 80
-# Note since there is only one tab and no headers, there is no 'tab' key here unlike in the multiple tabs example.
-# However, this example will still work if there is the one unnecessary 'tab' key, with the 'items' key a value of
-# the 'tabs' key, **so long as there are no other values of the tabs key**, i.e. the 2-3 other keys --
-# `header_entry`, `header_description` or (optional) `header_long_description`.
-#
-# The reason for this design choice is that if there is only one tab defined, the program will never show a
-# header/tab bar (since with one tab by definition you can't change tabs). However, if any of the other keys are
-# present, it looks like the programmer wants multiple tabs, so it looks like having a single tab means s/he
-# accidentally forgot the other tabs, so the program won't accept it.
-#
-# I tried to come up with some plausible items for a single-menu Python shell app. The app I have in mind goes
-# through the filesystem file by file displaying the file and giving the user various options as to what to do
-# with the file or even the entire folder. This would be an inefficient way of handling files, to be sure!
-# It's only an example.
+# Note since there is only one tab and no headers, there is no 'tab' key here unlike in the multiple and
+# single with key examples
 items:
-  - choice_displayed: n  # YAML 1.1 would interpret this as false, so we're using YAML 1.2 read with ruamel.yaml
+  - choice_displayed: n  # will be changed to str if not already
     choice_description: Next directory
     valid_entries: 
-      - n  # YAML 1.1 would interpret this as false, so we're using YAML 1.2 read with ruamel.yaml
+      - n  # will be changed to str if not already
     returns: next_dir
   - choice_displayed: p
     choice_description: Previous directory
@@ -51,7 +39,7 @@ items:
     valid_entries:
       - X  # will be lowercased by normalizer
     returns: del_dir 
-  - choice_displayed: Q  # purposely made uppercase
+  - choice_displayed: Q  # purposely made uppercase, will NOT be lowercased by normalizer
     choice_description: Quit
     valid_entries: 
       - Q  # will be lowercased by normalizer
