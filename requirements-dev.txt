@@ -10,3 +10,4 @@ pylama==7.6.6
 eradicate
 codacy-coverage
 pylint
+autodoc
