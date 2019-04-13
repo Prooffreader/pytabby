@@ -13,7 +13,7 @@ tabbedshellmenus [in development]
 .. image:: https://api.codacy.com/project/badge/Grade/dae598fbe5b04b0e90e9e2080bb68c11
     :target: https://www.codacy.com/app/Prooffreader/tabbedshellmenus?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Prooffreader/tabbedshellmenus&amp;utm_campaign=Badge_Grade)
 
-.. image:: https://img.shields.io/badge/code%20style-black-lightgrey.svg
+.. image:: https://camo.githubusercontent.com/28a51fe3a2c05048d8ca8ecd039d6b1619037326/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f636f64652532307374796c652d626c61636b2d3030303030302e737667
     :target: https://github.com/ambv/black
 
 .. image:: https://img.shields.io/badge/python-2.7%7C3.5%7C3.6%7C3.7-blue.svg
@@ -52,9 +52,6 @@ Usage
         do_this_other_thing()``
     # etc...
 
-NOTE:
-^^^^^
-
 
 FAQ:
 ^^^^
@@ -71,6 +68,7 @@ Why do ``items`` have both 'choice_displayed' and 'valid_entries' keys?
 I have 'case_sensitive' == False, but my return value is still uppercase.
     'case_sensitive' only affects inputs, not outputs
 
+
 Dependencies:
 ^^^^^^^^^^^^^
 
@@ -81,10 +79,11 @@ Dependencies:
 TODO:
 ^^^^^
 
-* test None as header_description and long_description, ensure test cases have descriptions present, absent and None
+* test None as header_description and header_long_description, ensure test cases have descriptions present, absent and None
 * test normalizer proper handling of lower case where appropriate
 * add another test config with other case
-* test that case_sensitive doesn't affect output/return, just header_choice_displayed_and_accepted and valid_entries.
+* test that case sensitive doesn't affect outputs
+* test that case_sensitive doesn't affect output/return, just header_entry and valid_entries.
 * ^ change example yamls to make this clear
 * test whether 'header_description' appears in error messages of test_validators:test_no_multiple_tabs_in_single_with_key
 * test whether error messages are being truncated in all vv. of Python
