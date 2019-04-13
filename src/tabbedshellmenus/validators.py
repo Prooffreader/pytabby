@@ -23,9 +23,6 @@ class InvalidInputError(Exception):
     """
 
 
-error_messages = []  # will be mutated by functions
-
-
 class _ValidSchemas:
     """Data-holding class for different schema.
 
@@ -85,7 +82,17 @@ def _extract_class(class_repr):
 
 
 def _validate_schema_part(error_messages, schema_, to_validate, prefix=None):
-    """Mutates error_messages if error found"""
+    """Validates that a section of the config follows schema
+
+    Args:
+        error_messages: list passed around
+        schema_: instance of schema.Schema()
+        to_validate: section of config
+        prefix: prefix to be added to error message
+
+    Returns:
+        error_messages
+    """
     try:
         _ = schema_.validate(to_validate)
     except Exception as e:  # noqa
@@ -95,6 +102,7 @@ def _validate_schema_part(error_messages, schema_, to_validate, prefix=None):
             prefix = ""
         error_message = prefix + error_type + error_description
         error_messages.append(error_message)
+    return error_messages
 
 
 def _determine_schema_type(config):
@@ -121,46 +129,75 @@ def _determine_schema_type(config):
     return schema_type
 
 
-def _validate_schema(error_messages, config):  # noqa
-    """Validates that config has the expected schema.
+def _validate_schema_multiple(error_messages, config, valid_schemas):
+    """Called by _validate_schema() (q.v.) if multiple type"""
+    error_messages = _validate_schema_part(
+        error_messages, valid_schemas.outer_schema_multiple_or_single_with_key, config
+    )
+    for tab_num, tab in enumerate(config["tabs"]):
+        prefix = "tab#{0}: ".format(tab_num)
+        error_messages = _validate_schema_part(error_messages, valid_schemas.tab_schema_multiple, tab, prefix)
+        for item_num, item in enumerate(tab["items"]):
+            prefix = "tab#{0},item#{1}: ".format(tab_num, item_num)
+            error_messages = _validate_schema_part(error_messages, valid_schemas.item_schema, item, prefix)
+            for entry_num, entry in enumerate(item["valid_entries"]):
+                prefix = "tab#{0},item#{1},valid_entry#{2}: ".format(tab_num, item_num, entry_num)
+                error_messages = _validate_schema_part(error_messages, valid_schemas.entry_schema, entry, prefix)
+    return error_messages
 
-    Mutates error_messages by appending all errors found
+
+def _validate_schema_single_with_key(error_messages, config, valid_schemas):
+    """Called by _validate_schema() (q.v.) if single_with_tab type"""
+    error_messages = _validate_schema_part(
+        error_messages, valid_schemas.outer_schema_multiple_or_single_with_key, config
+    )
+    prefix = "sole tab: "
+    error_messages = _validate_schema_part(
+        error_messages, valid_schemas.tab_schema_single_with_key, config["tabs"][0], prefix
+    )
+    for item_num, item in enumerate(config["tabs"][0]["items"]):
+        prefix = "sole tab,item#{0}: ".format(item_num)
+        error_messages = _validate_schema_part(error_messages, valid_schemas.item_schema, item, prefix)
+        for entry_num, entry in enumerate(item["valid_entries"]):
+            prefix = "sole tab,item#{0},valid_entry#{1}: ".format(item_num, entry_num)
+            error_messages = _validate_schema_part(error_messages, valid_schemas.entry_schema, entry, prefix)
+    return error_messages
+
+
+def _validate_schema_single_without_key(error_messages, config, valid_schemas):
+    """Called by _validate_schema() (q.v.) if single_without_tab type"""
+    error_messages = _validate_schema_part(error_messages, valid_schemas.outer_schema_single_without_key, config)
+    for item_num, item in enumerate(config["items"]):
+        prefix = "item#{0}: ".format(item_num)
+        error_messages = _validate_schema_part(error_messages, valid_schemas.item_schema, item, prefix)
+        for entry_num, entry in enumerate(item["valid_entries"]):
+            prefix = "item#{0},valid_entry#{1}: ".format(item_num, entry_num)
+            error_messages = _validate_schema_part(error_messages, valid_schemas.entry_schema, entry, prefix)
+    return error_messages
+
+
+def _validate_schema(error_messages, config):
+    """Validates that config has the expected schema.
 
     Examples of valid schemas can be seen in the examples/ folder of the git repo, or in the docs.
     There are three kinds of schemas, one with multiple tabs, one with a single tab, and one with an implicit single
     tab that skips the redundant 'tabs' key
+
+    Args:
+        error_messages: list of str passed around
+        config: the dict
+
+    Returns:
+        error messages list of str
     """
     schema_type = _determine_schema_type(config)
     valid_schemas = _ValidSchemas()
     if schema_type == "multiple":
-        _validate_schema_part(error_messages, valid_schemas.outer_schema_multiple_or_single_with_key, config)
-        for tab_num, tab in enumerate(config["tabs"]):
-            prefix = "tab#{0}: ".format(tab_num)
-            _validate_schema_part(error_messages, valid_schemas.tab_schema_multiple, tab, prefix)
-            for item_num, item in enumerate(tab["items"]):
-                prefix = "tab#{0},item#{1}: ".format(tab_num, item_num)
-                _validate_schema_part(error_messages, valid_schemas.item_schema, item, prefix)
-                for entry_num, entry in enumerate(item["valid_entries"]):
-                    prefix = "tab#{0},item#{1},valid_entry#{2}: ".format(tab_num, item_num, entry_num)
-                    _validate_schema_part(error_messages, valid_schemas.entry_schema, entry, prefix)
+        error_messages = _validate_schema_multiple(error_messages, config, valid_schemas)
     elif schema_type == "single_with_key":
-        _validate_schema_part(error_messages, valid_schemas.outer_schema_multiple_or_single_with_key, config)
-        prefix = "sole tab: "
-        _validate_schema_part(error_messages, valid_schemas.tab_schema_single_with_key, config["tabs"][0], prefix)
-        for item_num, item in enumerate(config["tabs"][0]["items"]):
-            prefix = "sole tab,item#{0}: ".format(item_num)
-            _validate_schema_part(error_messages, valid_schemas.item_schema, item, prefix)
-            for entry_num, entry in enumerate(item["valid_entries"]):
-                prefix = "sole tab,item#{0},valid_entry#{1}: ".format(item_num, entry_num)
-                _validate_schema_part(error_messages, valid_schemas.entry_schema, entry, prefix)
+        error_messages = _validate_schema_single_with_key(error_messages, config, valid_schemas)
     elif schema_type == "single_without_key":
-        _validate_schema_part(error_messages, valid_schemas.outer_schema_single_without_key, config)
-        for item_num, item in enumerate(config["items"]):
-            prefix = "item#{0}: ".format(item_num)
-            _validate_schema_part(error_messages, valid_schemas.item_schema, item, prefix)
-            for entry_num, entry in enumerate(item["valid_entries"]):
-                prefix = "item#{0},valid_entry#{1}: ".format(item_num, entry_num)
-                _validate_schema_part(error_messages, valid_schemas.entry_schema, entry, prefix)
+        error_messages = _validate_schema_single_without_key(error_messages, config, valid_schemas)
 
 
 def _config_tabs(config):
@@ -181,9 +218,8 @@ def _count_for_overlap(items_):
 def _validate_no_return_value_overlap(error_messages, config):
     """Validates that all return values in every tab are unique. Mutates error_messages with all errors found
 
-    NOTE: mutates error_messages
-    NOTE: Checks all tabs, so can result in long error message
-    NOTE: Case insensitivity does not affect return values
+    Checks all tabs, so can result in long error message
+    Case insensitivity does not affect return values
     """
     tabs = _config_tabs(config)
     for tab_num, tab in enumerate(tabs):
@@ -194,6 +230,7 @@ def _validate_no_return_value_overlap(error_messages, config):
                 error_messages.append("In tab#{0}, there are repeated return values: {1}.".format(tab_num, multiples))
             else:
                 error_messages.append("In the single tab, there are repeated return values: {0}".format(multiples))
+    return error_messages
 
 
 def _validate_no_input_value_overlap(error_messages, config):
@@ -204,8 +241,7 @@ def _validate_no_input_value_overlap(error_messages, config):
     way, I chose not to accept duplicate tab name and input in that tab for the sake of consistency rather than
     freeing up one possible input in a sort of weird edge case)
 
-    NOTE: Mutates error_messages
-    NOTE: Case insensitivity casts all inputs to lowercase, which can create overlap
+    Case insensitivity casts all inputs to lowercase, which can create overlap
     """
     case_sensitive = config.get("case_sensitive", False)
     schema_type = _determine_schema_type(config)
@@ -243,24 +279,26 @@ def _validate_no_input_value_overlap(error_messages, config):
                         multiples, case_sensitive_message
                     )
                 )
+    return error_messages
 
 
 def _shorten_long_schema_error_messages(error_messages):
-    """The schema packages puts the entire schema in the error message; this function removes it."""
-    for i, message in enumerate(error_messages):
+    """The schema packages puts the entire config in the error message; this function removes it."""
+    for i, message in enumerate(error_messages[:]):
         if re.search("in {.+}$", message):
-            error_messages[i] = re.sub("in {.+}$", "in config", message)
+            error_messages[i] = re.sub(r"in \{.+\}$", "in config", message)
+    return error_messages
 
 
 def validate_all(config):
     """Runs above non-underscored functions on input"""
     error_messages = []
-    _validate_schema(error_messages, config)
-    _validate_no_input_value_overlap(error_messages, config)
-    _validate_no_return_value_overlap(error_messages, config)
+    error_messages = _validate_schema(error_messages, config)
+    error_messages = _validate_no_input_value_overlap(error_messages, config)
+    error_messages = _validate_no_return_value_overlap(error_messages, config)
     if error_messages:
-        _shorten_long_schema_error_messages(error_messages)
+        error_messages = _shorten_long_schema_error_messages(error_messages)
         printed_message = ["", "Errors:"]
         for i, message in enumerate(error_messages):
-            printed_message.append("{0}. {1}".format(i, message))
+            printed_message.append("{0}. {1}".format(i + 1, message))
         raise InvalidInputError("\n".join(printed_message))
