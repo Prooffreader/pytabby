@@ -88,21 +88,18 @@ Dependencies:
 TODO:
 ^^^^^
 
-* test None as header_description and header_long_description,
-  ensure test cases have descriptions present, absent and None
 * test normalizer proper handling of lower case where appropriate
-* add another test config with other case
-* test that case sensitive doesn't affect outputs
 * test that case_sensitive doesn't affect output/return,
   just header_entry and valid_entries.
 * ^ change example yamls to make this clear
-* test whether 'header_description' appears in error messages
-  of test_validators:test_no_multiple_tabs_in_single_with_key
-* test whether error messages are being truncated in all vv. of Python
+* test whether error messages are being truncated in all vv. of Python:
+  will show in coverage
 * check this line in test_tab:
   ``keys = sorted(tab_dict["input2result"].keys(), key=str)`` --
   shouldn't they already be str if they've been normalized?
-* test range of screen width in validators
+* in normalizer, change header_entry to string
+* in normalizer, test default values
+* Change docstrings to Google, enable napoleon in sphinx, ensure autodoc
 
 Wish List:
 ^^^^^^^^^^
