@@ -87,18 +87,9 @@ Dependencies:
 
 TODO:
 ^^^^^
-
-* test normalizer proper handling of lower case where appropriate
-* test that case_sensitive doesn't affect output/return,
-  just header_entry and valid_entries.
-* ^ change example yamls to make this clear
-* test whether error messages are being truncated in all vv. of Python:
-  will show in coverage
 * check this line in test_tab:
   ``keys = sorted(tab_dict["input2result"].keys(), key=str)`` --
   shouldn't they already be str if they've been normalized?
-* in normalizer, change header_entry to string
-* in normalizer, test default values
 * Change docstrings to Google, enable napoleon in sphinx, ensure autodoc
 
 Wish List:

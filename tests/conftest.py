@@ -6,27 +6,8 @@
 NOTE: this script tests uses static method menu.Menu.safe_read_yaml() and function
 validators._determine_schema_type, but they are both tested in their respective sections. So Exceptions will be
 raised here before those tests run, redundantly, but they're in both places to ensure 100% coverage
-
-NOTE ON YAML FILES NAMING CONVENTION in tests/data:
-Files can be added but their name must contain the word 'multiple' or 'single', not both (and they must correspond
-to multiple or single schemas)
-If a yaml is 'single', it must have 'with_key' or 'without_key' indicating whether it has the top level key 'tabs'
-Other than that, yaml files can contain other words to differentiate them or multiply them in future tests
-This naming convention is used to test validators_.determine_schema_type()
-
-LIST OF CONFIG FIXTURES:
-This conftest.py produces the following fixtures containing config dicts out of .yaml files in tests/data:
-1. input_config_dict: all dicts from .yaml files
-2. input_config_dict_and_id: tuple of (dict, id) from all .yaml, only to test validators._determine_schema_type()
-3. input_config_multiple_only: all dicts from .yaml files which return 'multiple' from
-   validators._determine_schema_type()
-4. input_config_single_with_key_only: all dicts from .yaml files which return 'single_with_key' from
-   validators._determine_schema_type()
-5. input_config_single_without_key_only: all dicts from .yaml files which return 'single_without_key' from
-   validators._determine_schema_type()
-6. input_config_case_sensitive_only: all dicts from .yaml files where first-level key "case_sensitive" is True
-7. input_config_case_insensitive_only: all dicts from .yaml files where first-level key "case_sensitive" is False
-8. menu_instance: an instance of the Menu class
+ 
+TODO: Fix this
 """
 
 

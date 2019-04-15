@@ -33,16 +33,24 @@ def _walk_stringize_and_case(config):  # noqa: C901
     new = {}
     c = config
 
+    if c.get('case_sensitive', None):
+        new['case_sensitive'] = c['case_sensitive']
+    else:
+        new['case_sensitive'] = False
+
+    if c.get('screen_width', None):
+        new['screen_width'] = c['screen_width']
+    else:
+        new['screen_width'] = 80
+
     def strcase(thing, change_case=False, none_allowed=False):
         if none_allowed and thing is None:
             return None
-        if change_case and not config["case_sensitive"]:
+        if change_case and not new["case_sensitive"]:
             return str(thing).lower()
         else:
             return str(thing)
 
-    for k in ["case_sensitive", "screen_width"]:
-        new[k] = c[k]
     new["tabs"] = []
     for tab in c["tabs"]:
         new_tab = {}
