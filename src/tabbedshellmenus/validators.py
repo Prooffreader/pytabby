@@ -120,10 +120,13 @@ def _determine_schema_type(config):
     """
     schema_type = None
     if "tabs" in config.keys():
-        if len(config["tabs"]) > 1 and "items" not in config.keys():
-            schema_type = "multiple"
-        elif "items" not in config.keys():
-            schema_type = "single_with_key"
+        try:
+            if len(config["tabs"]) > 1 and "items" not in config.keys():
+                schema_type = "multiple"
+            elif "items" not in config.keys():
+                schema_type = "single_with_key"
+        except TypeError:
+            return None
     elif "tabs" not in config.keys():
         schema_type = "single_without_key"
     return schema_type
@@ -134,15 +137,21 @@ def _validate_schema_multiple(error_messages, config, valid_schemas):
     error_messages = _validate_schema_part(
         error_messages, valid_schemas.outer_schema_multiple_or_single_with_key, config
     )
-    for tab_num, tab in enumerate(config["tabs"]):
-        prefix = "tab#{0}: ".format(tab_num)
-        error_messages = _validate_schema_part(error_messages, valid_schemas.tab_schema_multiple, tab, prefix)
-        for item_num, item in enumerate(tab["items"]):
-            prefix = "tab#{0},item#{1}: ".format(tab_num, item_num)
-            error_messages = _validate_schema_part(error_messages, valid_schemas.item_schema, item, prefix)
-            for entry_num, entry in enumerate(item["valid_entries"]):
-                prefix = "tab#{0},item#{1},valid_entry#{2}: ".format(tab_num, item_num, entry_num)
-                error_messages = _validate_schema_part(error_messages, valid_schemas.entry_schema, entry, prefix)
+    try:
+        level = "tabs"
+        for tab_num, tab in enumerate(config["tabs"]):
+            prefix = "tab#{0}: ".format(tab_num)
+            error_messages = _validate_schema_part(error_messages, valid_schemas.tab_schema_multiple, tab, prefix)
+            level = "items"
+            for item_num, item in enumerate(tab["items"]):
+                prefix = "tab#{0},item#{1}: ".format(tab_num, item_num)
+                error_messages = _validate_schema_part(error_messages, valid_schemas.item_schema, item, prefix)
+                level = "valid_entries"
+                for entry_num, entry in enumerate(item["valid_entries"]):
+                    prefix = "tab#{0},item#{1},valid_entry#{2}: ".format(tab_num, item_num, entry_num)
+                    error_messages = _validate_schema_part(error_messages, valid_schemas.entry_schema, entry, prefix)
+    except Exception as e:  #noqa
+        error_messages = _catch_iteration_error(error_messages, e, level)
     return error_messages
 
 
@@ -152,27 +161,49 @@ def _validate_schema_single_with_key(error_messages, config, valid_schemas):
         error_messages, valid_schemas.outer_schema_multiple_or_single_with_key, config
     )
     prefix = "sole tab: "
-    error_messages = _validate_schema_part(
-        error_messages, valid_schemas.tab_schema_single_with_key, config["tabs"][0], prefix
-    )
-    for item_num, item in enumerate(config["tabs"][0]["items"]):
-        prefix = "sole tab,item#{0}: ".format(item_num)
-        error_messages = _validate_schema_part(error_messages, valid_schemas.item_schema, item, prefix)
-        for entry_num, entry in enumerate(item["valid_entries"]):
-            prefix = "sole tab,item#{0},valid_entry#{1}: ".format(item_num, entry_num)
-            error_messages = _validate_schema_part(error_messages, valid_schemas.entry_schema, entry, prefix)
+    try:
+        level = "tabs"
+        error_messages = _validate_schema_part(
+            error_messages, valid_schemas.tab_schema_single_with_key, config["tabs"][0], prefix
+        )
+        level = "items"
+        for item_num, item in enumerate(config["tabs"][0]["items"]):
+            prefix = "sole tab,item#{0}: ".format(item_num)
+            error_messages = _validate_schema_part(error_messages, valid_schemas.item_schema, item, prefix)
+            level = "valid_entries"
+            for entry_num, entry in enumerate(item["valid_entries"]):
+                prefix = "sole tab,item#{0},valid_entry#{1}: ".format(item_num, entry_num)
+                error_messages = _validate_schema_part(error_messages, valid_schemas.entry_schema, entry, prefix)
+    except Exception as e:  #noqa
+        error_messages = _catch_iteration_error(error_messages, e, level)
     return error_messages
 
 
 def _validate_schema_single_without_key(error_messages, config, valid_schemas):
     """Called by _validate_schema() (q.v.) if single_without_tab type"""
     error_messages = _validate_schema_part(error_messages, valid_schemas.outer_schema_single_without_key, config)
-    for item_num, item in enumerate(config["items"]):
-        prefix = "item#{0}: ".format(item_num)
-        error_messages = _validate_schema_part(error_messages, valid_schemas.item_schema, item, prefix)
-        for entry_num, entry in enumerate(item["valid_entries"]):
-            prefix = "item#{0},valid_entry#{1}: ".format(item_num, entry_num)
-            error_messages = _validate_schema_part(error_messages, valid_schemas.entry_schema, entry, prefix)
+    try:
+        level = "items"
+        for item_num, item in enumerate(config["items"]):
+            prefix = "item#{0}: ".format(item_num)
+            error_messages = _validate_schema_part(error_messages, valid_schemas.item_schema, item, prefix)
+            level = "valid_entries"
+            for entry_num, entry in enumerate(item["valid_entries"]):
+                prefix = "item#{0},valid_entry#{1}: ".format(item_num, entry_num)
+                error_messages = _validate_schema_part(error_messages, valid_schemas.entry_schema, entry, prefix)
+    except Exception as e:  #noqa
+        error_messages = _catch_iteration_error(error_messages, e, level)
+    return error_messages
+
+
+def _catch_iteration_error(error_messages, e, level):
+    """Stops introspection on an iterable when it throws an exception, adds it to error_messages"""
+    error_type = _extract_class(str(e.__class__)) + ": "
+    error_description = str(e).replace("\n", " ")
+    error_message = "WHILE ITERATING OVER {0}: {1}{2}. No further introspection possible.".format(
+        level, error_type, error_description
+    )
+    error_messages.append(error_message)
     return error_messages
 
 
@@ -198,6 +229,7 @@ def _validate_schema(error_messages, config):
         error_messages = _validate_schema_single_with_key(error_messages, config, valid_schemas)
     elif schema_type == "single_without_key":
         error_messages = _validate_schema_single_without_key(error_messages, config, valid_schemas)
+    return error_messages
 
 
 def _config_tabs(config):
@@ -216,7 +248,7 @@ def _count_for_overlap(items_):
 
 
 def _validate_no_return_value_overlap(error_messages, config):
-    """Validates that all return values in every tab are unique. Mutates error_messages with all errors found
+    """Validates that all return values in every tab are unique.
 
     Checks all tabs, so can result in long error message
     Case insensitivity does not affect return values
@@ -297,6 +329,7 @@ def validate_all(config):
     error_messages = _validate_no_input_value_overlap(error_messages, config)
     error_messages = _validate_no_return_value_overlap(error_messages, config)
     if error_messages:
+        # import pdb;pdb.set_trace()
         error_messages = _shorten_long_schema_error_messages(error_messages)
         printed_message = ["", "Errors:"]
         for i, message in enumerate(error_messages):

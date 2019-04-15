@@ -51,7 +51,7 @@ def load_multiple_config_yaml():
     this_dir = os.path.split(path_to_here)[0]
     config_path = os.path.join(this_dir, "data", "test_config.yaml")
     config = Menu.safe_read_yaml(config_path)
-    assert len(config["tabs"] > 1)  #noqa
+    assert len(config["tabs"]) > 1  # noqa
     if not isinstance(config, dict):
         raise AssertionError
     return config
@@ -64,7 +64,7 @@ def create_single_with_key(multiple_config):
     del d["tabs"][0]["header_entry"]
     for key in ["header_description", "header_long_description"]:
         try:
-            del d[key]
+            del d["tabs"][0][key]
         except KeyError:
             pass
     return d
@@ -73,7 +73,7 @@ def create_single_with_key(multiple_config):
 def create_single_without_key(with_key):
     """Creates single_without_key type from single_with_key config"""
     d = deepcopy(with_key)
-    d["items"] = d["tabs"][0]
+    d["items"] = d["tabs"][0]["items"]
     del d["tabs"]
     return d
 
@@ -103,8 +103,8 @@ def config_single_without_key():
     scope="function",
     params=[
         load_multiple_config_yaml(),
-        config_single_with_key(load_multiple_config_yaml()),
-        config_single_without_key(config_single_with_key(load_multiple_config_yaml())),
+        create_single_with_key(load_multiple_config_yaml()),
+        create_single_without_key(create_single_with_key(load_multiple_config_yaml())),
     ],
     ids=["multiple", "single_with_key", "single_without_key"],
 )
@@ -117,8 +117,8 @@ def config_all(request):
     scope="function",
     params=[
         load_multiple_config_yaml(),
-        config_single_with_key(load_multiple_config_yaml()),
-        config_single_without_key(config_single_with_key(load_multiple_config_yaml())),
+        create_single_with_key(load_multiple_config_yaml()),
+        create_single_without_key(create_single_with_key(load_multiple_config_yaml())),
     ],
     ids=["multiple", "single_with_key", "single_without_key"],
 )
