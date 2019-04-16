@@ -100,13 +100,12 @@ class Menu:
 
     def _collect_input(self, testing=False):
         """Gets choice from user, repeating until a valid choice given
-        
+
         Bad form, but setting a testing variable to break out of the loop
         was the lowest-hanging fruit.
         """
         received_valid_input = False
         prompt = "?"
-        tries = 0
         while not received_valid_input:
             selection = input("{0}: ".format(prompt))  # monkeypatch for testing
             if not self.case_sensitive:

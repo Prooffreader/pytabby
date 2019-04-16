@@ -15,8 +15,8 @@ import tabbedshellmenus.normalizer as normalizer
 @pytest.mark.function
 @pytest.mark.run(order=1)
 def test__add_tabs_key_if_needed_multiple(config_all_with_id):
-    """Tests function.
-    
+    """Tests function
+
     Function should not change a multiple or single_with_key schema type
     but should change single_without_key
     """

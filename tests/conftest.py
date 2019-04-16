@@ -6,7 +6,7 @@
 NOTE: this script tests uses static method menu.Menu.safe_read_yaml() and function
 validators._determine_schema_type, but they are both tested in their respective sections. So Exceptions will be
 raised here before those tests run, redundantly, but they're in both places to ensure 100% coverage
- 
+
 TODO: Fix this
 """
 

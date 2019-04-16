@@ -29,13 +29,13 @@ class TestStaticMethods:
     """Tests the static methods to load data"""
 
     def test_yaml(self):
-        """loads test yaml and instantiates Menu"""
+        """Loads test yaml and instantiates Menu"""
         config = Menu.safe_read_yaml(yaml_path())
-        menu = Menu(config)
+        menu = Menu(config) #noqa
 
     def test_json(self, tmpdir):
         """Loads test yaml, converts to json, loads json and instantiates Menu
-        
+
         Also asserts the two dicts are equal
         """
         config_from_yaml = Menu.safe_read_yaml(yaml_path())
@@ -49,16 +49,17 @@ class TestStaticMethods:
 @pytest.mark.function
 @pytest.mark.run(order=6)
 def test_method__change_tab(config_multiple, capsys, random_string):
+    """Tests menu._change_tab"""
     c = deepcopy(config_multiple)
     c["tabs"][1]["header_entry"] = random_string[:3]
     c["tabs"][1]["header_description"] = random_string[3:7]
     c["tabs"][1]["header_long_description"] = random_string[7:]
     menu = Menu(c)
-    if not menu.current_tab_number == 0:
+    if menu.current_tab_number != 0:
         raise AssertionError
     menu._change_tab(1)
-    out, err = capsys.readouterr()
-    if not menu.current_tab_number == 1:
+    out, _ = capsys.readouterr()
+    if menu.current_tab_number != 1:
         raise AssertionError
     for astr in [
         "Change tab to {}".format(random_string[:3]),
@@ -71,7 +72,7 @@ def test_method__change_tab(config_multiple, capsys, random_string):
 @pytest.mark.breaking
 @pytest.mark.run(order=7)
 def test_breaking_change_tab(config_single_with_key, config_single_without_key):
-    """This should not work because you can't change tabs with single tabs"""
+    """Should not work because you can't change tabs with single tabs"""
     for conf in (config_single_with_key, config_single_without_key):
         c = deepcopy(conf)
         menu = Menu(c)
@@ -85,7 +86,7 @@ def test_method_print_menu(config_all, capsys, data_regression):
     """Simple regression test of print output"""
     menu = Menu(config_all)
     menu._print_menu()
-    out, err = capsys.readouterr()
+    out, _ = capsys.readouterr()
     data = {"output": out}
     data_regression.check(data)
 
@@ -96,10 +97,10 @@ def test_method_print_menu_after_change_tab(config_multiple, capsys, data_regres
     """Simple regression test of print output"""
     menu = Menu(config_multiple)
     menu._print_menu()
-    out_before_change, err = capsys.readouterr()
+    out_before_change, _ = capsys.readouterr()
     menu._change_tab(1)
     menu._print_menu()
-    out, err = capsys.readouterr()
+    out, _ = capsys.readouterr()
     # test that different tabs give different outputs
     if out_before_change == out:
         raise AssertionError
@@ -130,7 +131,7 @@ class TestCollectInput:
             data["result_multiple"] = result2
         data_regression.check(data)
 
-    def teardown_method(self, method):
+    def teardown_method(self):
         """Reverts input"""
         tabbedshellmenus.menu.input = input
 
@@ -165,7 +166,6 @@ class TestRun:
     def test_with_invalid_input(self, config_all, random_string):
         c = deepcopy(config_all)
         menu = Menu(c)
-        normal = menu.config
         tabbedshellmenus.menu.input = lambda x: random_string
         result = menu.run(testing_invalid=True)
         if result != "Invalid, try again":
@@ -191,6 +191,6 @@ class TestRun:
         data["result"] = result
         data_regression.check(data)
 
-    def teardown_method(self, method):
+    def teardown_method(self):
         """Reverts input"""
         tabbedshellmenus.menu.input = input
