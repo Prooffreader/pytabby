@@ -150,7 +150,7 @@ def _validate_schema_multiple(error_messages, config, valid_schemas):
                 for entry_num, entry in enumerate(item["valid_entries"]):
                     prefix = "tab#{0},item#{1},valid_entry#{2}: ".format(tab_num, item_num, entry_num)
                     error_messages = _validate_schema_part(error_messages, valid_schemas.entry_schema, entry, prefix)
-    except Exception as e:  #noqa
+    except Exception as e:  # noqa
         error_messages = _catch_iteration_error(error_messages, e, level)
     return error_messages
 
@@ -174,7 +174,7 @@ def _validate_schema_single_with_key(error_messages, config, valid_schemas):
             for entry_num, entry in enumerate(item["valid_entries"]):
                 prefix = "sole tab,item#{0},valid_entry#{1}: ".format(item_num, entry_num)
                 error_messages = _validate_schema_part(error_messages, valid_schemas.entry_schema, entry, prefix)
-    except Exception as e:  #noqa
+    except Exception as e:  # noqa
         error_messages = _catch_iteration_error(error_messages, e, level)
     return error_messages
 
@@ -191,7 +191,7 @@ def _validate_schema_single_without_key(error_messages, config, valid_schemas):
             for entry_num, entry in enumerate(item["valid_entries"]):
                 prefix = "item#{0},valid_entry#{1}: ".format(item_num, entry_num)
                 error_messages = _validate_schema_part(error_messages, valid_schemas.entry_schema, entry, prefix)
-    except Exception as e:  #noqa
+    except Exception as e:  # noqa
         error_messages = _catch_iteration_error(error_messages, e, level)
     return error_messages
 
