@@ -26,19 +26,16 @@ def create_tab_objects(config):
 class Tab:
     """Tab class to represent individual tabs in Menu class
 
-    :param tab_dict: passed from menu constructor from config
-    :type tab_dict: dict
-    :param tab_selectors: all inputs that select tabs
-    :type tab_selectors: list
+    Methods:
+        process_input: called from Menu instance, not user
     """
 
     def __init__(self, tab_dict, tab_selectors):
-        """Constructor for Tab class instances.
+        """Constructor for Tab class instances. Called by Menu instance, not user.
 
-        :param tab_dict: passed from menu constructor from config
-        :type tab_dict: dict
-        :param tab_selectors: all inputs that select tabs
-        :type tab_selectors: list
+        Args:
+            tab_dict (dict): passed from menu constructor from config
+            tab_selectors (list): all inputs that select tabs
         """
         self.head_choice = tab_dict.get("header_entry", None)
         self.head_desc = tab_dict.get("header_description", None)
@@ -47,6 +44,7 @@ class Tab:
         self._parse_items(tab_dict["items"])
 
     def _parse_items(self, items):
+        """Semiprivate helper function"""
         self.input2result = {}
         for i, selector in enumerate(self.selectors):
             self.input2result[selector] = {"type": "change_tab", "new_number": i}

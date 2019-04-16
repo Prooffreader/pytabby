@@ -98,10 +98,15 @@ class Menu:
         formatted = formatting.format_menu(self.config, self.current_tab_number, self.screen_width)
         print(formatted)
 
-    def _collect_input(self):
-        """Gets choice from user, repeating until a valid choice given"""
+    def _collect_input(self, testing=False):
+        """Gets choice from user, repeating until a valid choice given
+        
+        Bad form, but setting a testing variable to break out of the loop
+        was the lowest-hanging fruit.
+        """
         received_valid_input = False
         prompt = "?"
+        tries = 0
         while not received_valid_input:
             selection = input("{0}: ".format(prompt))  # monkeypatch for testing
             if not self.case_sensitive:
@@ -111,9 +116,11 @@ class Menu:
                 prompt = "Invalid, try again"
             else:
                 received_valid_input = True
+            if testing:
+                return prompt
         return return_dict
 
-    def run(self):
+    def run(self, testing_invalid=False, testing_tab_change=False):
         """Called by user, runs menu until valid selection from a tab is made, and returns value
 
         :returns: if there is more than one tab, returns tuple of (tab selector, return value).
@@ -123,9 +130,13 @@ class Menu:
         received_return_value = False
         while not received_return_value:
             self._print_menu()
-            return_dict = self._collect_input()
+            return_dict = self._collect_input(testing=testing_invalid)
+            if testing_invalid:
+                return return_dict  # not actually a dict
             if return_dict["type"] == "change_tab":
                 self._change_tab(return_dict["new_number"])
+                if testing_tab_change:
+                    return return_dict
             else:
                 if self.has_multiple_tabs:
                     tab_id = self.tabs[self.current_tab_number].head_choice

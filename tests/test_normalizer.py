@@ -69,7 +69,8 @@ class TestCaseSensitiveOrInsensitive:
         result = normal.get('screen_width', None)
         if result != 80:
             raise AssertionError
-
+@pytest.mark.integration
+@pytest.mark.run(order=2)
 class TestCaseInsensitive:
     """Tests that changes are made only where appropriate"""
     def test_header_entry_changed(self, config_multiple, random_string):
