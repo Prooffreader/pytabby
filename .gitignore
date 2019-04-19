@@ -10,6 +10,7 @@ pip-wheel-metadata/
 pytest.ini
 sourcecodacy.sh
 */designedtofail.yaml
+wishlist.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
