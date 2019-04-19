@@ -34,7 +34,7 @@ class Tab:
         """Constructor for Tab class instances. Called by Menu instance, not user.
 
         Args:
-            tab_dict (dict): passed from menu constructor from config
+            tab_dict (dict): passed from menu instantiator from config
             tab_selectors (list): all inputs that select tabs
         """
         self.head_choice = tab_dict.get("tab_header_input", None)

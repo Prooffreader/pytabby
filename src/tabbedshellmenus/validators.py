@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Functions to validate config dict as passed to menu.Menu constructor
+"""Functions to validate config dict as passed to menu.Menu instantiator
 
 Note that this module creates one exception listing all errors encountered. That way the user has the change to fix
 all errors, instead of having to deal with exception after exception one at a time

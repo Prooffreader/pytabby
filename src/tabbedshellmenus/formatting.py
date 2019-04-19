@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Contains functions used to format shell text output"""
+"""Contains functions used to format shell text output, i.e. multiline strings sent to stdout"""
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
@@ -10,7 +10,7 @@ def format_menu(config, current_tab_number, line_length):
     """Creates menu to be displayed to user, called from menu.Menu only, not by user
 
     Args:
-        config (dict): the config dict passed to the Menu constructor, after normalization
+        config (dict): the config dict passed to the Menu instantiator, after normalization
         current_tab_number (int): number of currently selected tab (always 0 for single-tabbed menus)
         line_length (int): value from config
 

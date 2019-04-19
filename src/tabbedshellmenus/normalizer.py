@@ -134,7 +134,7 @@ def normalize(config):
     Called from menu.Menu only, not by user
 
     Args:
-        config (dict): config data as passed to menu.Menu constructor
+        config (dict): config data as passed to menu.Menu instantiator
     Returns:
         (dict): normalized/modified config dict
     """
