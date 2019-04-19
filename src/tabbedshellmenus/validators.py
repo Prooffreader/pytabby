@@ -1,10 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Functions to validate inputs and configs.
+"""Functions to validate config dict as passed to menu.Menu constructor
 
-Note that this creates one exception listing all errors encountered.
-Note also that this validates the input requirements *before* normalization
+Note that this module creates one exception listing all errors encountered. That way the user has the change to fix
+all errors, instead of having to deal with exception after exception one at a time
+
+Note on config_layout:
+There are three possible values of config_layout, determined from the config dict
+1. 'multiple': a config with multiple tabs, therefore by necessity having an outermost 'tabs' key
+2. 'single_with_key': a config with a single tab (i.e. with no tabs), but also containing a redundant 'tabs' key 
+                      whose values is a list of size one containing a dict with the key 'items'
+3. 'single_without_key': a config with a single tab but lacking the 'tabs' key; the single dict with the key 'items'
+                         is at the top level of the config dict, i.e. where 'tabs' would have been
 """
 
 
@@ -14,6 +22,12 @@ import re
 from collections import Counter
 
 from schema import And, Forbidden, Optional, Or, Schema
+from schema import (SchemaError, SchemaForbiddenKeyError, SchemaMissingKeyError, SchemaUnexpectedTypeError,
+                    SchemaWrongKeyError)
+# SchemaOnlyOneAllowedError is not used
+
+SCHEMA_ERRORS = (SchemaError, SchemaForbiddenKeyError, SchemaMissingKeyError, SchemaUnexpectedTypeError,
+                 SchemaWrongKeyError)
 
 
 class InvalidInputError(Exception):
@@ -24,12 +38,15 @@ class InvalidInputError(Exception):
 
 
 class _ValidSchemas:
-    """Data-holding class for different schema.
+    """Data-holding class for Schema instances appropriate for different types of config.
 
-    Schema instances to use in dict validation. Used in validate_schema()
+    Instantiated from validate_schema() only
     """
 
     def __init__(self):
+
+        # outermost keys of config if it has a 'tabs' outermost key, i.e. if it is of layout
+        # multiple or single_with_key
         self.outer_schema_multiple_or_single_with_key = Schema(
             {
                 Optional("case_sensitive"): bool,
@@ -38,6 +55,7 @@ class _ValidSchemas:
             }
         )
 
+        # outermost keys for single_without_key layout
         self.outer_schema_single_without_key = Schema(
             {
                 Optional("case_sensitive"): bool,
@@ -46,6 +64,7 @@ class _ValidSchemas:
             }
         )
 
+        # schema for each 'tab' value if there are multiple tabs
         self.tab_schema_multiple = Schema(
             {
                 "header_entry": lambda x: x is not None and len(str(x)) > 0,
@@ -55,6 +74,7 @@ class _ValidSchemas:
             }
         )
 
+        # schema for the single redundant 'tab' value for the 'single_with_key' layout
         self.tab_schema_single_with_key = Schema(
             {
                 Forbidden("header_entry"): object,
@@ -64,6 +84,7 @@ class _ValidSchemas:
             }
         )
 
+        # schema for items
         self.item_schema = Schema(
             {
                 "choice_displayed": lambda x: x is not None and len(str(x)) > 0,
@@ -73,11 +94,26 @@ class _ValidSchemas:
             }
         )
 
+        # schema for each entry in 'valid_entries'
         self.entry_schema = Schema(lambda x: x is not None and len(str(x)) > 0)
 
+# TODO: put this somewhere
+    # Exceptions raised by the schema package tend to recapitulate the entire config dict repr, which
+    # would take up far too much space since this module returns a single exception listing all errors
 
 def _extract_class(class_repr):
-    """Helper function to prettify error messages"""
+    """Helper function to prettify class specifications in error messages
+
+    Example:
+        >>> _extract_class("<class 'str'>)
+        'str'
+
+    Args:
+        class_repr (str): the output of an instance's .__class__ attribute
+
+    Returns
+        str, shorter
+    """
     return class_repr.replace("<class '", "").replace("'>", "")
 
 
@@ -85,17 +121,18 @@ def _validate_schema_part(error_messages, schema_, to_validate, prefix=None):
     """Validates that a section of the config follows schema
 
     Args:
-        error_messages: list passed around
-        schema_: instance of schema.Schema()
-        to_validate: section of config
-        prefix: prefix to be added to error message
+        error_messages (list of str): list of all error messages produced by the validator to date
+        schema_ (schema.Schema): instance defined in _ValidSchemas() class in this module
+        to_validate (dict or str): config or subsection of config to validate
+        prefix (str): prefix to be added to error message, to make it clear exactly where in the
+                      config dict the error occurred
 
     Returns:
-        error_messages
+        (list of str) error_messages, extended if applicable
     """
     try:
         _ = schema_.validate(to_validate)
-    except Exception as e:  # noqa
+    except SCHEMA_ERRORS as e:  # noqa
         error_type = _extract_class(str(e.__class__)) + ": "
         error_description = str(e).replace("\n", " ")
         if not prefix:
@@ -105,7 +142,7 @@ def _validate_schema_part(error_messages, schema_, to_validate, prefix=None):
     return error_messages
 
 
-def _determine_schema_type(config):
+def _determine_config_layout(config):
     """Determines which of three valid schema types applies to input dict.
 
     Used in validate_schema()
@@ -118,18 +155,18 @@ def _determine_schema_type(config):
 
     Returns None if cannot find a valid schema_tyoe
     """
-    schema_type = None
+    config_layout = None
     if "tabs" in config.keys():
         try:
             if len(config["tabs"]) > 1 and "items" not in config.keys():
-                schema_type = "multiple"
+                config_layout = "multiple"
             elif "items" not in config.keys():
-                schema_type = "single_with_key"
+                config_layout = "single_with_key"
         except TypeError:
             return None
     elif "tabs" not in config.keys():
-        schema_type = "single_without_key"
-    return schema_type
+        config_layout = "single_without_key"
+    return config_layout
 
 
 def _validate_schema_multiple(error_messages, config, valid_schemas):
@@ -221,21 +258,21 @@ def _validate_schema(error_messages, config):
     Returns:
         error messages list of str
     """
-    schema_type = _determine_schema_type(config)
+    config_layout = _determine_config_layout(config)
     valid_schemas = _ValidSchemas()
-    if schema_type == "multiple":
+    if config_layout == "multiple":
         error_messages = _validate_schema_multiple(error_messages, config, valid_schemas)
-    elif schema_type == "single_with_key":
+    elif config_layout == "single_with_key":
         error_messages = _validate_schema_single_with_key(error_messages, config, valid_schemas)
-    elif schema_type == "single_without_key":
+    elif config_layout == "single_without_key":
         error_messages = _validate_schema_single_without_key(error_messages, config, valid_schemas)
     return error_messages
 
 
 def _config_tabs(config):
     """Returns 'tabs' list unless single_without_key, in which case it manufactures one"""
-    schema_type = _determine_schema_type(config)
-    if schema_type == "single_without_key":
+    config_layout = _determine_config_layout(config)
+    if config_layout == "single_without_key":
         return [{"items": config["items"]}]
     return config["tabs"]
 
@@ -276,11 +313,11 @@ def _validate_no_input_value_overlap(error_messages, config):
     Case insensitivity casts all inputs to lowercase, which can create overlap
     """
     case_sensitive = config.get("case_sensitive", False)
-    schema_type = _determine_schema_type(config)
+    config_layout = _determine_config_layout(config)
     tabs = _config_tabs(config)
     starting_choices = []
     # get tab header choices if multiple tabs
-    if schema_type == "multiple":
+    if config_layout == "multiple":
         for tab in tabs:
             starting_choices.append(tab["header_entry"])
     for tab_num, tab in enumerate(tabs):
@@ -299,7 +336,7 @@ def _validate_no_input_value_overlap(error_messages, config):
                 )
             else:
                 case_sensitive_message = ""
-            if schema_type == "multiple":
+            if config_layout == "multiple":
                 error_messages.append(
                     "In tab#{0}, there are repeated input values including tab selectors: {1}.{2}".format(
                         tab_num, multiples, case_sensitive_message

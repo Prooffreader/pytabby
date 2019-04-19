@@ -31,7 +31,7 @@ class TestStaticMethods:
     def test_yaml(self):
         """Loads test yaml and instantiates Menu"""
         config = Menu.safe_read_yaml(yaml_path())
-        menu = Menu(config) #noqa
+        menu = Menu(config)  # noqa
 
     def test_json(self, tmpdir):
         """Loads test yaml, converts to json, loads json and instantiates Menu

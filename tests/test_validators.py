@@ -46,7 +46,7 @@ def validate_iteration_fail(conf, expected_error_message_part, case=None):
     """
     error_messages = []
     error_messages = validators._validate_schema(error_messages, conf)
-    if validators._determine_schema_type(conf) is None:
+    if validators._determine_config_layout(conf) is None:
         error_messages.append("Schema type not recognized")
     found = False
     for error_message in error_messages:
@@ -61,14 +61,16 @@ def validate_iteration_fail(conf, expected_error_message_part, case=None):
 
 
 def parse_items(conf):
-    """Returns deepcopy of conf, schema_type and 'items' list for config"""
-    schema_type = validators._determine_schema_type(conf)
+    """Returns deepcopy of conf, config_layout and 'items' list for config"""
+    # TODO: this function was not as useful as was thought in the planning stages.
+    # TODO: remove config_layout
+    config_layout = validators._determine_config_layout(conf)
     c = deepcopy(conf)
-    if schema_type.find("without") != -1:
+    if config_layout.find("without") != -1:
         items = c["items"]
     else:
         items = c["tabs"][0]["items"]
-    return c, schema_type, deepcopy(items)
+    return c, config_layout, deepcopy(items)
 
 
 # TESTS OF SINGLE FUNCTIONS
@@ -76,30 +78,30 @@ def parse_items(conf):
 
 @pytest.mark.function
 @pytest.mark.run(order=1)
-def test_fn__determine_schema_type(config_all_with_id):
+def test_fn__determine_config_layout(config_all_with_id):
     """Test that all config dicts return a valid type, and that it matches id"""
     config, id_ = config_all_with_id
-    schema_type = validators._determine_schema_type(config)
-    if schema_type not in ("multiple", "single_with_key", "single_without_key"):
-        raise AssertionError("Unrecognized schema_type")
-    if schema_type == "multiple":
+    config_layout = validators._determine_config_layout(config)
+    if config_layout not in ("multiple", "single_with_key", "single_without_key"):
+        raise AssertionError("Unrecognized config_layout")
+    if config_layout == "multiple":
         if id_.find("multiple") == -1:
             raise AssertionError("this id should include multiple")
-    if schema_type.startswith("single"):
+    if config_layout.startswith("single"):
         if id_.find("single") == -1:
             raise AssertionError("this id should include single")
-        if schema_type.endswith("_with_key"):
+        if config_layout.endswith("_with_key"):
             if id_.find("with_key") == -1:
                 raise AssertionError("this id should include with_key")
-        if schema_type.endswith("_without_key"):
+        if config_layout.endswith("_without_key"):
             if id_.find("without_key") == -1:
                 raise AssertionError("this id should include with_key")
 
 
 @pytest.mark.integration
-@pytest.mark.run(order=2)  # order 2 because it depends on determine_schema_type(), and breaking tests depend on it
+@pytest.mark.run(order=2)  # order 2 because it depends on determine_config_layout(), and breaking tests depend on it
 def test_fn__validate_schema(config_all):
-    """Test _validate_schema. Since it depends on _determine_schema_type, order=2"""
+    """Test _validate_schema. Since it depends on _determine_config_layout, order=2"""
     error_messages = []
     error_messages = validators._validate_schema(error_messages, config_all)
     if error_messages:
@@ -350,8 +352,8 @@ class TestSchemaItems:
     def test_several_types_3_keys(self, config_all):
         for key in ["choice_displayed", "choice_description", "returns"]:
             for value in ["astring", 50, 2.57]:
-                c, schema_type, _ = parse_items(config_all)
-                if schema_type.find("without") == -1:
+                c, config_layout, _ = parse_items(config_all)
+                if config_layout.find("without") == -1:
                     c["tabs"][0]["items"][0][key] = value
                 else:
                     c["items"][0][key] = value
@@ -361,8 +363,8 @@ class TestSchemaItems:
                     raise AssertionError
 
     def test_choice_description_absent(self, config_all):
-        c, schema_type, _ = parse_items(config_all)
-        if schema_type.find("without") == -1:
+        c, config_layout, _ = parse_items(config_all)
+        if config_layout.find("without") == -1:
             c["tabs"][0]["items"][0] = del_key_if_present(c["tabs"][0]["items"][0], "choice_description")
         else:
             c["items"][0] = del_key_if_present(c["items"][0], "choice_description")
@@ -373,8 +375,8 @@ class TestSchemaItems:
 
     def test_choice_description_values(self, config_all):
         for value in [None, ["astring"], ("string1", "string2")]:
-            c, schema_type, _ = parse_items(config_all)
-            if schema_type.find("without") == -1:
+            c, config_layout, _ = parse_items(config_all)
+            if config_layout.find("without") == -1:
                 c["tabs"][0]["items"][0]["choice_description"] = value
             else:
                 c["items"][0]["choice_description"] = value
@@ -391,8 +393,8 @@ class TestBreakingSchemasItems:
 
     def test_3_required_keys_absent(self, config_all):
         for case in ["choice_displayed", "valid_entries", "returns"]:
-            c, schema_type, _ = parse_items(config_all)
-            if schema_type.find("without") == -1:
+            c, config_layout, _ = parse_items(config_all)
+            if config_layout.find("without") == -1:
                 c["tabs"][0]["items"][0] = del_key_if_present(c["tabs"][0]["items"][0], case)
             else:
                 c["items"][0] = del_key_if_present(c["items"][0], case)
@@ -402,16 +404,16 @@ class TestBreakingSchemasItems:
         for key in ["choice_displayed", "returns"]:
             for value in [None, ""]:
                 case = "{}_{}".format(key, value)
-                c, schema_type, _ = parse_items(config_all)
-                if schema_type.find("without") == -1:
+                c, config_layout, _ = parse_items(config_all)
+                if config_layout.find("without") == -1:
                     c["tabs"][0]["items"][0][key] = value
                 else:
                     c["items"][0][key] = value
                 validate_schema_fail(c, ["item#0: schema.SchemaError: Key ", "<lambda>"], case)
 
     def test_choice_description_len_0(self, config_all):
-        c, schema_type, _ = parse_items(config_all)
-        if schema_type.find("without") == -1:
+        c, config_layout, _ = parse_items(config_all)
+        if config_layout.find("without") == -1:
             c["tabs"][0]["items"][0]["choice_description"] = ""
         else:
             c["items"][0]["choice_description"] = ""
@@ -419,8 +421,8 @@ class TestBreakingSchemasItems:
 
     def test_valid_entries_wrong_types(self, config_all):
         for case in [None, 50]:
-            c, schema_type, _ = parse_items(config_all)
-            if schema_type.find("without") == -1:
+            c, config_layout, _ = parse_items(config_all)
+            if config_layout.find("without") == -1:
                 c["tabs"][0]["items"][0]["valid_entries"] = case
             else:
                 c["items"][0]["valid_entries"] = case
@@ -428,8 +430,8 @@ class TestBreakingSchemasItems:
 
     def test_valid_entries_wrong_typestring(self, config_all):
         case = "asrting"
-        c, schema_type, _ = parse_items(config_all)
-        if schema_type.find("without") == -1:
+        c, config_layout, _ = parse_items(config_all)
+        if config_layout.find("without") == -1:
             c["tabs"][0]["items"][0]["valid_entries"] = case
         else:
             c["items"][0]["valid_entries"] = case
@@ -437,16 +439,16 @@ class TestBreakingSchemasItems:
 
     def test_valid_entries_len_0(self, config_all):
         for case in [[], tuple([])]:
-            c, schema_type, _ = parse_items(config_all)
-            if schema_type.find("without") == -1:
+            c, config_layout, _ = parse_items(config_all)
+            if config_layout.find("without") == -1:
                 c["tabs"][0]["items"][0]["valid_entries"] = case
             else:
                 c["items"][0]["valid_entries"] = case
             validate_schema_fail(c, ["lambda"], case)
 
     def unexpected_key_present(self, config_all):
-        c, schema_type, _ = parse_items(config_all)
-        if schema_type.find("without") == -1:
+        c, config_layout, _ = parse_items(config_all)
+        if config_layout.find("without") == -1:
             c["tabs"][0]["items"][0]["disallowedkey"] = "astring"
         else:
             c["items"][0]["disallowedkey"] = "astring"
@@ -466,8 +468,8 @@ class TestBreakingSchemasValidEntries:
 
     def test_valid_entries_none_or_len_0(self, config_all):
         for value in [None, ""]:
-            c, schema_type, _ = parse_items(config_all)
-            if schema_type.find("without") == -1:
+            c, config_layout, _ = parse_items(config_all)
+            if config_layout.find("without") == -1:
                 c["tabs"][0]["items"][0]["valid_entries"][0] = value
             else:
                 c["items"][0]["valid_entries"][0] = value

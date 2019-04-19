@@ -4,8 +4,12 @@
 
 """Functions that ensure incoming configs have the same general features AFTER validation.
 
-(This ordering is chosen because if the config doesn't pass validation, the user will have to fix it as they
-see it, not as it looks after validation)
+The validation check comes first so they user can fix problems as they see it, not after it looks after normalization
+
+Normalization consists of, for those parts of the config that require it:
+1. Adding default values where the key is missing
+2. Converting elements to string where appropriate
+3. Converting elements to lower-case where appropriate if config's case_sensitive is False
 """
 
 from __future__ import absolute_import, division, print_function, unicode_literals
@@ -14,9 +18,20 @@ from copy import deepcopy
 
 
 def _add_tabs_key_if_needed(config):
+    """Adds redundant 'tab' key if config describes a single tab with 'items' as a top-level key.
+
+    Called from normalize()
+
+    Args:
+        config (dict): config dict from menu.Menu
+
+    Returns:
+        config (dict): modified so that 'items' key is a member of 'tabs': list if appropriate
+                       otherwise, unchanged config
+    """
     if "tabs" not in config.keys():
         if "items" not in config.keys():  # sanity check
-            raise AssertionError
+            raise AssertionError("There is something wrong with the test suite if this error is called")
         config["tabs"] = [{"items": deepcopy(config["items"])}]
         del config["items"]
         return config
@@ -27,56 +42,102 @@ def _add_tabs_key_if_needed(config):
 def _walk_stringize_and_case(config):  # noqa: C901
     """Walks the various contents of config and:
 
-    1. Converts to string if not None where appropriate
-    2. If case_sensitive is False, converts to lowercase where appropriate
+    1. Adds default values if missing
+    2. Converts to string if not None where appropriate
+    3. If case_sensitive is False, converts to lowercase where appropriate
+
+    Called from normalize()
+
+    Args:
+        config (dict): config dict from menu.Menu after possibly being modified by _add_key_if_needed()
+
+    Returns:
+        config (dict): modified so that 'items' key is a member of 'tabs': list if appropriate
+                       otherwise, unchanged config
     """
-    new = {}
-    c = config
+    new_config = {}
+    old_config = config
 
-    if c.get("case_sensitive", None):
-        new["case_sensitive"] = c["case_sensitive"]
+    if old_config.get("case_sensitive", None):
+        new_config["case_sensitive"] = old_config["case_sensitive"]
     else:
-        new["case_sensitive"] = False
+        new_config["case_sensitive"] = False
 
-    if c.get("screen_width", None):
-        new["screen_width"] = c["screen_width"]
+    if old_config.get("screen_width", None):
+        new_config["screen_width"] = old_config["screen_width"]
     else:
-        new["screen_width"] = 80
+        new_config["screen_width"] = 80
 
-    def strcase(thing, change_case=False, none_allowed=False):
-        if none_allowed and thing is None:
+    def stringify_and_recase(element, change_case=False, none_allowed=False):
+        """Changes to string and/or changes case where appropriate.
+
+        Args:
+            element (object): Python object (probably a string or an int) that is a value of config
+            change_case (bool): whether to change case if and only if nonlocal variable
+                                new_config["case_sensitive"] is true
+            none_allowed (bool): whether element is allowed to be None, in which case if it is None,
+                                 None is returned
+        """
+        # return None if element is None and that's allowed
+        if none_allowed and element is None:
             return None
-        if change_case and not new["case_sensitive"]:
-            return str(thing).lower()
+        # change to lowercase if appropriate for element and for config's case_sensitive boolean key
+        if change_case and not new_config["case_sensitive"]:
+            return str(element).lower()
         else:
-            return str(thing)
+            # return as-is, but as a string
+            return str(element)
 
-    new["tabs"] = []
-    for tab in c["tabs"]:
+    # walk tree of config["tabs"], building a new config tree with modified values where appropriate
+    new_config["tabs"] = []
+    for old_tab in old_config["tabs"]:
         new_tab = {}
-        for k1, v1 in tab.items():
-            if k1 == "header_entry":
-                new_tab[k1] = strcase(v1, True)
-            elif k1 in ["header_description", "header_long_description"]:
-                new_tab[k1] = strcase(v1, False, True)
+        # Note by iterating over the keys and values present in old_tab, there is no assumption made
+        # that any key except for 'items' will be present. Congruity of the presence and types of these
+        # keys was already done by the validators module
+        for tab_key, old_tab_value in old_tab.items():
+            if tab_key == "header_entry":
+                # since this is an input, it should be lowercased if config is not case-sensitive
+                new_tab[tab_key] = stringify_and_recase(old_tab_value, change_case=True)
+            elif tab_key in ["header_description", "header_long_description"]:
+                # these are allowed to be None (or missing, though that's not checked here), and since
+                # they are only printed to stdout, they should not change case
+                new_tab[tab_key] = stringify_and_recase(old_tab_value, change_case=False, none_allowed=True)
+            # items is the only key this function assumes will be there; its presence was already validated
+            # by the validators script
             new_tab["items"] = []
-            for item in tab["items"]:
+            for old_item in old_tab["items"]:
                 new_item = {}
-                for k2, v2 in item.items():
-                    if k2 in ["choice_displayed", "choice_description", "returns"]:
-                        new_item[k2] = strcase(v2)
+                for item_key, old_item_value in old_item.items():
+                    if item_key in ["choice_displayed", "choice_description", "returns"]:
+                        # these keys are changed to string only
+                        # changing the returns value to a string was a design decision which could be
+                        # reversed in future, e.g. so a function could be returned
+                        new_item[item_key] = stringify_and_recase(old_item_value)
                     else:
+                        # the only other possible key, already validated, is 'valid_entries
                         new_entries = []
-                        for entry in item["valid_entries"]:
-                            new_entries.append(strcase(entry, True))
+                        for old_entry in old_item["valid_entries"]:
+                            # since this is an input, it should be lowercased if config is not case sensitive
+                            new_entries.append(stringify_and_recase(old_entry, True))
                         new_item["valid_entries"] = new_entries
                 new_tab["items"].append(new_item)
-        new["tabs"].append(new_tab)
-    return new
+        new_config["tabs"].append(new_tab)
+    return new_config
 
 
 def normalize(config):
-    """Runs underscored functions in this module on config dict"""
+    """Calls semiprivate functions above to normalize config dict
+
+    This allows menu.Menu and tab.Tab to be simplified, as they don't have to account for allowed variations
+
+    Called from menu.Menu only, not by user
+
+    Args:
+        config (dict): config data as passed to menu.Menu constructor
+    Returns:
+        (dict): normalized/modified config dict
+    """
     config = _add_tabs_key_if_needed(config)
     config = _walk_stringize_and_case(config)
     return config
