@@ -2,35 +2,35 @@ case_sensitive: true
 screen_width: 80 
 tabs:
   - 
-    header_entry: un
-    header_description: Description
+    tab_header_input: un
+    tab_header_description: Description
     items:
-      - choice_displayed: 1
-        choice_description: One
-        valid_entries: 
+      - item_choice_displayed: 1
+        item_description: One
+        item_inputs: 
           - 1
           - ONE
-        returns: 1
-      - choice_displayed: 2
-        choice_description: 2
-        valid_entries: 
+        item_returns: 1
+      - item_choice_displayed: 2
+        item_description: 2
+        item_inputs: 
           - 2
           - tWo
-        returns: 2
+        item_returns: 2
   - 
-    header_entry: deux
-    header_description: has a description
-    header_long_description: This one has a long description, the other one does not
+    tab_header_input: deux
+    tab_header_description: has a description
+    tab_header_long_description: This one has a long description, the other one does not
     items:
-      - choice_displayed: three
-        choice_description: 3
-        valid_entries: 
+      - item_choice_displayed: three
+        item_description: 3
+        item_inputs: 
           - 3
           - three
-        returns: three
-      - choice_displayed: four
-        choice_description: 4
-        valid_entries: 
+        item_returns: three
+      - item_choice_displayed: four
+        item_description: 4
+        item_inputs: 
           - 4
           - four
-        returns: four!
+        item_returns: four!

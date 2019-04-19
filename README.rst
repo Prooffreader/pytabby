@@ -67,10 +67,10 @@ Why can't I return handlers?
 Why are my return values coming in/out strings?
     To keep things simple, all input and output (return) values are
     converted to string. So if you have
-    ``config['tabs'][0]['items][0]['valid_entries'] = [1]``,
+    ``config['tabs'][0]['items][0]['item_inputs'] = [1]``,
     the return value will be '1'.
 
-Why do ``items`` have both 'choice_displayed' and 'valid_entries' keys?
+Why do ``items`` have both 'item_choice_displayed' and 'item_inputs' keys?
     To keep things flexible, you don't have to display exactly
     what you'll accept as input. For example, you could display
     'yes/no' as the suggested answers to a yes or no question, but a

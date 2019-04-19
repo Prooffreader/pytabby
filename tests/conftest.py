@@ -42,8 +42,8 @@ def create_single_with_key(multiple_config):
     """Creates single_with_key type from multiple config"""
     d = deepcopy(multiple_config)
     d["tabs"] = d["tabs"][:1]
-    del d["tabs"][0]["header_entry"]
-    for key in ["header_description", "header_long_description"]:
+    del d["tabs"][0]["tab_header_input"]
+    for key in ["tab_header_description", "tab_header_long_description"]:
         try:
             del d["tabs"][0][key]
         except KeyError:

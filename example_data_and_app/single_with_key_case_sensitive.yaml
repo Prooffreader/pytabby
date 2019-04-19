@@ -3,7 +3,7 @@ screen_width: 80  # optional, integer, default 80
 # Note that there is only one tab and no header key/value pairs for that tab
 # This example will still work with its one unnecessary 'tab' key, with the 'items' key a value of
 # the 'tabs' key, **because there are no other values of the tabs key**, i.e. the 2-3 other keys --
-# `header_entry`, (optional) `header_description` or (optional) `header_long_description`.
+# `tab_header_input`, (optional) `tab_header_description` or (optional) `tab_header_long_description`.
 #
 # The reason for this design choice is that if there is only one tab defined, the program will never show a
 # header/tab bar (since with one tab by definition you can't change tabs). However, if any of the  
@@ -17,46 +17,46 @@ screen_width: 80  # optional, integer, default 80
 # It's only an example.
 tabs:
   - items:
-      - choice_displayed: n 
-        choice_description: Next directory
-        valid_entries: 
+      - item_choice_displayed: n 
+        item_description: Next directory
+        item_inputs: 
           - n  # will be changed to str if not already
-        returns: next_dir  # will be changed to str if not already
-      - choice_displayed: p
-        choice_description: Previous directory
-        valid_entries: 
+        item_returns: next_dir  # will be changed to str if not already
+      - item_choice_displayed: p
+        item_description: Previous directory
+        item_inputs: 
           - p
-        returns: prev_dir
-      - choice_displayed: u
-        choice_description: Up a directory
-        valid_entries: 
+        item_returns: prev_dir
+      - item_choice_displayed: u
+        item_description: Up a directory
+        item_inputs: 
           - u
-        returns: up_dir
-      - choice_displayed: e
-        choice_description: Enter directory (if one is current selection)  # Note there is no way to 'silence' menu
+        item_returns: up_dir
+      - item_choice_displayed: e
+        item_description: Enter directory (if one is current selection)  # Note there is no way to 'silence' menu
                                                                            # Items as yet. On the wishlist!
-        valid_entries: 
+        item_inputs: 
           - e
-        returns: enter_dir
-      - choice_displayed: o
-        choice_description: Open file (if one is current selection)
-        valid_entries:
+        item_returns: enter_dir
+      - item_choice_displayed: o
+        item_description: Open file (if one is current selection)
+        item_inputs:
           - o
-        returns: open_file
-      - choice_displayed: d
-        choice_description: Delete file (if one is current selection)
-        valid_entries:
+        item_returns: open_file
+      - item_choice_displayed: d
+        item_description: Delete file (if one is current selection)
+        item_inputs:
           - d
-        returns: del_file
-      - choice_displayed: D  # uppercased same letter as previous item
-        choice_description: Delete directory and contents (if one is current selection)
-        valid_entries:
+        item_returns: del_file
+      - item_choice_displayed: D  # uppercased same letter as previous item
+        item_description: Delete directory and contents (if one is current selection)
+        item_inputs:
           - D
-        returns: del_dir 
-      - choice_displayed: QX  # purposely made uppercase
-        choice_description: Quit
-        valid_entries: 
+        item_returns: del_dir 
+      - item_choice_displayed: QX  # purposely made uppercase
+        item_description: Quit
+        item_inputs: 
           - Q
           - X
-        returns: quit
+        item_returns: quit
   

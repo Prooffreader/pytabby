@@ -96,10 +96,10 @@ def _walk_stringize_and_case(config):  # noqa: C901
         # that any key except for 'items' will be present. Congruity of the presence and types of these
         # keys was already done by the validators module
         for tab_key, old_tab_value in old_tab.items():
-            if tab_key == "header_entry":
+            if tab_key == "tab_header_input":
                 # since this is an input, it should be lowercased if config is not case-sensitive
                 new_tab[tab_key] = stringify_and_recase(old_tab_value, change_case=True)
-            elif tab_key in ["header_description", "header_long_description"]:
+            elif tab_key in ["tab_header_description", "tab_header_long_description"]:
                 # these are allowed to be None (or missing, though that's not checked here), and since
                 # they are only printed to stdout, they should not change case
                 new_tab[tab_key] = stringify_and_recase(old_tab_value, change_case=False, none_allowed=True)
@@ -109,18 +109,18 @@ def _walk_stringize_and_case(config):  # noqa: C901
             for old_item in old_tab["items"]:
                 new_item = {}
                 for item_key, old_item_value in old_item.items():
-                    if item_key in ["choice_displayed", "choice_description", "returns"]:
+                    if item_key in ["item_choice_displayed", "item_description", "item_returns"]:
                         # these keys are changed to string only
                         # changing the returns value to a string was a design decision which could be
                         # reversed in future, e.g. so a function could be returned
                         new_item[item_key] = stringify_and_recase(old_item_value)
                     else:
-                        # the only other possible key, already validated, is 'valid_entries
+                        # the only other possible key, already validated, is 'item_inputs
                         new_entries = []
-                        for old_entry in old_item["valid_entries"]:
+                        for old_entry in old_item["item_inputs"]:
                             # since this is an input, it should be lowercased if config is not case sensitive
                             new_entries.append(stringify_and_recase(old_entry, True))
-                        new_item["valid_entries"] = new_entries
+                        new_item["item_inputs"] = new_entries
                 new_tab["items"].append(new_item)
         new_config["tabs"].append(new_tab)
     return new_config

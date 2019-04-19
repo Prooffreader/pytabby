@@ -36,24 +36,24 @@ def test__add_tabs_key_if_needed_multiple(config_all_with_id):
 class TestCaseSensitiveOrInsensitive:
     """Performs tests that do not depend on case insensitivity"""
 
-    def test_header_entry_str(self, config_multiple):
+    def test_tab_header_input_str(self, config_multiple):
         c = deepcopy(config_multiple)
-        c["tabs"][0]["header_entry"] = 50
+        c["tabs"][0]["tab_header_input"] = 50
         normal = normalizer.normalize(c)
-        if normal["tabs"][0]["header_entry"] != "50":
+        if normal["tabs"][0]["tab_header_input"] != "50":
             raise AssertionError
 
-    def test_valid_entries_str(self, config_all_with_id):
+    def test_item_inputs_str(self, config_all_with_id):
         conf, id_ = config_all_with_id
         c = deepcopy(conf)
         if id_.find("without") == -1:
-            c["tabs"][0]["items"][0]["valid_entries"].append(50)
+            c["tabs"][0]["items"][0]["item_inputs"].append(50)
         else:
-            c["items"][0]["valid_entries"].append(50)
+            c["items"][0]["item_inputs"].append(50)
         normal = normalizer.normalize(c)
         for tab in normal["tabs"]:
             for item in tab["items"]:
-                for entry in item["valid_entries"]:
+                for entry in item["item_inputs"]:
                     if not isinstance(entry, str):
                         raise AssertionError
 
@@ -81,21 +81,21 @@ class TestCaseSensitiveOrInsensitive:
 class TestCaseInsensitive:
     """Tests that changes are made only where appropriate"""
 
-    def test_header_entry_changed(self, config_multiple, random_string):
+    def test_tab_header_input_changed(self, config_multiple, random_string):
         c = deepcopy(config_multiple)
         c["case_sensitive"] = False
-        c["tabs"][0]["header_entry"] = random_string
+        c["tabs"][0]["tab_header_input"] = random_string
         normal = normalizer.normalize(c)
         if (
-            normal["tabs"][0]["header_entry"] == random_string
-            or normal["tabs"][0]["header_entry"] != random_string.lower()
+            normal["tabs"][0]["tab_header_input"] == random_string
+            or normal["tabs"][0]["tab_header_input"] != random_string.lower()
         ):
             raise AssertionError
 
     def test_other_headers_str_but_unchanged(self, config_multiple, random_string):
         c = deepcopy(config_multiple)
         c["case_sensitive"] = False
-        for key in ["header_description", "header_long_description"]:
+        for key in ["tab_header_description", "tab_header_long_description"]:
             c["tabs"][0][key] = random_string
             normal = normalizer.normalize(c)
             if normal["tabs"][0][key] != random_string:
@@ -104,7 +104,7 @@ class TestCaseInsensitive:
     def test_other_headers_none_ok(self, config_multiple):
         c = deepcopy(config_multiple)
         c["case_sensitive"] = False
-        for key in ["header_description", "header_long_description"]:
+        for key in ["tab_header_description", "tab_header_long_description"]:
             c["tabs"][0][key] = None
             normal = normalizer.normalize(c)
             if normal["tabs"][0][key] is not None:
@@ -113,7 +113,7 @@ class TestCaseInsensitive:
     def test_other_headers_missing_ok(self, config_multiple):
         c = deepcopy(config_multiple)
         c["case_sensitive"] = False
-        for key in ["header_description", "header_long_description"]:
+        for key in ["tab_header_description", "tab_header_long_description"]:
             if key in c["tabs"][0].keys():
                 del c["tabs"][0][key]
             normal = normalizer.normalize(c)
@@ -122,7 +122,7 @@ class TestCaseInsensitive:
 
     def test_choice_fields_str_but_unchanged(self, config_all_with_id, random_string):
         conf, id_ = config_all_with_id
-        for key in ["choice_displayed", "choice_description", "returns"]:
+        for key in ["item_choice_displayed", "item_description", "item_returns"]:
             c = deepcopy(conf)
             c["case_sensitive"] = False
             if id_.find("without") == -1:
@@ -133,17 +133,17 @@ class TestCaseInsensitive:
             if normal["tabs"][0]["items"][0][key] != random_string:
                 raise AssertionError
 
-    def test_valid_entries_changed(self, config_all_with_id, random_string):
+    def test_item_inputs_changed(self, config_all_with_id, random_string):
         conf, id_ = config_all_with_id
         c = deepcopy(conf)
         c["case_sensitive"] = False
         if id_.find("without") == -1:
-            c["tabs"][0]["items"][0]["valid_entries"][0] = random_string
+            c["tabs"][0]["items"][0]["item_inputs"][0] = random_string
         else:
-            c["items"][0]["valid_entries"][0] = random_string
+            c["items"][0]["item_inputs"][0] = random_string
         normal = normalizer.normalize(c)
         if (
-            normal["tabs"][0]["items"][0]["valid_entries"][0] == random_string
-            or normal["tabs"][0]["items"][0]["valid_entries"][0] != random_string.lower()
+            normal["tabs"][0]["items"][0]["item_inputs"][0] == random_string
+            or normal["tabs"][0]["items"][0]["item_inputs"][0] != random_string.lower()
         ):
             raise AssertionError

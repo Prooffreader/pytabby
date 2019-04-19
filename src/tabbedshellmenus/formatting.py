@@ -28,14 +28,14 @@ def format_menu(config, current_tab_number, line_length):
     # get items from currently selected tab
     current_tab = tabs[current_tab_number]
     items = current_tab["items"]
-    # find maximum length of choice_displayed in items to make sure they are equally justified
+    # find maximum length of item_choice_displayed in items to make sure they are equally justified
     max_choice_len = 0
     for item in items:
-        max_choice_len = max(max_choice_len, len(item["choice_displayed"]))
+        max_choice_len = max(max_choice_len, len(item["item_choice_displayed"]))
     # build up one line per item, add to menu list
     for item in items:
-        choice = item["choice_displayed"]
-        description = item["choice_description"]
+        choice = item["item_choice_displayed"]
+        description = item["item_description"]
         spacer = " " * (max_choice_len - len(choice))
         menu.append("[{0}{1}] {2}".format(choice, spacer, description))
     # return one string by concatenating lines of list
@@ -63,8 +63,8 @@ def _format_headers(tabs, current_tab_number, line_length):
     bottom_text = []
     # build the list of strings tab by tab
     for i, tab in enumerate(tabs):
-        abbreviation = tab["header_entry"]
-        description = tab.get("header_description", None)
+        abbreviation = tab["tab_header_input"]
+        description = tab.get("tab_header_description", None)
         if description is None:
             description = ""
         # use = for currently selected tab, - for other tabs

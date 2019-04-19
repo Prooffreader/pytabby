@@ -51,9 +51,9 @@ class TestStaticMethods:
 def test_method__change_tab(config_multiple, capsys, random_string):
     """Tests menu._change_tab"""
     c = deepcopy(config_multiple)
-    c["tabs"][1]["header_entry"] = random_string[:3]
-    c["tabs"][1]["header_description"] = random_string[3:7]
-    c["tabs"][1]["header_long_description"] = random_string[7:]
+    c["tabs"][1]["tab_header_input"] = random_string[:3]
+    c["tabs"][1]["tab_header_description"] = random_string[3:7]
+    c["tabs"][1]["tab_header_long_description"] = random_string[7:]
     menu = Menu(c)
     if menu.current_tab_number != 0:
         raise AssertionError
@@ -119,13 +119,13 @@ class TestCollectInput:
         c["case_sensitive"] = False  # to get 100% coverage
         menu = Menu(c)
         normal = menu.config
-        test_input_valid_entry = normal["tabs"][0]["items"][0]["valid_entries"][0]
+        test_input_valid_entry = normal["tabs"][0]["items"][0]["item_inputs"][0]
         data = {}
         tabbedshellmenus.menu.input = lambda x: test_input_valid_entry
         result = menu._collect_input()
         data["result"] = result
         if id_.find("multiple") != -1:
-            test_input_tab = normal["tabs"][1]["header_entry"]
+            test_input_tab = normal["tabs"][1]["tab_header_input"]
             tabbedshellmenus.menu.input = lambda x: test_input_tab
             result2 = menu._collect_input()
             data["result_multiple"] = result2
@@ -175,7 +175,7 @@ class TestRun:
         c = deepcopy(config_multiple)
         menu = Menu(c)
         normal = menu.config
-        test_input = normal["tabs"][1]["header_entry"]
+        test_input = normal["tabs"][1]["tab_header_input"]
         tabbedshellmenus.menu.input = lambda x: test_input
         result = menu.run(testing_tab_change=True)
         assert result == {"new_number": 1, "type": "change_tab"}
@@ -184,7 +184,7 @@ class TestRun:
         c = deepcopy(config_all)
         menu = Menu(c)
         normal = menu.config
-        test_input = normal["tabs"][0]["items"][0]["valid_entries"][0]
+        test_input = normal["tabs"][0]["items"][0]["item_inputs"][0]
         tabbedshellmenus.menu.input = lambda x: test_input
         data = {}
         result = menu.run()

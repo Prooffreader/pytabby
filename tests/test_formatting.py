@@ -49,30 +49,30 @@ def test_regress__format_menu(data_regression, config_all_with_id):
 class TestEdgeCases:
     """Edge cases to get 100% coverage. Will use only one config each"""
 
-    def test_regress_header_description_none(self, data_regression, config_multiple):
+    def test_regress_tab_header_description_none(self, data_regression, config_multiple):
         c = deepcopy(config_multiple)
-        c["tabs"][0]["header_description"] = None
+        c["tabs"][0]["tab_header_description"] = None
         result = formatting._format_headers(c["tabs"], 0, 80)
         data = {"data": result}
         data_regression.check(data)
 
-    def test_regress_missing_header_description(self, data_regression, config_multiple):
+    def test_regress_missing_tab_header_description(self, data_regression, config_multiple):
         c = deepcopy(config_multiple)
-        if "header_description" in c["tabs"][0].keys():
-            del c["tabs"][0]["header_description"]
+        if "tab_header_description" in c["tabs"][0].keys():
+            del c["tabs"][0]["tab_header_description"]
         result = formatting._format_headers(c["tabs"], 0, 80)
         data = {"data": result}
         data_regression.check(data)
 
     def test_many_tabs_with_long_headers(self, data_regression, config_multiple):
         c = deepcopy(config_multiple)
-        c["tabs"][0]["header_entry"] = "abcdefghij"
-        c["tabs"][0]["header_description"] = "klmnopqrstuvwxyz"
-        c["tabs"][1]["header_entry"] = "abcdefghijx"
-        c["tabs"][1]["header_description"] = "klmnopqrstuvwxyzx"
+        c["tabs"][0]["tab_header_input"] = "abcdefghij"
+        c["tabs"][0]["tab_header_description"] = "klmnopqrstuvwxyz"
+        c["tabs"][1]["tab_header_input"] = "abcdefghijx"
+        c["tabs"][1]["tab_header_description"] = "klmnopqrstuvwxyzx"
         c["tabs"].append(c["tabs"][0])
-        c["tabs"][-1]["header_entry"] = "xabcdefghij"
-        c["tabs"][-1]["header_description"] = "xklmnopqrstuvwxyz"
+        c["tabs"][-1]["tab_header_input"] = "xabcdefghij"
+        c["tabs"][-1]["tab_header_description"] = "xklmnopqrstuvwxyz"
         result = formatting._format_headers(c["tabs"], 0, 80)
         data = {"data": result}
         data_regression.check(data)

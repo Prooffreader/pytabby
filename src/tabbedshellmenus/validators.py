@@ -67,9 +67,9 @@ class _ValidSchemas:
         # schema for each 'tab' value if there are multiple tabs
         self.tab_schema_multiple = Schema(
             {
-                "header_entry": lambda x: x is not None and len(str(x)) > 0,
-                Optional("header_description"): lambda x: x is None or len(str(x)) > 0,
-                Optional("header_long_description"): lambda x: x is None or len(str(x)) > 0,
+                "tab_header_input": lambda x: x is not None and len(str(x)) > 0,
+                Optional("tab_header_description"): lambda x: x is None or len(str(x)) > 0,
+                Optional("tab_header_long_description"): lambda x: x is None or len(str(x)) > 0,
                 "items": And(Or(list, tuple), lambda x: len(x) > 0),
             }
         )
@@ -77,9 +77,9 @@ class _ValidSchemas:
         # schema for the single redundant 'tab' value for the 'single_with_key' layout
         self.tab_schema_single_with_key = Schema(
             {
-                Forbidden("header_entry"): object,
-                Forbidden("header_description"): object,
-                Forbidden("header_long_description"): object,
+                Forbidden("tab_header_input"): object,
+                Forbidden("tab_header_description"): object,
+                Forbidden("tab_header_long_description"): object,
                 "items": And(Or(list, tuple), lambda x: len(x) > 0),
             }
         )
@@ -87,14 +87,14 @@ class _ValidSchemas:
         # schema for items
         self.item_schema = Schema(
             {
-                "choice_displayed": lambda x: x is not None and len(str(x)) > 0,
-                Optional("choice_description"): lambda x: x is None or len(str(x)) > 0,
-                "valid_entries": And(Or(list, tuple), lambda x: len(x) > 0),
-                "returns": lambda x: x is not None and len(str(x)) > 0,
+                "item_choice_displayed": lambda x: x is not None and len(str(x)) > 0,
+                Optional("item_description"): lambda x: x is None or len(str(x)) > 0,
+                "item_inputs": And(Or(list, tuple), lambda x: len(x) > 0),
+                "item_returns": lambda x: x is not None and len(str(x)) > 0,
             }
         )
 
-        # schema for each entry in 'valid_entries'
+        # schema for each entry in 'item_inputs'
         self.entry_schema = Schema(lambda x: x is not None and len(str(x)) > 0)
 
 # TODO: put this somewhere
@@ -183,8 +183,8 @@ def _validate_schema_multiple(error_messages, config, valid_schemas):
             for item_num, item in enumerate(tab["items"]):
                 prefix = "tab#{0},item#{1}: ".format(tab_num, item_num)
                 error_messages = _validate_schema_part(error_messages, valid_schemas.item_schema, item, prefix)
-                level = "valid_entries"
-                for entry_num, entry in enumerate(item["valid_entries"]):
+                level = "item_inputs"
+                for entry_num, entry in enumerate(item["item_inputs"]):
                     prefix = "tab#{0},item#{1},valid_entry#{2}: ".format(tab_num, item_num, entry_num)
                     error_messages = _validate_schema_part(error_messages, valid_schemas.entry_schema, entry, prefix)
     except Exception as e:  # noqa
@@ -207,8 +207,8 @@ def _validate_schema_single_with_key(error_messages, config, valid_schemas):
         for item_num, item in enumerate(config["tabs"][0]["items"]):
             prefix = "sole tab,item#{0}: ".format(item_num)
             error_messages = _validate_schema_part(error_messages, valid_schemas.item_schema, item, prefix)
-            level = "valid_entries"
-            for entry_num, entry in enumerate(item["valid_entries"]):
+            level = "item_inputs"
+            for entry_num, entry in enumerate(item["item_inputs"]):
                 prefix = "sole tab,item#{0},valid_entry#{1}: ".format(item_num, entry_num)
                 error_messages = _validate_schema_part(error_messages, valid_schemas.entry_schema, entry, prefix)
     except Exception as e:  # noqa
@@ -224,8 +224,8 @@ def _validate_schema_single_without_key(error_messages, config, valid_schemas):
         for item_num, item in enumerate(config["items"]):
             prefix = "item#{0}: ".format(item_num)
             error_messages = _validate_schema_part(error_messages, valid_schemas.item_schema, item, prefix)
-            level = "valid_entries"
-            for entry_num, entry in enumerate(item["valid_entries"]):
+            level = "item_inputs"
+            for entry_num, entry in enumerate(item["item_inputs"]):
                 prefix = "item#{0},valid_entry#{1}: ".format(item_num, entry_num)
                 error_messages = _validate_schema_part(error_messages, valid_schemas.entry_schema, entry, prefix)
     except Exception as e:  # noqa
@@ -292,10 +292,10 @@ def _validate_no_return_value_overlap(error_messages, config):
     """
     tabs = _config_tabs(config)
     for tab_num, tab in enumerate(tabs):
-        returns = [x["returns"] for x in tab["items"]]
+        returns = [x["item_returns"] for x in tab["items"]]
         multiples = _count_for_overlap(returns)
         if multiples:
-            if "header_entry" in tab.keys():
+            if "tab_header_input" in tab.keys():
                 error_messages.append("In tab#{0}, there are repeated return values: {1}.".format(tab_num, multiples))
             else:
                 error_messages.append("In the single tab, there are repeated return values: {0}".format(multiples))
@@ -319,11 +319,11 @@ def _validate_no_input_value_overlap(error_messages, config):
     # get tab header choices if multiple tabs
     if config_layout == "multiple":
         for tab in tabs:
-            starting_choices.append(tab["header_entry"])
+            starting_choices.append(tab["tab_header_input"])
     for tab_num, tab in enumerate(tabs):
         choices = starting_choices[:]
         for item in tab["items"]:
-            for entry in item["valid_entries"]:
+            for entry in item["item_inputs"]:
                 choices.append(entry)
         if not case_sensitive:
             choices = [str(choice).lower() for choice in choices]

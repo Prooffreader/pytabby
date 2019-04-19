@@ -234,14 +234,14 @@ class TestBreakingSchemaTop:
 class TestSchemaTabs:
     """Does non-breaking tests for schemas with tabs"""
 
-    def test_header_entry_present(self, config_multiple):
+    def test_tab_header_input_present(self, config_multiple):
         c = deepcopy(config_multiple)
         for tab in c["tabs"]:
-            if not tab.get("header_entry", None):
+            if not tab.get("tab_header_input", None):
                 raise AssertionError
 
-    def test_header_descriptions_absent(self, config_multiple):
-        for key in ["header_description", "header_long_description"]:
+    def test_tab_header_descriptions_absent(self, config_multiple):
+        for key in ["tab_header_description", "tab_header_long_description"]:
             c = deepcopy(config_multiple)
             c["tabs"][0] = del_key_if_present(c["tabs"][0], key)
             error_messages = []
@@ -249,8 +249,8 @@ class TestSchemaTabs:
             if error_messages:
                 raise AssertionError(key)
 
-    def test_header_descriptions_values_incl_none(self, config_multiple):
-        for key in ["header_description", "header_long_description"]:
+    def test_tab_header_descriptions_values_incl_none(self, config_multiple):
+        for key in ["tab_header_description", "tab_header_long_description"]:
             for case in [None, "astring", 1000, 2.5, KeyError]:  # unlikely to pass a class, but it should work
                 c = deepcopy(config_multiple)
                 c["tabs"][0][key] = case
@@ -260,7 +260,7 @@ class TestSchemaTabs:
                     raise AssertionError(key, case)
 
     def test_headers_absent_in_single(self, config_single_with_key):
-        for key in ["header_entry", "header_description", "header_long_description"]:
+        for key in ["tab_header_input", "tab_header_description", "tab_header_long_description"]:
             c = deepcopy(config_single_with_key)
             if c["tabs"][0].get(key, None):
                 raise AssertionError(key)
@@ -279,13 +279,13 @@ class TestSchemaTabs:
 class TestBreakingSchemasTabs:
     """Tests tabs item in schemas to ensure they break appropriately"""
 
-    def test_header_entry_absent(self, config_multiple):
+    def test_tab_header_input_absent(self, config_multiple):
         c = deepcopy(config_multiple)
-        c["tabs"][0] = del_key_if_present(c["tabs"][0], "header_entry")
-        validate_schema_fail(c, ["tab#0: schema.SchemaMissingKeyError: Missing key: 'header_entry'"])
+        c["tabs"][0] = del_key_if_present(c["tabs"][0], "tab_header_input")
+        validate_schema_fail(c, ["tab#0: schema.SchemaMissingKeyError: Missing key: 'tab_header_input'"])
 
     def test_forbidden_headers_present(self, config_single_with_key):
-        for key in ["header_entry", "header_description", "header_long_description"]:
+        for key in ["tab_header_input", "tab_header_description", "tab_header_long_description"]:
             c = deepcopy(config_single_with_key)
             c["tabs"][0][key] = "astring"
             validate_schema_fail(c, ["Forbidden"])
@@ -298,7 +298,7 @@ class TestBreakingSchemasTabs:
 
     def test_headers_empty_string_len_0(self, config_multiple):
         c = deepcopy(config_multiple)
-        for key in ["header_entry", "header_description", "header_long_description"]:
+        for key in ["tab_header_input", "tab_header_description", "tab_header_long_description"]:
             c["tabs"][0][key] = ""
             validate_schema_fail(c, ["<lambda>"], key)
 
@@ -345,12 +345,12 @@ class TestSchemaItems:
     def test_mandatory_keys_present(self, config_all):
         _, _, items = parse_items(config_all)
         for item in items:
-            for key in ["choice_displayed", "valid_entries", "returns"]:
+            for key in ["item_choice_displayed", "item_inputs", "item_returns"]:
                 if not item.get(key, None):
                     raise AssertionError
 
     def test_several_types_3_keys(self, config_all):
-        for key in ["choice_displayed", "choice_description", "returns"]:
+        for key in ["item_choice_displayed", "item_description", "item_returns"]:
             for value in ["astring", 50, 2.57]:
                 c, config_layout, _ = parse_items(config_all)
                 if config_layout.find("without") == -1:
@@ -362,24 +362,24 @@ class TestSchemaItems:
                 if error_messages:
                     raise AssertionError
 
-    def test_choice_description_absent(self, config_all):
+    def test_item_description_absent(self, config_all):
         c, config_layout, _ = parse_items(config_all)
         if config_layout.find("without") == -1:
-            c["tabs"][0]["items"][0] = del_key_if_present(c["tabs"][0]["items"][0], "choice_description")
+            c["tabs"][0]["items"][0] = del_key_if_present(c["tabs"][0]["items"][0], "item_description")
         else:
-            c["items"][0] = del_key_if_present(c["items"][0], "choice_description")
+            c["items"][0] = del_key_if_present(c["items"][0], "item_description")
         error_messages = []
         error_messages = validators._validate_schema(error_messages, c)
         if error_messages:
             raise AssertionError
 
-    def test_choice_description_values(self, config_all):
+    def test_item_description_values(self, config_all):
         for value in [None, ["astring"], ("string1", "string2")]:
             c, config_layout, _ = parse_items(config_all)
             if config_layout.find("without") == -1:
-                c["tabs"][0]["items"][0]["choice_description"] = value
+                c["tabs"][0]["items"][0]["item_description"] = value
             else:
-                c["items"][0]["choice_description"] = value
+                c["items"][0]["item_description"] = value
             error_messages = []
             error_messages = validators._validate_schema(error_messages, c)
             if error_messages:
@@ -392,7 +392,7 @@ class TestBreakingSchemasItems:
     """Tests items in schemas to ensure they break appropriately"""
 
     def test_3_required_keys_absent(self, config_all):
-        for case in ["choice_displayed", "valid_entries", "returns"]:
+        for case in ["item_choice_displayed", "item_inputs", "item_returns"]:
             c, config_layout, _ = parse_items(config_all)
             if config_layout.find("without") == -1:
                 c["tabs"][0]["items"][0] = del_key_if_present(c["tabs"][0]["items"][0], case)
@@ -401,7 +401,7 @@ class TestBreakingSchemasItems:
                 validate_iteration_fail(c, "schema.SchemaMissingKeyError: Missing key: ", case)
 
     def test_2_keys_none_or_len_0(self, config_all):
-        for key in ["choice_displayed", "returns"]:
+        for key in ["item_choice_displayed", "item_returns"]:
             for value in [None, ""]:
                 case = "{}_{}".format(key, value)
                 c, config_layout, _ = parse_items(config_all)
@@ -411,39 +411,39 @@ class TestBreakingSchemasItems:
                     c["items"][0][key] = value
                 validate_schema_fail(c, ["item#0: schema.SchemaError: Key ", "<lambda>"], case)
 
-    def test_choice_description_len_0(self, config_all):
+    def test_item_description_len_0(self, config_all):
         c, config_layout, _ = parse_items(config_all)
         if config_layout.find("without") == -1:
-            c["tabs"][0]["items"][0]["choice_description"] = ""
+            c["tabs"][0]["items"][0]["item_description"] = ""
         else:
-            c["items"][0]["choice_description"] = ""
+            c["items"][0]["item_description"] = ""
             validate_schema_fail(c, ["item#0: schema.SchemaError: Key ", "<lambda"])
 
-    def test_valid_entries_wrong_types(self, config_all):
+    def test_item_inputs_wrong_types(self, config_all):
         for case in [None, 50]:
             c, config_layout, _ = parse_items(config_all)
             if config_layout.find("without") == -1:
-                c["tabs"][0]["items"][0]["valid_entries"] = case
+                c["tabs"][0]["items"][0]["item_inputs"] = case
             else:
-                c["items"][0]["valid_entries"] = case
+                c["items"][0]["item_inputs"] = case
             validate_iteration_fail(c, "WHILE ITERATING", case)
 
-    def test_valid_entries_wrong_typestring(self, config_all):
+    def test_item_inputs_wrong_typestring(self, config_all):
         case = "asrting"
         c, config_layout, _ = parse_items(config_all)
         if config_layout.find("without") == -1:
-            c["tabs"][0]["items"][0]["valid_entries"] = case
+            c["tabs"][0]["items"][0]["item_inputs"] = case
         else:
-            c["items"][0]["valid_entries"] = case
+            c["items"][0]["item_inputs"] = case
         validate_schema_fail(c, ["should be instance of"], case)
 
-    def test_valid_entries_len_0(self, config_all):
+    def test_item_inputs_len_0(self, config_all):
         for case in [[], tuple([])]:
             c, config_layout, _ = parse_items(config_all)
             if config_layout.find("without") == -1:
-                c["tabs"][0]["items"][0]["valid_entries"] = case
+                c["tabs"][0]["items"][0]["item_inputs"] = case
             else:
-                c["items"][0]["valid_entries"] = case
+                c["items"][0]["item_inputs"] = case
             validate_schema_fail(c, ["lambda"], case)
 
     def unexpected_key_present(self, config_all):
@@ -464,15 +464,15 @@ class TestBreakingSchemasItems:
 @pytest.mark.breaking
 @pytest.mark.run(order=3)
 class TestBreakingSchemasValidEntries:
-    """Tests valid_entries item in schemas to ensure they break appropriately"""
+    """Tests item_inputs item in schemas to ensure they break appropriately"""
 
-    def test_valid_entries_none_or_len_0(self, config_all):
+    def test_item_inputs_none_or_len_0(self, config_all):
         for value in [None, ""]:
             c, config_layout, _ = parse_items(config_all)
             if config_layout.find("without") == -1:
-                c["tabs"][0]["items"][0]["valid_entries"][0] = value
+                c["tabs"][0]["items"][0]["item_inputs"][0] = value
             else:
-                c["items"][0]["valid_entries"][0] = value
+                c["items"][0]["item_inputs"][0] = value
                 validate_iteration_fail(c, "<lambda>", value)
 
 
@@ -485,10 +485,10 @@ class TestBreakingSchemasValidEntries:
 #     "command,error_message",
 #     [
 #         ("c['new_header'] = 'something'", "Wrong key .{0,1}'new_header'"),
-#         ("del c['tabs'][0]['items'][0]['choice_displayed']", "Missing key: .{0,1}'choice_displayed'"),
-#         ("c['tabs'][0]['items'][0]['valid_entries'] = []", "should evaluate to True"),
+#         ("del c['tabs'][0]['items'][0]['item_choice_displayed']", "Missing key: .{0,1}'item_choice_displayed'"),
+#         ("c['tabs'][0]['items'][0]['item_inputs'] = []", "should evaluate to True"),
 #     ],
-#     ids=["unexpected_top_level_header", "no_tabs.items.choice_displayed", "tabs.items.valid_entries_is_empty_list"],
+#     ids=["unexpected_top_level_header", "no_tabs.items.item_choice_displayed", "tabs.items.item_inputs_is_empty_list"],
 # )
 # def test_some_fail_scenarios_multiple(input_config_multiple_only, command, error_message):
 #     """Schema test should catch all of these, which are not exhaustive."""
@@ -522,17 +522,17 @@ class TestBreakingSchemasValidEntries:
 
 # @pytest.mark.breaking
 # @pytest.mark.run(order=5)
-# def test_optional_header_long_description_multiple(input_config_multiple_only):
-#     """Test that a tab's 'header_long_description' is optional"""
+# def test_optional_tab_header_long_description_multiple(input_config_multiple_only):
+#     """Test that a tab's 'tab_header_long_description' is optional"""
 #     c = deepcopy(input_config_multiple_only)
 #     error_messages = []
 #     validators._validate_schema(error_messages, c)
 #     if error_messages:
 #         raise AssertionError
-#     if "header_long_description" in c["tabs"][0].keys():
-#         del c["tabs"][0]["header_long_description"]
+#     if "tab_header_long_description" in c["tabs"][0].keys():
+#         del c["tabs"][0]["tab_header_long_description"]
 #     else:
-#         c["tabs"][0]["header_long_description"] = "a long description"
+#         c["tabs"][0]["tab_header_long_description"] = "a long description"
 #     error_messages = []
 #     validators._validate_schema(error_messages, c)
 #     if error_messages:
@@ -559,12 +559,12 @@ class TestBreakingSchemasValidEntries:
 
 # @pytest.mark.breaking
 # @pytest.mark.run(order=5)
-# def test_any_type_header_long_description_multiple(input_config_multiple_only):
+# def test_any_type_tab_header_long_description_multiple(input_config_multiple_only):
 #     """Test that any type will work for long description, as it will be coerced to string in normalizer."""
 #     c = deepcopy(input_config_multiple_only)
 #     for value in [True, 10, 2.54, KeyError, None]:  # exception used just as an example of a class
 #         # which can be coerced to a string like any object
-#         c["tabs"][0]["header_long_description"] = value
+#         c["tabs"][0]["tab_header_long_description"] = value
 #         error_messages = []
 #         validators._validate_schema(error_messages, c)
 #         if error_messages:
@@ -576,17 +576,17 @@ class TestBreakingSchemasValidEntries:
 # @pytest.mark.parametrize(
 #     "command,error_message",
 #     [
-#         ("c['tabs'][0]['header_entry']='somestring'", "Forbidden key encountered: .{0,1}'header_entry'"),
-#         ("c['tabs'][0]['header_description']='somestring'", "Forbidden key encountered: .{0,1}'header_description'"),
+#         ("c['tabs'][0]['tab_header_input']='somestring'", "Forbidden key encountered: .{0,1}'tab_header_input'"),
+#         ("c['tabs'][0]['tab_header_description']='somestring'", "Forbidden key encountered: .{0,1}'tab_header_description'"),
 #         (
-#             "c['tabs'][0]['header_long_description']='somestring'",
-#             "Forbidden key encountered: .{0,1}'header_long_description'",
+#             "c['tabs'][0]['tab_header_long_description']='somestring'",
+#             "Forbidden key encountered: .{0,1}'tab_header_long_description'",
 #         ),
 #     ],
 #     ids=[
-#         "should_not_have_header_entry",
-#         "should_not_have_header_description",
-#         "should_not_have_header_long_description_which_is_optional_in_multiple",
+#         "should_not_have_tab_header_input",
+#         "should_not_have_tab_header_description",
+#         "should_not_have_tab_header_long_description_which_is_optional_in_multiple",
 #     ],
 # )
 # def test_some_fail_scenarios_single_with_key(input_config_single_with_key_only, command, error_message):
@@ -605,15 +605,15 @@ class TestBreakingSchemasValidEntries:
 #     """Too complicated to fit in one exec statement in test_some_fail_scenarios_single_with_key.
 
 #     This will be recognized by the validator as a multiple tab type, but missing the keys
-#     'header_entry' and 'header_description'
+#     'tab_header_input' and 'tab_header_description'
 #     """
 #     tab = {
 #         "items": [
 #             {
-#                 "choice_displayed": "a_{}".format(random_string),
-#                 "choice_description": "b_{}".format(random_string),
-#                 "valid_entries": ["c_{}".format(random_string)],
-#                 "returns": "d_{}".format(random_string),
+#                 "item_choice_displayed": "a_{}".format(random_string),
+#                 "item_description": "b_{}".format(random_string),
+#                 "item_inputs": ["c_{}".format(random_string)],
+#                 "item_returns": "d_{}".format(random_string),
 #             }
 #         ]
 #     }
@@ -625,10 +625,10 @@ class TestBreakingSchemasValidEntries:
 #     c["tabs"].append(tab)
 #     error_messages = []
 #     validators._validate_schema(error_messages, c)
-#     # These are split up because Python 2 has u'header_choice... and I don't feel like fixing it
+#     # These are split up because Python 2 has u'tab_header_choice... and I don't feel like fixing it
 #     if not (
 #         any([x.find("Missing key: ") != -1 for x in error_messages])
-#         or any([x.find("'header_entry'") != -1 for x in error_messages])
+#         or any([x.find("'tab_header_input'") != -1 for x in error_messages])
 #     ):
 #         raise AssertionError
 
@@ -694,9 +694,9 @@ def test_validate_no_input_value_overlap_fail_within_an_item(config_all_with_id,
         else:
             new_returns = [random_string, random_string.lower()]
         if id_.find("without") == -1:
-            c["tabs"][0]["items"][0]["valid_entries"] += new_returns
+            c["tabs"][0]["items"][0]["item_inputs"] += new_returns
         else:
-            c["items"][0]["valid_entries"] += new_returns
+            c["items"][0]["item_inputs"] += new_returns
         error_messages = []
         validators._validate_no_input_value_overlap(error_messages, c)
         if all([x.find("there are repeated input values") == -1 for x in error_messages]):
@@ -710,11 +710,11 @@ def test__validate_no_input_value_overlap_fail_between_item_and_tab(config_multi
     for case_sens in [True, False]:
         c = deepcopy(config_multiple)
         c["case_sensitive"] = case_sens
-        c["tabs"][0]["header_entry"] = random_string
+        c["tabs"][0]["tab_header_input"] = random_string
         if case_sens:
-            c["tabs"][1]["items"][0]["valid_entries"] += [random_string]
+            c["tabs"][1]["items"][0]["item_inputs"] += [random_string]
         else:
-            c["tabs"][1]["items"][0]["valid_entries"] += [random_string.lower()]
+            c["tabs"][1]["items"][0]["item_inputs"] += [random_string.lower()]
         error_messages = []
         validators._validate_no_input_value_overlap(error_messages, c)
         if all([x.find("there are repeated input values") == -1 for x in error_messages]):

@@ -35,7 +35,7 @@ def main(config_filename):
             tab_return = returned[0]
             # find tab number for output
             for tab_number, tab in enumerate(config["tabs"]):
-                if tab["header_entry"] == tab_return:
+                if tab["tab_header_input"] == tab_return:
                     break
             else:
                 raise AssertionError("Somehow invalid tab choice was returned")
