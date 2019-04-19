@@ -58,11 +58,13 @@ FAQ:
 ^^^^
 
 Why can't I return handlers?
-    Out of scope for this project. The Menu instance just returns
-    strings to control program flow, you can put the handlers in
-    if statements after a value is returned.
+    Out of scope for this project at this time, but it's on the
+    Wish List. For now, the Menu instance just returns strings 
+    which the outer closure can then use to control program flow,
+    including defining handlers using control flow/if statement
+    based on the string returned by Menu.run().
 
-Why are my values coming in/out strings?
+Why are my return values coming in/out strings?
     To keep things simple, all input and output (return) values are
     converted to string. So if you have
     ``config['tabs'][0]['items][0]['valid_entries'] = [1]``,
@@ -87,10 +89,12 @@ Dependencies:
 
 TODO:
 ^^^^^
-* check this line in test_tab:
-  ``keys = sorted(tab_dict["input2result"].keys(), key=str)`` --
-  shouldn't they already be str if they've been normalized?
-* Change docstrings to Google, enable napoleon in sphinx, ensure autodoc
+* Change docstrings to Google
+* Change config names
+* Change use of parse_items() in test_validators a/t TODO
+* incorporate keypress
+* Sphinx
+* Make coverage cumulative/platform-dependent due to keypress; codecov instead?
 
 Wish List:
 ^^^^^^^^^^
@@ -98,3 +102,6 @@ Wish List:
 * a way to dynamically silence ("grey out", if this were a GUI menu system)
   certain menu items, which may be desired during program flow, probably by
   passing a list of silenced tab names and return values
+* have an option to accept single keypresses instead of multiple keys and
+  ENTER with the input() function, using ``msvcrt`` package in Windows
+  or ``tty`` and ``termios`` in Mac/Linux.
