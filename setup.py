@@ -66,7 +66,7 @@ setup(
         'python', 'shell', 'terminal', 'tabs', 'tabbed', 'menu', 'menus'
     ],
     install_requires=[
-        'PyYAML==5.1', 'schema==0.7.0'
+        'PyYAML>=5.1', 'schema>=0.7.0'
     ],
     extras_require={
     },
