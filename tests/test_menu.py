@@ -190,7 +190,8 @@ class TestRun:
         tabbedshellmenus.menu.input = lambda x: test_input
         menu._testing = 'run_tab'
         result = menu.run()
-        assert result == {"new_number": 1, "type": "change_tab"}
+        if result != {"new_number": 1, "type": "change_tab"}:
+            raise AssertionError
 
     def test_with_valid_entry(self, config_all, data_regression):
         _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid

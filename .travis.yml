@@ -14,20 +14,12 @@ matrix:
         - 'pip install eradicate'
         - 'pip install .'
       script: pylama src,tests,example_data_and_app
-    - python: '2.7'
-      env:
-       - TRAVIS_TEST_NAME="Py27"
-      install:
-        - 'pip install -r requirements.txt'
-        - 'pip install -r requirements-test-py27to36.txt'
-        - 'pip install .'
-      script: pytest
     - python: '3.5'
       env:
        - TRAVIS_TEST_NAME="Py35"
       install:
         - 'pip install -r requirements.txt'
-        - 'pip install -r requirements-test-py27to36.txt'
+        - 'pip install -r requirements-dev.txt'
         - 'pip install .'
       script: pytest
     - python: '3.6'
@@ -35,7 +27,7 @@ matrix:
        - TRAVIS_TEST_NAME="Py36"
       install:
         - 'pip install -r requirements.txt'
-        - 'pip install -r requirements-test-py27to36.txt'
+        - 'pip install -r requirements-dev.txt'
         - 'pip install .'
       script: pytest
     - python: '3.7'

@@ -13,46 +13,36 @@ environment:
 
   matrix:
 
-    - PYTHON: "C:\\Python27"
-      PYTHON_VERSION: "2.7.x" # currently 2.7.9
-      PYTHON_ARCH: "32"
-      DEVREQUIREMENTS: "requirements-test-py27to36.txt"
-
-    - PYTHON: "C:\\Python27-x64"
-      PYTHON_VERSION: "2.7.x" # currently 2.7.9
-      PYTHON_ARCH: "64"
-      DEVREQUIREMENTS: "requirements-test-py27to36.txt"
 
     - PYTHON: "C:\\Python37"
       PYTHON_VERSION: "3.7.x" # currently 2.7.9
       PYTHON_ARCH: "32"
-      DEVREQUIREMENTS: "requirements-test-py27to36.txt"  # Because Windows, we only need fewer requirements
-                                                        # despite the filename.
+      DEVREQUIREMENTS: "requirements-devwin.txt"
 
     - PYTHON: "C:\\Python37-x64"
       PYTHON_VERSION: "3.7.x" # currently 2.7.9
       PYTHON_ARCH: "64"
-      DEVREQUIREMENTS: "requirements-test-py27to36.txt"
+      DEVREQUIREMENTS: "requirements-devwin.txt"
 
     - PYTHON: "C:\\Python36"
       PYTHON_VERSION: "3.6.x" # currently 2.7.9
       PYTHON_ARCH: "32"
-      DEVREQUIREMENTS: "requirements-test-py27to36.txt"
+      DEVREQUIREMENTS: "requirements-devwin.txt"
 
     - PYTHON: "C:\\Python36-x64"
       PYTHON_VERSION: "3.6.x" # currently 2.7.9
       PYTHON_ARCH: "64"
-      DEVREQUIREMENTS: "requirements-test-py27to36.txt"
+      DEVREQUIREMENTS: "requirements-devwin.txt"
 
     - PYTHON: "C:\\Python35"
       PYTHON_VERSION: "3.5.x" # currently 2.7.9
       PYTHON_ARCH: "32"
-      DEVREQUIREMENTS: "requirements-test-py27to36.txt"
+      DEVREQUIREMENTS: "requirements-devwin.txt"
 
     - PYTHON: "C:\\Python35-x64"
       PYTHON_VERSION: "3.5.x" # currently 2.7.9
       PYTHON_ARCH: "64"
-      DEVREQUIREMENTS: "requirements-test-py27to36.txt"
+      DEVREQUIREMENTS: "requirements-devwin.txt"
 
 install:
   # If there is a newer build queued for the same PR, cancel this one.
@@ -99,7 +89,7 @@ test_script:
       &$env:PYTHON\python -m pytest
       if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
       
-# after_test:  # TODO: Thhis
+# after_test:  # TODO: This
   # If tests are successful, create binary packages for the project.
   # - "%CMD_IN_ENV% python setup.py bdist_wheel"
   # - "%CMD_IN_ENV% python setup.py bdist_wininst"

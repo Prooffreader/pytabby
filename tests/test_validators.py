@@ -174,7 +174,7 @@ class TestBreakingSchemaTop:
         for case in [-1, 0]:
             c["screen_width"] = case
             validate_schema_fail(
-                c, ["schema.SchemaError: Key 'screen_width' error:", "<lambda>", "should evaluate to True"], case
+                c, ["schema.SchemaError: Key 'screen_width' error:", "<lambda", "should evaluate to True"], case
             )
 
     def test_missing_tabs(self, config_multiple, config_single_with_key):
@@ -184,7 +184,7 @@ class TestBreakingSchemaTop:
             del c["tabs"]
             # note that schema type identifier now thinks this is a single_without_key
             validate_iteration_fail(
-                c, "WHILE ITERATING OVER items: KeyError: 'items'. No further introspection possible."
+                c, "WHILE ITERATING OVER items: KeyError:"
             )
 
     def test_wrong_type_tabs_not_iterable(self, config_multiple, config_single_with_key):
@@ -224,7 +224,7 @@ class TestBreakingSchemaTop:
         _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         c = deepcopy(config_all)
         c["astring"] = "astring"
-        validate_schema_fail(c, ["schema.SchemaWrongKeyError: Wrong key 'astring' in"])
+        validate_schema_fail(c, ["schema.SchemaWrongKeyError: Wrong key"])
 
 
 # TEST CLASSES: TABS
@@ -304,7 +304,7 @@ class TestBreakingSchemasTabs:
         for config in [config_multiple, config_single_with_key]:
             c = deepcopy(config)
             c["tabs"][0]["astring"] = "astring"
-            validate_schema_fail(c, ["schema.SchemaWrongKeyError: Wrong key 'astring' in"])
+            validate_schema_fail(c, ["schema.SchemaWrongKeyError: Wrong key"])
 
     def test_headers_empty_string_len_0(self, config_multiple):
         _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
@@ -319,7 +319,7 @@ class TestBreakingSchemasTabs:
             c = deepcopy(config)
             c["tabs"][0] = del_key_if_present(c["tabs"][0], "items")
             # iteration fail because can't iterate over items if it's not there
-            validate_iteration_fail(c, "schema.SchemaMissingKeyError: Missing key: 'items'")
+            validate_iteration_fail(c, "schema.SchemaMissingKeyError: Missing key:")
 
     def test_wrong_type_items_not_iterable(self, config_multiple, config_single_with_key):
         _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
