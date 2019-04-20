@@ -1,3 +1,4 @@
 pytest
 pytest-ordering
 pytest-regressions
+pytest-cov
