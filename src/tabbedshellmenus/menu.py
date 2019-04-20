@@ -97,9 +97,9 @@ class Menu:
         """Sets self._testing to False during normal operation.
 
         During testing, this can be monkeypatched to one of the following values:
-        - 'collect_input' when testing that function
-        - 'run_tab' when testing tab changing in run()
-        - 'run_invalid' when testing run() with invalid input
+        1. 'collect_input' when testing that function
+        2. 'run_tab' when testing tab changing in run()
+        3. 'run_invalid' when testing run() with invalid input
         """
         self._testing = False
 
@@ -149,7 +149,7 @@ class Menu:
                 prompt = "Invalid, try again"
             else:
                 received_valid_input = True
-            if self._testing:  # To avoid infinite loop in test
+            if self._testing in ['run_invalid', 'collect_input']:  # To avoid infinite loop in test
                 return prompt
         return return_dict
 
@@ -165,9 +165,9 @@ class Menu:
         received_return_value = False
         while not received_return_value:
             self._print_menu()
-            return_dict = self._collect_input(testing=testing_invalid)
+            return_dict = self._collect_input()
             if self._testing == "run_invalid":
-                return return_dict  # not actually a dict yet
+                return return_dict
             if return_dict["type"] == "change_tab":
                 self._change_tab(return_dict["new_number"])
                 if self._testing == "run_tab":

@@ -60,7 +60,7 @@ class Tab:
 
         Returns:
             (dict), with "type" in ['change_tab', 'return' or 'invalid']
-            """
+        """
         if inputstr in self.input2result.keys():
             return self.input2result[inputstr]
         else:

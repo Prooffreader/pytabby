@@ -148,7 +148,8 @@ class TestBreakingCollectInput:
         # this assumes that random_string is not a valid entry in the config file
         # this is a pretty darn safe assumption
         tabbedshellmenus.menu.input = lambda x: random_string
-        result = menu._collect_input(testing=True)
+        menu._testing = 'collect_input'
+        result = menu._collect_input()
         if result != "Invalid, try again":
             raise AssertionError
 
@@ -167,7 +168,8 @@ class TestRun:
         c = deepcopy(config_all)
         menu = Menu(c)
         tabbedshellmenus.menu.input = lambda x: random_string
-        result = menu.run(testing_invalid=True)
+        menu._testing = 'run_invalid'
+        result = menu.run()
         if result != "Invalid, try again":
             raise AssertionError
 
@@ -177,7 +179,8 @@ class TestRun:
         normal = menu._config
         test_input = normal["tabs"][1]["tab_header_input"]
         tabbedshellmenus.menu.input = lambda x: test_input
-        result = menu.run(testing_tab_change=True)
+        menu._testing = 'run_tab'
+        result = menu.run()
         assert result == {"new_number": 1, "type": "change_tab"}
 
     def test_with_valid_entry(self, config_all, data_regression):

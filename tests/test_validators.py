@@ -596,5 +596,5 @@ def test__shorten_long_schema_error_messages():
     """Tests that function"""
     error_messages = ["stuff that comes at the beginning in {'key': 'value'}"]
     error_messages = validators._shorten_long_schema_error_messages(error_messages)
-    if not error_messages[0] == "stuff that comes at the beginning in config":
+    if error_messages[0] != "stuff that comes at the beginning in config":
         raise AssertionError
