@@ -10,9 +10,6 @@ tabbedshellmenus [in development]
 .. image:: https://codecov.io/gh/Prooffreader/tabbedshellmenus/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/Prooffreader/tabbedshellmenus
 
-.. image:: https://api.codacy.com/project/badge/Coverage/dae598fbe5b04b0e90e9e2080bb68c11
-    :target: https://www.codacy.com/app/Prooffreader/tabbedshellmenus?utm_source=github.com&utm_medium=referral&utm_content=Prooffreader/tabbedshellmenus&utm_campaign=Badge_Coverage)
-
 .. image:: https://api.codacy.com/project/badge/Grade/dae598fbe5b04b0e90e9e2080bb68c11
     :target: https://www.codacy.com/app/Prooffreader/tabbedshellmenus?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Prooffreader/tabbedshellmenus&amp;utm_campaign=Badge_Grade)
 
