@@ -89,12 +89,7 @@ Dependencies:
 
 TODO:
 ^^^^^
-* Change docstrings to Google
-* Change config names
-* Change use of parse_items() in test_validators a/t TODO
-* incorporate keypress
-* Sphinx
-* Make coverage cumulative/platform-dependent due to keypress; codecov instead?
+* Sphinx docs
 
 Wish List:
 ^^^^^^^^^^
@@ -104,4 +99,5 @@ Wish List:
   passing a list of silenced tab names and return values
 * have an option to accept single keypresses instead of multiple keys and
   ENTER with the input() function, using ``msvcrt`` package in Windows
-  or ``tty`` and ``termios`` in Mac/Linux.
+  or ``tty`` and ``termios`` in Mac/Linux. (This will make coverage platform-
+  dependent, so it will have to be cumulative on travis and appveyor)
