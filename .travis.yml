@@ -19,7 +19,7 @@ matrix:
        - TRAVIS_TEST_NAME="Py35"
       install:
         - 'pip install -r requirements.txt'
-        - 'pip install -r requirements-dev.txt'
+        - 'pip install -r requirements-devwin.txt'  # despite the name, because of black
         - 'pip install .'
       script: pytest
     - python: '3.6'

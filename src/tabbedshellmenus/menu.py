@@ -149,7 +149,7 @@ class Menu:
                 prompt = "Invalid, try again"
             else:
                 received_valid_input = True
-            if self._testing in ['run_invalid', 'collect_input']:  # To avoid infinite loop in test
+            if self._testing in ["run_invalid", "collect_input"]:  # To avoid infinite loop in test
                 return prompt
         return return_dict
 

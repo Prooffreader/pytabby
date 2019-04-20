@@ -183,9 +183,7 @@ class TestBreakingSchemaTop:
             c = deepcopy(config)
             del c["tabs"]
             # note that schema type identifier now thinks this is a single_without_key
-            validate_iteration_fail(
-                c, "WHILE ITERATING OVER items: KeyError:"
-            )
+            validate_iteration_fail(c, "WHILE ITERATING OVER items: KeyError:")
 
     def test_wrong_type_tabs_not_iterable(self, config_multiple, config_single_with_key):
         _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
