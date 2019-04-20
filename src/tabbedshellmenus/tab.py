@@ -54,7 +54,7 @@ class Tab:
 
     def process_input(self, inputstr):
         """Processes input value from menu instance according to this Tab instance
-        
+
         Args:
             inputstr (str): menu instance's input
 

@@ -9,7 +9,7 @@ all errors, instead of having to deal with exception after exception one at a ti
 Note on config_layout:
 There are three possible values of config_layout, determined from the config dict
 1. 'multiple': a config with multiple tabs, therefore by necessity having an outermost 'tabs' key
-2. 'single_with_key': a config with a single tab (i.e. with no tabs), but also containing a redundant 'tabs' key 
+2. 'single_with_key': a config with a single tab (i.e. with no tabs), but also containing a redundant 'tabs' key
                       whose values is a list of size one containing a dict with the key 'items'
 3. 'single_without_key': a config with a single tab but lacking the 'tabs' key; the single dict with the key 'items'
                          is at the top level of the config dict, i.e. where 'tabs' would have been
@@ -22,12 +22,23 @@ import re
 from collections import Counter
 
 from schema import And, Forbidden, Optional, Or, Schema
-from schema import (SchemaError, SchemaForbiddenKeyError, SchemaMissingKeyError, SchemaUnexpectedTypeError,
-                    SchemaWrongKeyError)
+from schema import (
+    SchemaError,
+    SchemaForbiddenKeyError,
+    SchemaMissingKeyError,
+    SchemaUnexpectedTypeError,
+    SchemaWrongKeyError,
+)
+
 # SchemaOnlyOneAllowedError is not used
 
-SCHEMA_ERRORS = (SchemaError, SchemaForbiddenKeyError, SchemaMissingKeyError, SchemaUnexpectedTypeError,
-                 SchemaWrongKeyError)
+SCHEMA_ERRORS = (
+    SchemaError,
+    SchemaForbiddenKeyError,
+    SchemaMissingKeyError,
+    SchemaUnexpectedTypeError,
+    SchemaWrongKeyError,
+)
 
 
 class InvalidInputError(Exception):
@@ -96,7 +107,6 @@ class _ValidSchemas:
 
         # schema for each entry in 'item_inputs'
         self.entry_schema = Schema(lambda x: x is not None and len(str(x)) > 0)
-
 
 
 def _extract_class(class_repr):
@@ -262,7 +272,7 @@ def _validate_schema(error_messages, config):
     elif config_layout == "single_without_key":
         error_messages = _validate_schema_single_without_key(error_messages, config, valid_schemas)
     else:
-        raise AssertionError('unrecognized config_layout')
+        raise AssertionError("unrecognized config_layout")
     return error_messages
 
 

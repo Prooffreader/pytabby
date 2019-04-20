@@ -48,6 +48,7 @@ class Menu:
             start_tab_number(int): default 0, the number of the tab to start at
         """
         self._config = config
+        self._set_testing()
         # validate config
         validators.validate_all(self._config)
         # normalize config
@@ -92,6 +93,16 @@ class Menu:
             dict_ = json.load(f)
         return dict_
 
+    def _set_testing(self):
+        """Sets self._testing to False during normal operation.
+
+        During testing, this can be monkeypatched to one of the following values:
+        - 'collect_input' when testing that function
+        - 'run_tab' when testing tab changing in run()
+        - 'run_invalid' when testing run() with invalid input
+        """
+        self._testing = False
+
     def _create_tab_objects(self):
         """Calls function in tab module"""
         self._tabs = tab.create_tab_objects(self._config)
@@ -103,7 +114,7 @@ class Menu:
         # display a message, including description and long_description if present,
         # informing user about the tab change
         if new_tab.head_choice:  # Should be redundant, because should only be called if
-                                 # the config's layout is multiple tabs.
+            # the config's layout is multiple tabs.
             msg = ["Change tab to {0}".format(new_tab.head_choice)]
             if new_tab.head_desc:
                 msg.append(": {0}".format(new_tab.head_desc))
@@ -117,12 +128,8 @@ class Menu:
         formatted = formatting.format_menu(self._config, self._current_tab_number, self._screen_width)
         print(formatted)
 
-    def _collect_input(self, testing=False):
+    def _collect_input(self):
         """Gets choice from user, repeating until a valid choice given
-
-        Args:
-            testing (bool): Not best practice, it is set to True only when being called from
-                            a pytest run. It was simply the easiest way to break out of an infinite loop
 
         Returns:
             (dict) containing info about input, e.g. whether it's a new tab or something that leads to
@@ -142,24 +149,15 @@ class Menu:
                 prompt = "Invalid, try again"
             else:
                 received_valid_input = True
-            if testing:  # See note in docstring
+            if self._testing:  # To avoid infinite loop in test
                 return prompt
         return return_dict
 
-    def run(self, testing_invalid=False, testing_tab_change=False):
+    def run(self):
         """Called by user, runs menu until valid selection from a tab is made, and returns value
 
-        Args:
-            testing_invalid (bool): whether this function is being called by pytest with monkeypatched
-                                    input() builtin to test invalid entries. When called by user, should
-                                    be left at its default value, False
-            testing_tab_change (bool): whether this function is being called by pytest with monkeypatched
-                                       input() builtin to test tab change
-        
-        TODO: don't have testing args in a public method!
-
         Returns:
-            (str, str) or str: if there are multiple tabs, returns tuple of 
+            (str, str) or str: if there are multiple tabs, returns tuple of
                                (tab_header_input, input_returns value).
                                If there is only one tab, returns input_returns value only.
         """
@@ -168,11 +166,11 @@ class Menu:
         while not received_return_value:
             self._print_menu()
             return_dict = self._collect_input(testing=testing_invalid)
-            if testing_invalid:
-                return return_dict  # not actually a dict
+            if self._testing == "run_invalid":
+                return return_dict  # not actually a dict yet
             if return_dict["type"] == "change_tab":
                 self._change_tab(return_dict["new_number"])
-                if testing_tab_change:
+                if self._testing == "run_tab":
                     return return_dict
             else:
                 if self._has_multiple_tabs:

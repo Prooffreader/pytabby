@@ -11,6 +11,7 @@ try:
         """Wait for a keypress and return a single character string."""
         return msvcrt.getch().decode()
 
+
 except ImportError:
     # meaning this is MacOS or Linux
 
