@@ -11,6 +11,7 @@ pytest.ini
 sourcecodacy.sh
 */designedtofail.yaml
 wishlist.txt
+codecov.sh
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
