@@ -7,7 +7,7 @@ tabbedshellmenus [in development]
 .. image:: https://ci.appveyor.com/api/projects/status/preqq0h4peiad07a?svg=true
     :target: https://ci.appveyor.com/project/Prooffreader/tabbedshellmenus
 
-image:: https://codecov.io/gh/codecov/Prooffreader/tabbedshellmenus/branch/master/graph/badge.svg
+.. image:: https://codecov.io/gh/codecov/Prooffreader/tabbedshellmenus/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/codecov/Prooffreader/tabbedshellmenus
 
 .. image:: https://api.codacy.com/project/badge/Coverage/dae598fbe5b04b0e90e9e2080bb68c11
@@ -26,9 +26,6 @@ image:: https://codecov.io/gh/codecov/Prooffreader/tabbedshellmenus/branch/maste
     :target: https://github.com/Prooffreader/tabbedshellmenus
 
 .. image:: https://img.shields.io/badge/pypi%20package-tbd-brightgreen.svg
-    :target: https://github.com/Prooffreader/tabbedshellmenus
-
-.. image:: https://img.shields.io/badge/implementation-cpython-blue.svg
     :target: https://github.com/Prooffreader/tabbedshellmenus
 
 A *flexible*, **tabbed** menu system to run in the shell and control program
