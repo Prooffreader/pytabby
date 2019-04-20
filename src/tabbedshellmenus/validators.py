@@ -97,9 +97,7 @@ class _ValidSchemas:
         # schema for each entry in 'item_inputs'
         self.entry_schema = Schema(lambda x: x is not None and len(str(x)) > 0)
 
-# TODO: put this somewhere
-    # Exceptions raised by the schema package tend to recapitulate the entire config dict repr, which
-    # would take up far too much space since this module returns a single exception listing all errors
+
 
 def _extract_class(class_repr):
     """Helper function to prettify class specifications in error messages
@@ -153,18 +151,15 @@ def _determine_config_layout(config):
     3. single tab without tab key ('single_without_key')
     note that single tabs should have no header-related keys; this is checked in the Schema portion
 
-    Returns None if cannot find a valid schema_tyoe
+    This function does not do a lot of error-checking, that is left to other functions.
     """
     config_layout = None
     if "tabs" in config.keys():
-        try:
-            if len(config["tabs"]) > 1 and "items" not in config.keys():
-                config_layout = "multiple"
-            elif "items" not in config.keys():
-                config_layout = "single_with_key"
-        except TypeError:
-            return None
-    elif "tabs" not in config.keys():
+        if len(config["tabs"]) > 1:
+            config_layout = "multiple"
+        else:
+            config_layout = "single_with_key"
+    else:
         config_layout = "single_without_key"
     return config_layout
 
@@ -266,6 +261,8 @@ def _validate_schema(error_messages, config):
         error_messages = _validate_schema_single_with_key(error_messages, config, valid_schemas)
     elif config_layout == "single_without_key":
         error_messages = _validate_schema_single_without_key(error_messages, config, valid_schemas)
+    else:
+        raise AssertionError('unrecognized config_layout')
     return error_messages
 
 
@@ -352,7 +349,7 @@ def _validate_no_input_value_overlap(error_messages, config):
 
 
 def _shorten_long_schema_error_messages(error_messages):
-    """The schema packages puts the entire config in the error message; this function removes it."""
+    """The schema package puts the entire config in the error message; this function removes it."""
     for i, message in enumerate(error_messages[:]):
         if re.search("in {.+}$", message):
             error_messages[i] = re.sub(r"in \{.+\}$", "in config", message)
