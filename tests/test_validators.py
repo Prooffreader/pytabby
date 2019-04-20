@@ -103,6 +103,7 @@ class TestSchemaTop:
     """Goes through all allowed values in the top level of configs"""
 
     def test_case_sensitive_missing(self, config_all):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         c = deepcopy(config_all)
         c = del_key_if_present(c, "case_sensitive")
         error_messages = []
@@ -111,6 +112,7 @@ class TestSchemaTop:
             raise AssertionError(error_messages)
 
     def test_case_sensitive_bool(self, config_all):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         c = deepcopy(config_all)
         for case in [True, False]:
             c["case_sensitive"] = case
@@ -120,6 +122,7 @@ class TestSchemaTop:
                 raise AssertionError(case)
 
     def test_screen_width_missing(self, config_all):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         c = deepcopy(config_all)
         c = del_key_if_present(c, "screen_width")
         error_messages = []
@@ -128,6 +131,7 @@ class TestSchemaTop:
             raise AssertionError(error_messages)
 
     def test_screen_width_int(self, config_all):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         c = deepcopy(config_all)
         c["screen_width"] = 40
         error_messages = []
@@ -136,6 +140,7 @@ class TestSchemaTop:
             raise AssertionError(error_messages)
 
     def test_multiple_tabs(self, config_multiple):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         if not len(config_multiple["tabs"]) > 1:
             raise AssertionError  # probably tautological but wth; actually might fail if test_config not
 
@@ -146,6 +151,7 @@ class TestBreakingSchemaTop:
     """Performs schema-invalidating changes on all config"""
 
     def test_wrong_type_case_sensitive(self, config_all):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         c = deepcopy(config_all)
         for case in ["string", -1, 2, 1.5, bool]:
             c["case_sensitive"] = case
@@ -154,6 +160,7 @@ class TestBreakingSchemaTop:
             )
 
     def test_wrong_type_invalid_screen_width(self, config_all):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         c = deepcopy(config_all)
         for case in ["string", 80.3, int]:
             c["screen_width"] = case
@@ -162,6 +169,7 @@ class TestBreakingSchemaTop:
             )
 
     def test_lambda_invalid_screen_width(self, config_all):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         c = deepcopy(config_all)
         for case in [-1, 0]:
             c["screen_width"] = case
@@ -170,6 +178,7 @@ class TestBreakingSchemaTop:
             )
 
     def test_missing_tabs(self, config_multiple, config_single_with_key):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         for config in [config_multiple, config_single_with_key]:
             c = deepcopy(config)
             del c["tabs"]
@@ -179,6 +188,7 @@ class TestBreakingSchemaTop:
             )
 
     def test_wrong_type_tabs_not_iterable(self, config_multiple, config_single_with_key):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         for config in [config_multiple, config_single_with_key]:
             c = deepcopy(config)
             for case in [{0, 1}, {0: 1}, []]:
@@ -186,6 +196,7 @@ class TestBreakingSchemaTop:
                 validate_iteration_fail(c, "No further introspection possible", repr(case))
 
     def test_wrong_type_tabs_string(self, config_multiple, config_single_with_key):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         for config in [config_multiple, config_single_with_key]:
             c = deepcopy(config)
             for case in ["string", ""]:
@@ -193,6 +204,7 @@ class TestBreakingSchemaTop:
                 validate_iteration_fail(c, "No further introspection possible.", case)
 
     def test_wrong_type_tabs_other(self, config_multiple, config_single_with_key):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         for config in [config_multiple, config_single_with_key]:
             c = deepcopy(config)
             for case in [50, None]:  # these raise TypeError from determine_config_layout
@@ -201,6 +213,7 @@ class TestBreakingSchemaTop:
                     validators.validate_all(c)
 
     def test_tabs_len_0(self, config_multiple, config_single_with_key):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         for config in [config_multiple, config_single_with_key]:
             c = deepcopy(config)
             for case in [[], tuple([])]:
@@ -208,6 +221,7 @@ class TestBreakingSchemaTop:
                 validate_iteration_fail(c, "<lambda>", case)
 
     def test_unexpected_top_level_key(self, config_all):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         c = deepcopy(config_all)
         c["astring"] = "astring"
         validate_schema_fail(c, ["schema.SchemaWrongKeyError: Wrong key 'astring' in"])
@@ -223,12 +237,14 @@ class TestSchemaTabs:
     """Does non-breaking tests for schemas with tabs"""
 
     def test_tab_header_input_present(self, config_multiple):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         c = deepcopy(config_multiple)
         for tab in c["tabs"]:
             if not tab.get("tab_header_input", None):
                 raise AssertionError
 
     def test_tab_header_descriptions_absent(self, config_multiple):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         for key in ["tab_header_description", "tab_header_long_description"]:
             c = deepcopy(config_multiple)
             c["tabs"][0] = del_key_if_present(c["tabs"][0], key)
@@ -238,6 +254,7 @@ class TestSchemaTabs:
                 raise AssertionError(key)
 
     def test_tab_header_descriptions_values_incl_none(self, config_multiple):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         for key in ["tab_header_description", "tab_header_long_description"]:
             for case in [None, "astring", 1000, 2.5, KeyError]:  # unlikely to pass a class, but it should work
                 c = deepcopy(config_multiple)
@@ -248,12 +265,14 @@ class TestSchemaTabs:
                     raise AssertionError(key, case)
 
     def test_headers_absent_in_single(self, config_single_with_key):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         for key in ["tab_header_input", "tab_header_description", "tab_header_long_description"]:
             c = deepcopy(config_single_with_key)
             if c["tabs"][0].get(key, None):
                 raise AssertionError(key)
 
     def test_items_present_and_iterable(self, config_multiple, config_single_with_key):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         for config in [config_multiple, config_single_with_key]:
             for tab in config["tabs"]:
                 if not tab.get("items", None):
@@ -268,29 +287,34 @@ class TestBreakingSchemasTabs:
     """Tests tabs item in schemas to ensure they break appropriately"""
 
     def test_tab_header_input_absent(self, config_multiple):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         c = deepcopy(config_multiple)
         c["tabs"][0] = del_key_if_present(c["tabs"][0], "tab_header_input")
         validate_schema_fail(c, ["tab#0: schema.SchemaMissingKeyError: Missing key: 'tab_header_input'"])
 
     def test_forbidden_headers_present(self, config_single_with_key):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         for key in ["tab_header_input", "tab_header_description", "tab_header_long_description"]:
             c = deepcopy(config_single_with_key)
             c["tabs"][0][key] = "astring"
             validate_schema_fail(c, ["Forbidden"])
 
     def test_unexpected_headers_present(self, config_multiple, config_single_with_key):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         for config in [config_multiple, config_single_with_key]:
             c = deepcopy(config)
             c["tabs"][0]["astring"] = "astring"
             validate_schema_fail(c, ["schema.SchemaWrongKeyError: Wrong key 'astring' in"])
 
     def test_headers_empty_string_len_0(self, config_multiple):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         c = deepcopy(config_multiple)
         for key in ["tab_header_input", "tab_header_description", "tab_header_long_description"]:
             c["tabs"][0][key] = ""
             validate_schema_fail(c, ["<lambda>"], key)
 
     def test_items_absent(self, config_multiple, config_single_with_key):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         for config in [config_multiple, config_single_with_key]:
             c = deepcopy(config)
             c["tabs"][0] = del_key_if_present(c["tabs"][0], "items")
@@ -298,6 +322,7 @@ class TestBreakingSchemasTabs:
             validate_iteration_fail(c, "schema.SchemaMissingKeyError: Missing key: 'items'")
 
     def test_wrong_type_items_not_iterable(self, config_multiple, config_single_with_key):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         for config in [config_multiple, config_single_with_key]:
             c = deepcopy(config)
             for case in [{0, 1}, {0: 1}]:
@@ -305,6 +330,7 @@ class TestBreakingSchemasTabs:
                 validate_iteration_fail(c, "No further introspection possible", repr(case))
 
     def test_wrong_type_items_string(self, config_multiple, config_single_with_key):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         for config in [config_multiple, config_single_with_key]:
             c = deepcopy(config)
             for case in ["string"]:
@@ -314,6 +340,7 @@ class TestBreakingSchemasTabs:
                 )
 
     def test_wrong_type_items_other(self, config_multiple, config_single_with_key):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         for config in [config_multiple, config_single_with_key]:
             c = deepcopy(config)
             for case in [50, None]:
@@ -331,6 +358,7 @@ class TestSchemaItems:
     """Does non-breaking tests for items"""
 
     def test_mandatory_keys_present(self, config_all):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         c = deepcopy(config_all)
         config_layout = validators._determine_config_layout(config_all)
         if config_layout.find("without") != -1:
@@ -343,6 +371,7 @@ class TestSchemaItems:
                     raise AssertionError
 
     def test_several_types_3_keys(self, config_all):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         for key in ["item_choice_displayed", "item_description", "item_returns"]:
             for value in ["astring", 50, 2.57]:
                 c = deepcopy(config_all)
@@ -357,6 +386,7 @@ class TestSchemaItems:
                     raise AssertionError
 
     def test_item_description_absent(self, config_all):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         c = deepcopy(config_all)
         config_layout = validators._determine_config_layout(config_all)
         if config_layout.find("without") == -1:
@@ -369,6 +399,7 @@ class TestSchemaItems:
             raise AssertionError
 
     def test_item_description_values(self, config_all):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         for value in [None, ["astring"], ("string1", "string2")]:
             c = deepcopy(config_all)
             config_layout = validators._determine_config_layout(config_all)
@@ -388,6 +419,7 @@ class TestBreakingSchemasItems:
     """Tests items in schemas to ensure they break appropriately"""
 
     def test_3_required_keys_absent(self, config_all):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         for case in ["item_choice_displayed", "item_inputs", "item_returns"]:
             c = deepcopy(config_all)
             config_layout = validators._determine_config_layout(config_all)
@@ -398,6 +430,7 @@ class TestBreakingSchemasItems:
                 validate_iteration_fail(c, "schema.SchemaMissingKeyError: Missing key: ", case)
 
     def test_2_keys_none_or_len_0(self, config_all):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         for key in ["item_choice_displayed", "item_returns"]:
             for value in [None, ""]:
                 case = "{}_{}".format(key, value)
@@ -410,6 +443,7 @@ class TestBreakingSchemasItems:
                 validate_schema_fail(c, ["item#0: schema.SchemaError: Key ", "<lambda>"], case)
 
     def test_item_description_len_0(self, config_all):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         c = deepcopy(config_all)
         config_layout = validators._determine_config_layout(config_all)
         if config_layout.find("without") == -1:
@@ -419,6 +453,7 @@ class TestBreakingSchemasItems:
             validate_schema_fail(c, ["item#0: schema.SchemaError: Key ", "<lambda"])
 
     def test_item_inputs_wrong_types(self, config_all):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         for case in [None, 50]:
             c = deepcopy(config_all)
             config_layout = validators._determine_config_layout(config_all)
@@ -429,6 +464,7 @@ class TestBreakingSchemasItems:
             validate_iteration_fail(c, "WHILE ITERATING", case)
 
     def test_item_inputs_wrong_typestring(self, config_all):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         case = "asrting"
         c = deepcopy(config_all)
         config_layout = validators._determine_config_layout(config_all)
@@ -439,6 +475,7 @@ class TestBreakingSchemasItems:
         validate_schema_fail(c, ["should be instance of"], case)
 
     def test_item_inputs_len_0(self, config_all):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         for case in [[], tuple([])]:
             c = deepcopy(config_all)
             config_layout = validators._determine_config_layout(config_all)
@@ -449,6 +486,7 @@ class TestBreakingSchemasItems:
             validate_schema_fail(c, ["lambda"], case)
 
     def unexpected_key_present(self, config_all):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         c = deepcopy(config_all)
         config_layout = validators._determine_config_layout(config_all)
         if config_layout.find("without") == -1:
@@ -470,6 +508,7 @@ class TestBreakingSchemasValidEntries:
     """Tests item_inputs item in schemas to ensure they break appropriately"""
 
     def test_item_inputs_none_or_len_0(self, config_all):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         for value in [None, ""]:
             c = deepcopy(config_all)
             config_layout = validators._determine_config_layout(config_all)

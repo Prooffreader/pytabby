@@ -40,7 +40,7 @@ matrix:
       script: pytest
     - python: '3.7'
       env:
-       - TRAVIS_TEST_NAME="Py37_codevoc"
+       - TRAVIS_TEST_NAME="Py37_codecov"
       install:
         - 'pip install -r requirements.txt'
         - 'pip install -r requirements-dev.txt'

@@ -32,7 +32,8 @@ def load_multiple_config_yaml():
     this_dir = os.path.split(path_to_here)[0]
     config_path = os.path.join(this_dir, "data", "test_config.yaml")
     config = Menu.safe_read_yaml(config_path)
-    assert len(config["tabs"]) > 1  # noqa
+    if len(config["tabs"]) <= 1:
+        raise AssertionError
     if not isinstance(config, dict):
         raise AssertionError
     return config

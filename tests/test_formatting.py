@@ -50,6 +50,7 @@ class TestEdgeCases:
     """Edge cases to get 100% coverage. Will use only one config each"""
 
     def test_regress_tab_header_description_none(self, data_regression, config_multiple):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         c = deepcopy(config_multiple)
         c["tabs"][0]["tab_header_description"] = None
         result = formatting._format_headers(c["tabs"], 0, 80)
@@ -57,6 +58,7 @@ class TestEdgeCases:
         data_regression.check(data)
 
     def test_regress_missing_tab_header_description(self, data_regression, config_multiple):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         c = deepcopy(config_multiple)
         if "tab_header_description" in c["tabs"][0].keys():
             del c["tabs"][0]["tab_header_description"]
@@ -65,6 +67,7 @@ class TestEdgeCases:
         data_regression.check(data)
 
     def test_many_tabs_with_long_headers(self, data_regression, config_multiple):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         c = deepcopy(config_multiple)
         c["tabs"][0]["tab_header_input"] = "abcdefghij"
         c["tabs"][0]["tab_header_description"] = "klmnopqrstuvwxyz"
