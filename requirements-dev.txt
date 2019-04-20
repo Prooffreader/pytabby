@@ -11,3 +11,4 @@ eradicate
 codacy-coverage
 pylint
 autodoc
+codecov
