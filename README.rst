@@ -7,8 +7,8 @@ tabbedshellmenus [in development]
 .. image:: https://ci.appveyor.com/api/projects/status/preqq0h4peiad07a?svg=true
     :target: https://ci.appveyor.com/project/Prooffreader/tabbedshellmenus
 
-.. image:: https://codecov.io/gh/codecov/Prooffreader/tabbedshellmenus/branch/master/graph/badge.svg
-    :target: https://codecov.io/gh/codecov/Prooffreader/tabbedshellmenus
+.. image:: https://codecov.io/gh/Prooffreader/tabbedshellmenus/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/Prooffreader/tabbedshellmenus
 
 .. image:: https://api.codacy.com/project/badge/Coverage/dae598fbe5b04b0e90e9e2080bb68c11
     :target: https://www.codacy.com/app/Prooffreader/tabbedshellmenus?utm_source=github.com&utm_medium=referral&utm_content=Prooffreader/tabbedshellmenus&utm_campaign=Badge_Coverage)
