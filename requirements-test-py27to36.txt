@@ -2,3 +2,4 @@ pytest
 pytest-ordering
 pytest-regressions
 pytest-cov
+coverage==5.0a4
