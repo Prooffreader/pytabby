@@ -29,17 +29,17 @@ class TestStaticMethods:
     """Tests the static methods to load data"""
 
     def test_yaml(self):
-        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         """Loads test yaml and instantiates Menu"""
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         config = Menu.safe_read_yaml(yaml_path())
         _ = Menu(config)
 
     def test_json(self, tmpdir):
-        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         """Loads test yaml, converts to json, loads json and instantiates Menu
 
         Also asserts the two dicts are equal
         """
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         config_from_yaml = Menu.safe_read_yaml(yaml_path())
         p = tmpdir.mkdir("tabbedshellmenustest").join("temp.json")
         p.write(json.dumps(config_from_yaml))
@@ -136,8 +136,8 @@ class TestCollectInput:
         data_regression.check(data)
 
     def teardown_method(self):
-        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         """Reverts input"""
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         tabbedshellmenus.menu.input = input
 
 
@@ -147,8 +147,8 @@ class TestBreakingCollectInput:
     """Monkeypatches module.input function"""
 
     def test_break_collect_input(self, config_all, random_string):
-        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         """Tries an invalid input with testing=True so it doesn't go into an infinite loop"""
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         c = deepcopy(config_all)
         menu = Menu(c)
         # this assumes that random_string is not a valid entry in the config file
@@ -160,8 +160,8 @@ class TestBreakingCollectInput:
             raise AssertionError
 
     def teardown_method(self):
-        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         """Reverts input"""
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         tabbedshellmenus.menu.input = input
 
 
@@ -206,6 +206,6 @@ class TestRun:
         data_regression.check(data)
 
     def teardown_method(self):
-        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         """Reverts input"""
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         tabbedshellmenus.menu.input = input
