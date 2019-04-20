@@ -55,11 +55,11 @@ def test_method__change_tab(config_multiple, capsys, random_string):
     c["tabs"][1]["tab_header_description"] = random_string[3:7]
     c["tabs"][1]["tab_header_long_description"] = random_string[7:]
     menu = Menu(c)
-    if menu.current_tab_number != 0:
+    if menu._current_tab_number != 0:
         raise AssertionError
     menu._change_tab(1)
     out, _ = capsys.readouterr()
-    if menu.current_tab_number != 1:
+    if menu._current_tab_number != 1:
         raise AssertionError
     for astr in [
         "Change tab to {}".format(random_string[:3]),
@@ -118,7 +118,7 @@ class TestCollectInput:
         c = deepcopy(conf)
         c["case_sensitive"] = False  # to get 100% coverage
         menu = Menu(c)
-        normal = menu.config
+        normal = menu._config
         test_input_valid_entry = normal["tabs"][0]["items"][0]["item_inputs"][0]
         data = {}
         tabbedshellmenus.menu.input = lambda x: test_input_valid_entry
@@ -174,7 +174,7 @@ class TestRun:
     def test_with_change_tab(self, config_multiple):
         c = deepcopy(config_multiple)
         menu = Menu(c)
-        normal = menu.config
+        normal = menu._config
         test_input = normal["tabs"][1]["tab_header_input"]
         tabbedshellmenus.menu.input = lambda x: test_input
         result = menu.run(testing_tab_change=True)
@@ -183,7 +183,7 @@ class TestRun:
     def test_with_valid_entry(self, config_all, data_regression):
         c = deepcopy(config_all)
         menu = Menu(c)
-        normal = menu.config
+        normal = menu._config
         test_input = normal["tabs"][0]["items"][0]["item_inputs"][0]
         tabbedshellmenus.menu.input = lambda x: test_input
         data = {}

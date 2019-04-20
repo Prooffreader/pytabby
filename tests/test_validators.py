@@ -60,19 +60,6 @@ def validate_iteration_fail(conf, expected_error_message_part, case=None):
         raise AssertionError(msg)
 
 
-def parse_items(conf):
-    """Returns deepcopy of conf, config_layout and 'items' list for config"""
-    # TODO: this function was not as useful as was thought in the planning stages.
-    # TODO: remove config_layout
-    config_layout = validators._determine_config_layout(conf)
-    c = deepcopy(conf)
-    if config_layout.find("without") != -1:
-        items = c["items"]
-    else:
-        items = c["tabs"][0]["items"]
-    return c, config_layout, deepcopy(items)
-
-
 # TESTS OF SINGLE FUNCTIONS
 
 
@@ -208,9 +195,10 @@ class TestBreakingSchemaTop:
     def test_wrong_type_tabs_other(self, config_multiple, config_single_with_key):
         for config in [config_multiple, config_single_with_key]:
             c = deepcopy(config)
-            for case in [50, None]:  # these raise exceptions because the schema checker can't even check them
+            for case in [50, None]:  # these raise TypeError from determine_config_layout
                 c["tabs"] = case
-                validate_iteration_fail(c, "Schema type not recognized", case)
+                with pytest.raises(TypeError):
+                    validators.validate_all(c)
 
     def test_tabs_len_0(self, config_multiple, config_single_with_key):
         for config in [config_multiple, config_single_with_key]:
@@ -343,7 +331,12 @@ class TestSchemaItems:
     """Does non-breaking tests for items"""
 
     def test_mandatory_keys_present(self, config_all):
-        _, _, items = parse_items(config_all)
+        c = deepcopy(config_all)
+        config_layout = validators._determine_config_layout(config_all)
+        if config_layout.find("without") != -1:
+            items = c["items"]
+        else:
+            items = c["tabs"][0]["items"]
         for item in items:
             for key in ["item_choice_displayed", "item_inputs", "item_returns"]:
                 if not item.get(key, None):
@@ -352,7 +345,8 @@ class TestSchemaItems:
     def test_several_types_3_keys(self, config_all):
         for key in ["item_choice_displayed", "item_description", "item_returns"]:
             for value in ["astring", 50, 2.57]:
-                c, config_layout, _ = parse_items(config_all)
+                c = deepcopy(config_all)
+                config_layout = validators._determine_config_layout(config_all)
                 if config_layout.find("without") == -1:
                     c["tabs"][0]["items"][0][key] = value
                 else:
@@ -363,7 +357,8 @@ class TestSchemaItems:
                     raise AssertionError
 
     def test_item_description_absent(self, config_all):
-        c, config_layout, _ = parse_items(config_all)
+        c = deepcopy(config_all)
+        config_layout = validators._determine_config_layout(config_all)
         if config_layout.find("without") == -1:
             c["tabs"][0]["items"][0] = del_key_if_present(c["tabs"][0]["items"][0], "item_description")
         else:
@@ -375,7 +370,8 @@ class TestSchemaItems:
 
     def test_item_description_values(self, config_all):
         for value in [None, ["astring"], ("string1", "string2")]:
-            c, config_layout, _ = parse_items(config_all)
+            c = deepcopy(config_all)
+            config_layout = validators._determine_config_layout(config_all)
             if config_layout.find("without") == -1:
                 c["tabs"][0]["items"][0]["item_description"] = value
             else:
@@ -393,7 +389,8 @@ class TestBreakingSchemasItems:
 
     def test_3_required_keys_absent(self, config_all):
         for case in ["item_choice_displayed", "item_inputs", "item_returns"]:
-            c, config_layout, _ = parse_items(config_all)
+            c = deepcopy(config_all)
+            config_layout = validators._determine_config_layout(config_all)
             if config_layout.find("without") == -1:
                 c["tabs"][0]["items"][0] = del_key_if_present(c["tabs"][0]["items"][0], case)
             else:
@@ -404,7 +401,8 @@ class TestBreakingSchemasItems:
         for key in ["item_choice_displayed", "item_returns"]:
             for value in [None, ""]:
                 case = "{}_{}".format(key, value)
-                c, config_layout, _ = parse_items(config_all)
+                c = deepcopy(config_all)
+                config_layout = validators._determine_config_layout(config_all)
                 if config_layout.find("without") == -1:
                     c["tabs"][0]["items"][0][key] = value
                 else:
@@ -412,7 +410,8 @@ class TestBreakingSchemasItems:
                 validate_schema_fail(c, ["item#0: schema.SchemaError: Key ", "<lambda>"], case)
 
     def test_item_description_len_0(self, config_all):
-        c, config_layout, _ = parse_items(config_all)
+        c = deepcopy(config_all)
+        config_layout = validators._determine_config_layout(config_all)
         if config_layout.find("without") == -1:
             c["tabs"][0]["items"][0]["item_description"] = ""
         else:
@@ -421,7 +420,8 @@ class TestBreakingSchemasItems:
 
     def test_item_inputs_wrong_types(self, config_all):
         for case in [None, 50]:
-            c, config_layout, _ = parse_items(config_all)
+            c = deepcopy(config_all)
+            config_layout = validators._determine_config_layout(config_all)
             if config_layout.find("without") == -1:
                 c["tabs"][0]["items"][0]["item_inputs"] = case
             else:
@@ -430,7 +430,8 @@ class TestBreakingSchemasItems:
 
     def test_item_inputs_wrong_typestring(self, config_all):
         case = "asrting"
-        c, config_layout, _ = parse_items(config_all)
+        c = deepcopy(config_all)
+        config_layout = validators._determine_config_layout(config_all)
         if config_layout.find("without") == -1:
             c["tabs"][0]["items"][0]["item_inputs"] = case
         else:
@@ -439,7 +440,8 @@ class TestBreakingSchemasItems:
 
     def test_item_inputs_len_0(self, config_all):
         for case in [[], tuple([])]:
-            c, config_layout, _ = parse_items(config_all)
+            c = deepcopy(config_all)
+            config_layout = validators._determine_config_layout(config_all)
             if config_layout.find("without") == -1:
                 c["tabs"][0]["items"][0]["item_inputs"] = case
             else:
@@ -447,7 +449,8 @@ class TestBreakingSchemasItems:
             validate_schema_fail(c, ["lambda"], case)
 
     def unexpected_key_present(self, config_all):
-        c, config_layout, _ = parse_items(config_all)
+        c = deepcopy(config_all)
+        config_layout = validators._determine_config_layout(config_all)
         if config_layout.find("without") == -1:
             c["tabs"][0]["items"][0]["disallowedkey"] = "astring"
         else:
@@ -468,169 +471,13 @@ class TestBreakingSchemasValidEntries:
 
     def test_item_inputs_none_or_len_0(self, config_all):
         for value in [None, ""]:
-            c, config_layout, _ = parse_items(config_all)
+            c = deepcopy(config_all)
+            config_layout = validators._determine_config_layout(config_all)
             if config_layout.find("without") == -1:
                 c["tabs"][0]["items"][0]["item_inputs"][0] = value
             else:
                 c["items"][0]["item_inputs"][0] = value
                 validate_iteration_fail(c, "<lambda>", value)
-
-
-# OLD TESTS #
-
-
-# @pytest.mark.breaking
-# @pytest.mark.run(order=5)
-# @pytest.mark.parametrize(
-#     "command,error_message",
-#     [
-#         ("c['new_header'] = 'something'", "Wrong key .{0,1}'new_header'"),
-#         ("del c['tabs'][0]['items'][0]['item_choice_displayed']", "Missing key: .{0,1}'item_choice_displayed'"),
-#         ("c['tabs'][0]['items'][0]['item_inputs'] = []", "should evaluate to True"),
-#     ],
-#     ids=["unexpected_top_level_header", "no_tabs.items.item_choice_displayed", "tabs.items.item_inputs_is_empty_list"],
-# )
-# def test_some_fail_scenarios_multiple(input_config_multiple_only, command, error_message):
-#     """Schema test should catch all of these, which are not exhaustive."""
-#     c = deepcopy(input_config_multiple_only)
-#     exec(command)
-#     error_messages = []
-#     validators._validate_schema(error_messages, c)
-#     if not any([re.search(error_message, x) for x in error_messages]):
-#         raise AssertionError
-
-
-# @pytest.mark.breaking
-# @pytest.mark.run(order=5)
-# def test_optional_top_level_keys_multiple(input_config_multiple_only):
-#     """Test that top level keys case_sensitive and screen_width are optional"""
-#     c = deepcopy(input_config_multiple_only)
-#     error_messages = []
-#     validators._validate_schema(error_messages, c)
-#     if error_messages:
-#         raise AssertionError
-#     for key, value in [("case_sensitive", True), ("screen_width", 60)]:
-#         if key in c.keys():
-#             del c[key]
-#         else:
-#             c[key] = value
-#         error_messages = []
-#         validators._validate_schema(error_messages, c)
-#         if error_messages:
-#             raise AssertionError
-
-
-# @pytest.mark.breaking
-# @pytest.mark.run(order=5)
-# def test_optional_tab_header_long_description_multiple(input_config_multiple_only):
-#     """Test that a tab's 'tab_header_long_description' is optional"""
-#     c = deepcopy(input_config_multiple_only)
-#     error_messages = []
-#     validators._validate_schema(error_messages, c)
-#     if error_messages:
-#         raise AssertionError
-#     if "tab_header_long_description" in c["tabs"][0].keys():
-#         del c["tabs"][0]["tab_header_long_description"]
-#     else:
-#         c["tabs"][0]["tab_header_long_description"] = "a long description"
-#     error_messages = []
-#     validators._validate_schema(error_messages, c)
-#     if error_messages:
-#         raise AssertionError
-
-
-# @pytest.mark.breaking
-# @pytest.mark.run(order=5)
-# def test_wrong_types_top_level_keys_multiple(input_config_multiple_only):
-#     """Ensure wrong types are caught."""
-#     c = deepcopy(input_config_multiple_only)
-#     error_messages = []
-#     validators._validate_schema(error_messages, c)
-#     if error_messages:
-#         raise AssertionError
-#     for key, value, msg in [("case_sensitive", "string", "bool"), ("screen_width", "string", "int")]:
-#         c = deepcopy(input_config_multiple_only)
-#         c[key] = value
-#         error_messages = []
-#         validators._validate_schema(error_messages, c)
-#         if all([x.find("string' should be instance of '{}'".format(msg)) == -1 for x in error_messages]):
-#             raise AssertionError
-
-
-# @pytest.mark.breaking
-# @pytest.mark.run(order=5)
-# def test_any_type_tab_header_long_description_multiple(input_config_multiple_only):
-#     """Test that any type will work for long description, as it will be coerced to string in normalizer."""
-#     c = deepcopy(input_config_multiple_only)
-#     for value in [True, 10, 2.54, KeyError, None]:  # exception used just as an example of a class
-#         # which can be coerced to a string like any object
-#         c["tabs"][0]["tab_header_long_description"] = value
-#         error_messages = []
-#         validators._validate_schema(error_messages, c)
-#         if error_messages:
-#             raise AssertionError
-
-
-# @pytest.mark.breaking
-# @pytest.mark.run(order=5)
-# @pytest.mark.parametrize(
-#     "command,error_message",
-#     [
-#         ("c['tabs'][0]['tab_header_input']='somestring'", "Forbidden key encountered: .{0,1}'tab_header_input'"),
-#         ("c['tabs'][0]['tab_header_description']='somestring'", "Forbidden key encountered: .{0,1}'tab_header_description'"),
-#         (
-#             "c['tabs'][0]['tab_header_long_description']='somestring'",
-#             "Forbidden key encountered: .{0,1}'tab_header_long_description'",
-#         ),
-#     ],
-#     ids=[
-#         "should_not_have_tab_header_input",
-#         "should_not_have_tab_header_description",
-#         "should_not_have_tab_header_long_description_which_is_optional_in_multiple",
-#     ],
-# )
-# def test_some_fail_scenarios_single_with_key(input_config_single_with_key_only, command, error_message):
-#     """Schema test should catch all of these, which are not exhaustive."""
-#     c = deepcopy(input_config_single_with_key_only)
-#     exec(command)
-#     error_messages = []
-#     validators._validate_schema(error_messages, c)
-#     if not any([re.search(error_message, x) for x in error_messages]):
-#         raise AssertionError
-
-
-# @pytest.mark.breaking
-# @pytest.mark.run(order=5)
-# def test_no_multiple_tabs_in_single_with_key(input_config_single_with_key_only, random_string):
-#     """Too complicated to fit in one exec statement in test_some_fail_scenarios_single_with_key.
-
-#     This will be recognized by the validator as a multiple tab type, but missing the keys
-#     'tab_header_input' and 'tab_header_description'
-#     """
-#     tab = {
-#         "items": [
-#             {
-#                 "item_choice_displayed": "a_{}".format(random_string),
-#                 "item_description": "b_{}".format(random_string),
-#                 "item_inputs": ["c_{}".format(random_string)],
-#                 "item_returns": "d_{}".format(random_string),
-#             }
-#         ]
-#     }
-#     c = deepcopy(input_config_single_with_key_only)
-#     error_messages = []
-#     validators._validate_schema(error_messages, c)
-#     if error_messages:
-#         raise AssertionError
-#     c["tabs"].append(tab)
-#     error_messages = []
-#     validators._validate_schema(error_messages, c)
-#     # These are split up because Python 2 has u'tab_header_choice... and I don't feel like fixing it
-#     if not (
-#         any([x.find("Missing key: ") != -1 for x in error_messages])
-#         or any([x.find("'tab_header_input'") != -1 for x in error_messages])
-#     ):
-#         raise AssertionError
 
 
 @pytest.mark.function
@@ -738,3 +585,14 @@ def test_fn_validate_all_fail(config_all):
     ] = "astring"  # this particular error will cause the error message to be shortened, testing that function
     with pytest.raises(validators.InvalidInputError):
         validators.validate_all(c)
+
+
+# MISC TESTS
+
+@pytest.mark.function
+@pytest.mark.run(order=1)
+def test__shorten_long_schema_error_messages():
+    error_messages = ["stuff that comes at the beginning in {'key': 'value'}"]
+    error_messages = validators._shorten_long_schema_error_messages(error_messages)
+    if not error_messages[0] == 'stuff that comes at the beginning in config':
+        raise AssertionError
