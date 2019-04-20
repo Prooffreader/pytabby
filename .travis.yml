@@ -51,4 +51,4 @@ matrix:
                      --cov-report xml
                      --no-cov-on-fail
       after_success:
-        - python-codacy-coverage -r coverage.xml
+        - bash <(curl -s https://codecov.io/bash)
