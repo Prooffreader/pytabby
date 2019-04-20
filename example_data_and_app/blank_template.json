@@ -1,19 +1,19 @@
 {
-    "case_sensitive": ,
-    "screen_width": ,
+    "case_sensitive": false,
+    "screen_width": 80,
     "tabs": [
        {
-          "header_choice_displayed_and_accepted": "",
-          "header_description": "",
-          "long_description": "",
+          "tab_header_input": "",
+          "tab_header_description": "",
+          "tab_header_long_description": "",
           "items": [
              {
-                "choice_displayed": "",
-                "choice_description": "",
-                "valid_entries": [
+                "item_choice_displayed": "",
+                "item_description": "",
+                "item_inputs": [
                    ""
                 ],
-                "returns": ""
+                "item_returns": ""
              }
           ]
        }

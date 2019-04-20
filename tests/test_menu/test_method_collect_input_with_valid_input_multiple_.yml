@@ -1,0 +1,6 @@
+result:
+  return_value: '1'
+  type: return
+result_multiple:
+  new_number: 1
+  type: change_tab

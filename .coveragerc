@@ -1,6 +1,13 @@
+[run]
+source = src/tabbedshellmenus
+
 [report]
 exclude_lines:
     pragma: no cover
     raise AssertionError
     ^\s+#
+    if __name__ == .__main__.:
+omit =
+    tests/*
+    */keypress.py
 show_missing: True

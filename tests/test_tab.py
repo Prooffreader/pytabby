@@ -4,6 +4,9 @@
 """Tests tabbedshellmenus/tab.py
 
 Note that tabs depend on having normalized config input.
+Regression tests only, based on input config
+If input config changes, regression tests will have to change.
+Functionality of this module is tested in menu.py tests
 """
 
 from __future__ import absolute_import, division, print_function, unicode_literals
@@ -37,9 +40,9 @@ def freeze_tab(tab_dict):
 
 @pytest.mark.regression
 @pytest.mark.run(order=3)
-def test_regress_create_tab_object(data_regression, input_config_dict_and_id):
+def test_regress_create_tab_object(data_regression, config_all_with_id):
     """Only normalize single without key"""
-    config, id_ = input_config_dict_and_id
+    config, id_ = config_all_with_id
     c = deepcopy(config)
     if id_.find("without") != -1:
         c = normalizer.normalize(c)

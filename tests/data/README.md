@@ -1,3 +1,0 @@
-# Note for test data
-
-Put any valid YAML files that follow the schemas in example_data. For one test, they must have the phrase "multiple" or "single", and if single, "with_key" or "without_key" in their filename. These refer to whether the YAML has the top-level key "tabs" (superfluous, but allowed), or if it does not and has the top-level key "items" instead of "tabs" (in which case it is "without_key")

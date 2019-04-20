@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
+
+"""setup.py for tabbedshellmenus"""
+
 from __future__ import absolute_import
 from __future__ import print_function
 
@@ -16,6 +19,7 @@ from setuptools import setup
 
 
 def read(*names, **kwargs):
+    """Reads file"""
     return io.open(
         join(dirname(__file__), *names),
         encoding=kwargs.get('encoding', 'utf8')
@@ -55,11 +59,6 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: Implementation :: CPython',
-        # 'Programming Language :: Python :: Implementation :: PyPy',
-        # uncomment if you test on these interpreters:
-        # 'Programming Language :: Python :: Implementation :: IronPython',
-        # 'Programming Language :: Python :: Implementation :: Jython',
-        # 'Programming Language :: Python :: Implementation :: Stackless',
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Utilities',
     ],
@@ -67,12 +66,9 @@ setup(
         'python', 'shell', 'terminal', 'tabs', 'tabbed', 'menu', 'menus'
     ],
     install_requires=[
-        'PyYAML==5.1', 'schema==0.7.0'
+        'PyYAML>=5.1', 'schema>=0.7.0'
     ],
     extras_require={
-        # eg:
-        #   'rst': ['docutils>=0.11'],
-        #   ':python_version=="2.6"': ['argparse'],
     },
     entry_points={
         'console_scripts': [

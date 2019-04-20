@@ -12,71 +12,148 @@ import pytest
 import tabbedshellmenus.normalizer as normalizer
 
 
-def freeze_config(normalized_config):
-    """Creates reproducible list for regression test"""
-    lst = [":OUTER_LEVEL:"]
-    c = normalized_config
-    for k in ["case_sensitive", "screen_width"]:
-        lst.append(c[k])
-    lst.append(":TAB:")
-    for tab in c["tabs"]:
-        for k1 in ["header_choice_displayed_and_accepted", "header_description", "long_description"]:
-            lst.append(tab.get(k1, "n/a"))
-        for item in tab["items"]:
-            lst.append(":ITEM:")
-            for k2 in ["choice_displayed", "choice_description", "returns"]:
-                lst.append(item[k2])
-            lst.append(":ENTRIES:")
-            for entry in item["valid_entries"]:
-                lst.append(entry)
-    return lst
-
-
 @pytest.mark.function
 @pytest.mark.run(order=1)
-def test__add_tabs_key_if_needed_multiple_nochange(input_config_multiple_only):
-    """Tested function should not change a multiple or single_with_key schema type"""
-    c = deepcopy(input_config_multiple_only)
-    cprime = normalizer._add_tabs_key_if_needed(deepcopy(c))
-    if not c == cprime:
-        raise AssertionError
+def test__add_tabs_key_if_needed_multiple(config_all_with_id):
+    """Tests function
 
-
-@pytest.mark.function
-@pytest.mark.run(order=1)
-def test__add_tabs_key_if_needed_single_with_key_nochange(input_config_single_with_key_only):
-    """Tested function hould not change a multiple or single_with_key schema type"""
-    c = deepcopy(input_config_single_with_key_only)
-    cprime = normalizer._add_tabs_key_if_needed(deepcopy(c))
-    if not c == cprime:
-        raise AssertionError
-
-
-@pytest.mark.regression
-@pytest.mark.run(order=1)
-def test_regress__add_tabs_single_wo_key(data_regression, input_config_single_without_key_only):
-    """Should switch items to tabs"""
-    c = deepcopy(input_config_single_without_key_only)
-    c = normalizer._add_tabs_key_if_needed(c)
-    if "tabs" not in c.keys():
-        raise AssertionError
-    if "items" in c.keys():
-        raise AssertionError
-    c = freeze_config(c)
-    data = {"data": c}
-    data_regression.check(data)
-
-
-@pytest.mark.regression
-@pytest.mark.run(order=1)
-def test_regress_normalize_all(data_regression, input_config_dict):
-    """Regression test instead of regular function tests.
-
-    The function _walk_stringize_and_case() is not tested because the only other 'private' function
-    is necessary for it to work, and the function normalize just wraps these two functions anyway
+    Function should not change a multiple or single_with_key schema type
+    but should change single_without_key
     """
-    c = deepcopy(input_config_dict)
-    c = normalizer.normalize(c)
-    c = freeze_config(c)
-    data = {"data": c}
-    data_regression.check(data)
+    conf, id_ = config_all_with_id
+    c = deepcopy(conf)
+    cprime = normalizer._add_tabs_key_if_needed(deepcopy(c))
+    if id_.find("without") == -1:
+        if c != cprime:
+            raise AssertionError
+    else:
+        if c == cprime:
+            raise AssertionError
+
+
+@pytest.mark.integration
+@pytest.mark.run(order=2)
+class TestCaseSensitiveOrInsensitive:
+    """Performs tests that do not depend on case insensitivity"""
+
+    def test_tab_header_input_str(self, config_multiple):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
+        c = deepcopy(config_multiple)
+        c["tabs"][0]["tab_header_input"] = 50
+        normal = normalizer.normalize(c)
+        if normal["tabs"][0]["tab_header_input"] != "50":
+            raise AssertionError
+
+    def test_item_inputs_str(self, config_all_with_id):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
+        conf, id_ = config_all_with_id
+        c = deepcopy(conf)
+        if id_.find("without") == -1:
+            c["tabs"][0]["items"][0]["item_inputs"].append(50)
+        else:
+            c["items"][0]["item_inputs"].append(50)
+        normal = normalizer.normalize(c)
+        for tab in normal["tabs"]:
+            for item in tab["items"]:
+                for entry in item["item_inputs"]:
+                    if not isinstance(entry, str):
+                        raise AssertionError
+
+    def test_default_case_sensitive(self, config_all):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
+        c = deepcopy(config_all)
+        if c.get("case_sensitive", None):
+            del c["case_sensitive"]
+        normal = normalizer.normalize(c)
+        result = normal.get("case_sensitive", None)
+        if result is None or result:
+            raise AssertionError
+
+    def test_default_screen_width(self, config_all):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
+        c = deepcopy(config_all)
+        if c.get("screen_width", None):
+            del c["screen_width"]
+        normal = normalizer.normalize(c)
+        result = normal.get("screen_width", None)
+        if result != 80:
+            raise AssertionError
+
+
+@pytest.mark.integration
+@pytest.mark.run(order=2)
+class TestCaseInsensitive:
+    """Tests that changes are made only where appropriate"""
+
+    def test_tab_header_input_changed(self, config_multiple, random_string):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
+        c = deepcopy(config_multiple)
+        c["case_sensitive"] = False
+        c["tabs"][0]["tab_header_input"] = random_string
+        normal = normalizer.normalize(c)
+        if (
+            normal["tabs"][0]["tab_header_input"] == random_string
+            or normal["tabs"][0]["tab_header_input"] != random_string.lower()
+        ):
+            raise AssertionError
+
+    def test_other_headers_str_but_unchanged(self, config_multiple, random_string):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
+        c = deepcopy(config_multiple)
+        c["case_sensitive"] = False
+        for key in ["tab_header_description", "tab_header_long_description"]:
+            c["tabs"][0][key] = random_string
+            normal = normalizer.normalize(c)
+            if normal["tabs"][0][key] != random_string:
+                raise AssertionError
+
+    def test_other_headers_none_ok(self, config_multiple):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
+        c = deepcopy(config_multiple)
+        c["case_sensitive"] = False
+        for key in ["tab_header_description", "tab_header_long_description"]:
+            c["tabs"][0][key] = None
+            normal = normalizer.normalize(c)
+            if normal["tabs"][0][key] is not None:
+                raise AssertionError
+
+    def test_other_headers_missing_ok(self, config_multiple):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
+        c = deepcopy(config_multiple)
+        c["case_sensitive"] = False
+        for key in ["tab_header_description", "tab_header_long_description"]:
+            if key in c["tabs"][0].keys():
+                del c["tabs"][0][key]
+            normal = normalizer.normalize(c)
+            if key in normal["tabs"][0].keys():
+                raise AssertionError
+
+    def test_choice_fields_str_but_unchanged(self, config_all_with_id, random_string):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
+        conf, id_ = config_all_with_id
+        for key in ["item_choice_displayed", "item_description", "item_returns"]:
+            c = deepcopy(conf)
+            c["case_sensitive"] = False
+            if id_.find("without") == -1:
+                c["tabs"][0]["items"][0][key] = random_string
+            else:
+                c["items"][0][key] = random_string
+            normal = normalizer.normalize(c)
+            if normal["tabs"][0]["items"][0][key] != random_string:
+                raise AssertionError
+
+    def test_item_inputs_changed(self, config_all_with_id, random_string):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
+        conf, id_ = config_all_with_id
+        c = deepcopy(conf)
+        c["case_sensitive"] = False
+        if id_.find("without") == -1:
+            c["tabs"][0]["items"][0]["item_inputs"][0] = random_string
+        else:
+            c["items"][0]["item_inputs"][0] = random_string
+        normal = normalizer.normalize(c)
+        if (
+            normal["tabs"][0]["items"][0]["item_inputs"][0] == random_string
+            or normal["tabs"][0]["items"][0]["item_inputs"][0] != random_string.lower()
+        ):
+            raise AssertionError

@@ -8,6 +8,10 @@ example_data_and_app/test_*.py
 pip-wheel-metadata/
 *.py,cover
 pytest.ini
+sourcecodacy.sh
+*/designedtofail.yaml
+wishlist.txt
+codecov.sh
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

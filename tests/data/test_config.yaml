@@ -1,0 +1,36 @@
+case_sensitive: true 
+screen_width: 80 
+tabs:
+  - 
+    tab_header_input: un
+    tab_header_description: Description
+    items:
+      - item_choice_displayed: 1
+        item_description: One
+        item_inputs: 
+          - 1
+          - ONE
+        item_returns: 1
+      - item_choice_displayed: 2
+        item_description: 2
+        item_inputs: 
+          - 2
+          - tWo
+        item_returns: 2
+  - 
+    tab_header_input: deux
+    tab_header_description: has a description
+    tab_header_long_description: This one has a long description, the other one does not
+    items:
+      - item_choice_displayed: three
+        item_description: 3
+        item_inputs: 
+          - 3
+          - three
+        item_returns: three
+      - item_choice_displayed: four
+        item_description: 4
+        item_inputs: 
+          - 4
+          - four
+        item_returns: four!

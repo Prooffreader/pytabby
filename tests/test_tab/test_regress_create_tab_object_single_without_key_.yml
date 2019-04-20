@@ -1,0 +1,26 @@
+0:
+- ':HEADS:'
+- null
+- null
+- null
+- ':SELECTORS:'
+- ':INPUT2RESULT:'
+- '1'
+- return
+- n/a
+- '1'
+- ':INPUT2RESULT:'
+- '2'
+- return
+- n/a
+- '2'
+- ':INPUT2RESULT:'
+- ONE
+- return
+- n/a
+- '1'
+- ':INPUT2RESULT:'
+- tWo
+- return
+- n/a
+- '2'
