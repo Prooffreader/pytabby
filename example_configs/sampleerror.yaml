@@ -1,0 +1,36 @@
+case_sensitive: 'This should be a boolean'
+screen_width: 'This should be an integer'
+tabs:
+  - # there is no tab_header_input for this tab
+    # the other two keys missing is ok, they're optional
+    items:
+      - item_choice_displayed: choice1
+        item_description: descript1
+        item_inputs: 
+          - # item inputs is an empty list
+        item_returns: return1 
+  - tab_header_input: a  # this will conflict with an item input in another tab
+    items:
+      - item_choice_displayed: 1
+        item_description: descript1
+        item_inputs: 
+          - 1  # int is okay, but it will conflict with another input in the same list
+        item_returns: None  # must be coerceable to string, can't be None
+      - item_choice_displayed: 2
+        item_description: descript2
+        item_inputs: 
+          - 1  # conflicts with previous item
+        item_returns: 1
+  - tab_header_input: b
+    items:
+      - item_choice_displayed: a
+        item_description: descripta
+        item_inputs: 
+          - a  # conflicts with the input to switch to another tab
+        item_returns: a  
+      - item_choice_displayed: foo
+        item_description: bar
+        item_inputs: 
+          - spam  # conflicts with previous item
+        # missing item_returns
+

@@ -1,0 +1,38 @@
+case_sensitive: False  # optional, boolean, default False
+screen_width: 80  # optional, integer, default 80
+tabs:  # if there's only one tab, there should be no headers. In fact, you can leave out the tabs
+       # key entirely and have 'items' as a top-level key.
+  - tab_header_input: a  # this is the input that will change to this header; it can be any length
+    tab_header_description: First tab  # this key is optional, or it can be None. It is displayed next to the tab_header_input
+    tab_header_long_description: Changing to First tab  # this key is optional, or it can be set to None.
+                                                        # it is displayed only when changing tabs 
+    items:
+      - item_choice_displayed: x  # an element to be put within square brackets to the left of every choice/item line
+                                  # note that it does not necessarily have to correspond at all to item_inputs, although
+                                  # it probably should
+        item_description: Choice x  # displayed to the right of item_choice_displayed
+        item_inputs:  # not displayed, a list of all inputs that will trigger the return of this item's 'item_returns'
+          - x
+        item_returns: xmarksthespot  # just a string
+      - item_choice_displayed: y,z  # note I put a comma here for clarity, but this field is not parsed, I could have put 
+                                    # anything eg "yz", "y|z", "y or z", "fizzbin", etc.
+        item_description: Choice y or z
+        item_inputs: 
+          - y
+          - z
+        item_returns: yorz
+  - tab_header_input: bee  # the second tab, note we can require a multi-letter input. This one has no descriptions.
+    items:
+      - item_choice_displayed: z  # this overlaps with the other tab, but that's okay, it's a different tab
+        item_description: Choice z
+        item_inputs: 
+          - z  
+        item_returns: z
+      - item_choice_displayed: spam  # again multi-letter
+        item_description: Surprise!
+        item_inputs: 
+          - ham
+          - jam
+          - lamb  # none of these match the choice displayed! Bad idea, but they don't have to!
+        item_returns: 1001010001010  # why not?
+ 
