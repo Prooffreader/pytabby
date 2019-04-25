@@ -4,8 +4,6 @@
 """Helper functions for menu.Menu and Tab class to represent individual tabs in menu.Menu"""
 
 
-
-
 def create_tab_objects(config):
     """Creates Tab objects in list in order of (normalized) menu._config['tabs']
 

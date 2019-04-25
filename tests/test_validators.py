@@ -4,7 +4,6 @@
 """Tests tabbedshellmenus/validators.py"""
 
 
-
 from copy import deepcopy
 
 import pytest
@@ -496,8 +495,6 @@ class TestBreakingSchemasItems:
 
 # TEST CLASSES: VALID_ENTRIES
 # BREAKING ONLY
-
-# self.entry_schema = Schema(lambda x: x is not None and len(str(x)) > 0)
 
 
 @pytest.mark.breaking

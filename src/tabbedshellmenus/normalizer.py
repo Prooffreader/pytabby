@@ -13,7 +13,6 @@ Normalization consists of, for those parts of the config that require it:
 """
 
 
-
 from copy import deepcopy
 
 

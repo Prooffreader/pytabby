@@ -9,8 +9,6 @@ If input config changes, regression tests will have to change.
 Functionality of this module is tested in menu.py tests
 """
 
-
-
 from copy import deepcopy
 
 import pytest

@@ -16,8 +16,6 @@ There are three possible values of config_layout, determined from the config dic
 """
 
 
-
-
 import re
 from collections import Counter
 
@@ -300,9 +298,9 @@ def _validate_no_return_value_overlap(error_messages, config):
     tabs = _config_tabs(config)
     for tab_num, tab in enumerate(tabs):
         returns = []
-        if 'item' in tab.keys():  # so as not to raise premature KeyError in invalid schema
-            for item in tab['items']:
-                value = item.get('item_returns', None)
+        if "items" in tab.keys():  # so as not to raise premature KeyError in invalid schema
+            for item in tab["items"]:
+                value = item.get("item_returns", None)
                 if value:  # so as not to raise premature KeyError in invalid schema
                     returns.append(value)
         multiples = _count_for_overlap(returns)
@@ -314,7 +312,7 @@ def _validate_no_return_value_overlap(error_messages, config):
     return error_messages
 
 
-def _validate_no_input_value_overlap(error_messages, config):
+def _validate_no_input_value_overlap(error_messages, config):  # noqa:C901
     """Validates that the potential inputs on each tab are unambiguous.
 
     In other words, validates that any entry will either lead
@@ -331,13 +329,13 @@ def _validate_no_input_value_overlap(error_messages, config):
     # get tab header choices if multiple tabs
     if config_layout == "multiple":
         for tab in tabs:
-            if tab.get('tab_header_input', None):  # so as not to raise premature KeyError for invalid schema
+            if tab.get("tab_header_input", None):  # so as not to raise premature KeyError for invalid schema
                 starting_choices.append(tab["tab_header_input"])
     for tab_num, tab in enumerate(tabs):
         choices = starting_choices[:]
-        if 'items' in tab.keys():  # so as not to raise premature KeyError for invalid schema
+        if "items" in tab.keys():  # so as not to raise premature KeyError for invalid schema
             for item in tab["items"]:
-                if 'item_inputs' in item.keys():  # so as not to raise premature KeyError for invalid schema
+                if "item_inputs" in item.keys():  # so as not to raise premature KeyError for invalid schema
                     for entry in item["item_inputs"]:
                         choices.append(entry)
             if not case_sensitive:

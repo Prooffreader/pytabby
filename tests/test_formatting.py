@@ -8,7 +8,6 @@ Just don't forget to replace data files if input file changes.
 """
 
 
-
 from copy import deepcopy
 
 import pytest

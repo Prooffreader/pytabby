@@ -4,8 +4,6 @@
 """Contains Menu class; this is the base imported class of this package"""
 
 
-
-
 import json
 
 import yaml

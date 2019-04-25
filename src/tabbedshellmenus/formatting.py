@@ -4,8 +4,6 @@
 """Contains functions used to format shell text output, i.e. multiline strings sent to stdout"""
 
 
-
-
 def format_menu(config, current_tab_number, line_length):
     """Creates menu to be displayed to user, called from menu.Menu only, not by user
 

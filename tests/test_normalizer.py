@@ -4,7 +4,6 @@
 """Tests tabbedshellmenus.normalizer.py"""
 
 
-
 from copy import deepcopy
 
 import pytest

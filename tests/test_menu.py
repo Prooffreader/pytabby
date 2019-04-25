@@ -4,7 +4,6 @@
 """Tests menu.py"""
 
 
-
 from copy import deepcopy
 import json
 import os
@@ -22,11 +21,13 @@ def yaml_path():
     this_dir = os.path.split(path_to_here)[0]
     return os.path.join(this_dir, "data", "test_config.yaml")
 
+
 @pytest.mark.smoke
 @pytest.mark.run(order=-1)
 def test_menu_smoke(config_all):
     """Smoke test to see if menu creation succeeds"""
-    _ = Menu.menu(config_all)
+    _ = Menu(config_all)
+
 
 @pytest.mark.integration
 @pytest.mark.run(order=5)
