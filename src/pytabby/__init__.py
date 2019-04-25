@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Just puts menu.Menu into the top tabbedshellmenus package namespace"""
+"""Just puts menu.Menu into the top pytabby package namespace"""
 
 # pylama:ignore=W0611,E800  # because used for namespace
 

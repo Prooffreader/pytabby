@@ -11,8 +11,8 @@ import os
 import pytest
 
 # import from __init__
-from tabbedshellmenus import Menu
-import tabbedshellmenus
+from pytabby import Menu
+import pytabby
 
 
 def yaml_path():
@@ -47,7 +47,7 @@ class TestStaticMethods:
         """
         _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         config_from_yaml = Menu.safe_read_yaml(yaml_path())
-        p = tmpdir.mkdir("tabbedshellmenustest").join("temp.json")
+        p = tmpdir.mkdir("pytabbytest").join("temp.json")
         p.write(json.dumps(config_from_yaml))
         config_from_json = Menu.read_json(str(p))
         if not config_from_yaml == config_from_json:
@@ -157,12 +157,12 @@ class TestCollectInput:
         normal = menu._config
         test_input_valid_entry = normal["tabs"][0]["items"][0]["item_inputs"][0]
         data = {}
-        tabbedshellmenus.menu.input = lambda x: test_input_valid_entry
+        pytabby.menu.input = lambda x: test_input_valid_entry
         result = menu._collect_input()
         data["result"] = result
         if id_.find("multiple") != -1:
             test_input_tab = normal["tabs"][1]["tab_header_input"]
-            tabbedshellmenus.menu.input = lambda x: test_input_tab
+            pytabby.menu.input = lambda x: test_input_tab
             result2 = menu._collect_input()
             data["result_multiple"] = result2
         data_regression.check(data)
@@ -170,7 +170,7 @@ class TestCollectInput:
     def teardown_method(self):
         """Reverts input"""
         _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
-        tabbedshellmenus.menu.input = input
+        pytabby.menu.input = input
 
 
 @pytest.mark.breaking
@@ -185,7 +185,7 @@ class TestBreakingCollectInput:
         menu = Menu(c)
         # this assumes that random_string is not a valid entry in the config file
         # this is a pretty darn safe assumption
-        tabbedshellmenus.menu.input = lambda x: random_string
+        pytabby.menu.input = lambda x: random_string
         menu._testing = "collect_input"
         result = menu._collect_input()
         if result != "Invalid, try again":
@@ -194,7 +194,7 @@ class TestBreakingCollectInput:
     def teardown_method(self):
         """Reverts input"""
         _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
-        tabbedshellmenus.menu.input = input
+        pytabby.menu.input = input
 
 
 @pytest.mark.integration
@@ -207,7 +207,7 @@ class TestRun:
         _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
         c = deepcopy(config_all)
         menu = Menu(c)
-        tabbedshellmenus.menu.input = lambda x: random_string
+        pytabby.menu.input = lambda x: random_string
         menu._testing = "run_invalid"
         result = menu.run()
         if result != "Invalid, try again":
@@ -219,7 +219,7 @@ class TestRun:
         menu = Menu(c)
         normal = menu._config
         test_input = normal["tabs"][1]["tab_header_input"]
-        tabbedshellmenus.menu.input = lambda x: test_input
+        pytabby.menu.input = lambda x: test_input
         menu._testing = "run_tab"
         result = menu.run()
         if result != {"new_number": 1, "type": "change_tab"}:
@@ -231,7 +231,7 @@ class TestRun:
         menu = Menu(c)
         normal = menu._config
         test_input = normal["tabs"][0]["items"][0]["item_inputs"][0]
-        tabbedshellmenus.menu.input = lambda x: test_input
+        pytabby.menu.input = lambda x: test_input
         data = {}
         result = menu.run()
         data["result"] = result
@@ -258,4 +258,4 @@ class TestRun:
     def teardown_method(self):
         """Reverts input"""
         _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
-        tabbedshellmenus.menu.input = input
+        pytabby.menu.input = input

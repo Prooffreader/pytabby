@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Tests tabbedshellmenus.normalizer.py"""
+"""Tests pytabby.normalizer.py"""
 
 
 from copy import deepcopy
 
 import pytest
 
-import tabbedshellmenus.normalizer as normalizer
+import pytabby.normalizer as normalizer
 
 
 @pytest.mark.function

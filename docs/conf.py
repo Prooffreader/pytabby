@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'tabbedshellmenus'
+project = 'pytabby'
 copyright = '2019, David Taylor'
 author = 'David Taylor'
 

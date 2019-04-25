@@ -1,7 +1,7 @@
 Example app
 ===========
 
-We're going to use ``tabbedshellmenus`` to control program flow in an app that takes a directory full of files
+We're going to use ``pytabby`` to control program flow in an app that takes a directory full of files
 and allows you to categorize them into subdirectories.
 
 There are two menus: [d]irectory management, where we see if folders exist and create them if needed;

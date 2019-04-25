@@ -1,4 +1,4 @@
 API
 ===
 
-.. autoclass:: tabbedshellmenus.Menu
+.. autoclass:: pytabby.Menu

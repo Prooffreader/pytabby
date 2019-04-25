@@ -12,8 +12,8 @@ from copy import deepcopy
 
 import pytest
 
-import tabbedshellmenus.formatting as formatting
-import tabbedshellmenus.normalizer as normalizer
+import pytabby.formatting as formatting
+import pytabby.normalizer as normalizer
 
 
 @pytest.mark.regression

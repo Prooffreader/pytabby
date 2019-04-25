@@ -1,10 +1,10 @@
-"""A simple app that shows some capabilities of tabbedshellmenus."""
+"""A simple app that shows some capabilities of pytabby."""
 
 import glob
 import os
 import shutil
 
-from tabbedshellmenus import Menu
+from pytabby import Menu
 
 # to make this a self-contained app, hardcode the config dict
 

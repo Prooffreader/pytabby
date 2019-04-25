@@ -11,16 +11,16 @@ And here's what happens when we try to initialize a Menu instance with that conf
 
 ::
 
-    >>> from tabbedshellmenus import Menu
+    >>> from pytabby import Menu
     >>> config = Menu.safe_read_yaml('sampleerror.yaml')
     >>> menu = Menu(config)
     Traceback (most recent call last):
       File "<stdin>", line 1, in <module>
-      File "<<path redacted>>tabbedshellmenus/menu.py", line 58, in __init__
+      File "<<path redacted>>pytabby/menu.py", line 58, in __init__
         validators.validate_all(self._config)
-      File "<<path redacted>>tabbedshellmenus/validators.py", line 388, in validate_all
+      File "<<path redacted>>pytabby/validators.py", line 388, in validate_all
         raise InvalidInputError("\n".join(printed_message))
-    tabbedshellmenus.validators.InvalidInputError: 
+    pytabby.validators.InvalidInputError: 
     Errors:
     1. schema.SchemaError: Key 'case_sensitive' error: 'This should be a boolean' should be instance of 'bool'
     2. tab#0: schema.SchemaMissingKeyError: Missing key: 'tab_header_input'

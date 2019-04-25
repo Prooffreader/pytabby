@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Tests tabbedshellmenus/validators.py"""
+"""Tests pytabby/validators.py"""
 
 
 from copy import deepcopy
 
 import pytest
 
-import tabbedshellmenus.validators as validators
+import pytabby.validators as validators
 
 # HELPER FUNCTIONS #
 

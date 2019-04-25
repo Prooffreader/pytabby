@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Tests tabbedshellmenus/tab.py
+"""Tests pytabby/tab.py
 
 Note that tabs depend on having normalized config input.
 Regression tests only, based on input config
@@ -13,8 +13,8 @@ from copy import deepcopy
 
 import pytest
 
-import tabbedshellmenus.normalizer as normalizer
-import tabbedshellmenus.tab as tab
+import pytabby.normalizer as normalizer
+import pytabby.tab as tab
 
 
 def freeze_tab(tab_dict):
