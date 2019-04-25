@@ -16,6 +16,11 @@ from . import formatting, normalizer, tab, validators
 class Menu:
     """Base class to import to create a menu
 
+    Args:
+            config (dict): a nested dict, in a schema which will be validated, containing everything needed
+                           to instantiate the Menu class
+            start_tab_number(int): default 0, the number of the tab to start at
+
     Methods:
         safe_read_yaml(path_to_yaml): static method to read a yaml file into a config dict
         read_json(path_to_json): static method to read a json file into a config dict
