@@ -1,4 +1,4 @@
-changelog
+Changelog
 =========
 
 .. include:: ../../CHANGELOG.rst
