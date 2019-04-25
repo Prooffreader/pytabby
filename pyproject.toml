@@ -3,3 +3,5 @@ line-length = 118
 target_version = ['py37']
 include = '\.pyi?$'
 exclude = 'blank_template.py'
+
+# pyproject.toml is used only for black right now, but hopefully one day PEP518 will be enforced

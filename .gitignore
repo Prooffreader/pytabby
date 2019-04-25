@@ -1,6 +1,7 @@
 # custom for development
 .vscode/
 runblack.sh
+runpylama.sh
 temp_*.py
 pip-wheel-metadata/
 *.py,cover

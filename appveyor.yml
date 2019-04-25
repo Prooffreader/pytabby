@@ -17,32 +17,22 @@ environment:
     - PYTHON: "C:\\Python37"
       PYTHON_VERSION: "3.7.x" # currently 2.7.9
       PYTHON_ARCH: "32"
-      DEVREQUIREMENTS: "requirements-devwin.txt"
+      DEVREQUIREMENTS: "requirements-ci.txt"
 
     - PYTHON: "C:\\Python37-x64"
       PYTHON_VERSION: "3.7.x" # currently 2.7.9
       PYTHON_ARCH: "64"
-      DEVREQUIREMENTS: "requirements-devwin.txt"
+      DEVREQUIREMENTS: "requirements-ci.txt"
 
     - PYTHON: "C:\\Python36"
       PYTHON_VERSION: "3.6.x" # currently 2.7.9
       PYTHON_ARCH: "32"
-      DEVREQUIREMENTS: "requirements-devwin.txt"
+      DEVREQUIREMENTS: "requirements-ci.txt"
 
     - PYTHON: "C:\\Python36-x64"
       PYTHON_VERSION: "3.6.x" # currently 2.7.9
       PYTHON_ARCH: "64"
-      DEVREQUIREMENTS: "requirements-devwin.txt"
-
-    - PYTHON: "C:\\Python35"
-      PYTHON_VERSION: "3.5.x" # currently 2.7.9
-      PYTHON_ARCH: "32"
-      DEVREQUIREMENTS: "requirements-devwin.txt"
-
-    - PYTHON: "C:\\Python35-x64"
-      PYTHON_VERSION: "3.5.x" # currently 2.7.9
-      PYTHON_ARCH: "64"
-      DEVREQUIREMENTS: "requirements-devwin.txt"
+      DEVREQUIREMENTS: "requirements-ci.txt"
 
 install:
   # If there is a newer build queued for the same PR, cancel this one.
@@ -74,12 +64,12 @@ install:
   # compiled extensions and are not provided as pre-built wheel packages,
   # pip will build them from source using the MSVC compiler matching the
   # target Python version and architecture
-  - "%CMD_IN_ENV% pip install -r requirements.txt"
-  - "%CMD_IN_ENV% pip install -r %DEVREQUIREMENTS%"
+  #- "%CMD_IN_ENV% pip install -r requirements.txt"
+  #- "%CMD_IN_ENV% pip install -r %DEVREQUIREMENTS%"
 
 build_script:
   # Build the compiled extension
-  #- "%CMD_IN_ENV% python setup.py build"  # TODO: this
+  #- "%CMD_IN_ENV% python setup.py build"  # TODO: this? If Windows wheel needed
   - "%CMD_IN_ENV% pip install ."
 
 test_script:
@@ -89,7 +79,7 @@ test_script:
       &$env:PYTHON\python -m pytest
       if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
       
-# after_test:  # TODO: This
+# after_test:  # TODO: This? Does this need a Windows whell, or is an 'any' wheel fine?
   # If tests are successful, create binary packages for the project.
   # - "%CMD_IN_ENV% python setup.py bdist_wheel"
   # - "%CMD_IN_ENV% python setup.py bdist_wininst"
