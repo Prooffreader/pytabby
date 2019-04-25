@@ -1,17 +1,12 @@
 # custom for development
-*.ipynb
 .vscode/
 runblack.sh
-codacy.sh
 temp_*.py
-example_data_and_app/test_*.py
 pip-wheel-metadata/
 *.py,cover
-pytest.ini
-sourcecodacy.sh
-*/designedtofail.yaml
 wishlist.txt
 codecov.sh
+prerelease_checklist.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
