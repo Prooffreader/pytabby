@@ -9,13 +9,15 @@ matrix:
   include:
     - python: '3.7'
       env:
-        - TRAVIS_TEST_NAME="Lintint_only"
+        - TRAVIS_TEST_NAME="Lint_only"
       install:
         - 'pip install .'
         - 'pip install pylama'
         - 'pip install eradicate'
       script: 
-        - pylama src,tests,example_app
+        - pylama src
+        - pylama tests
+        - pylama example_app
         - rst-lint *.rst
     - python: '3.6'
       env:
