@@ -9,7 +9,7 @@ If input config changes, regression tests will have to change.
 Functionality of this module is tested in menu.py tests
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
+
 
 from copy import deepcopy
 

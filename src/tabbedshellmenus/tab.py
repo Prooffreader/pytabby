@@ -3,7 +3,7 @@
 
 """Helper functions for menu.Menu and Tab class to represent individual tabs in menu.Menu"""
 
-from __future__ import absolute_import, division, print_function, unicode_literals
+
 
 
 def create_tab_objects(config):
