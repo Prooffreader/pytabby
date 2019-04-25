@@ -1,0 +1,13 @@
+[ ] Update version in src/tabbedshellmenus/_version.py4
+[ ] Update version in setup.py
+[ ] Add version to changelog
+[ ] black (bash runblack.sh)
+[ ] pylama (bash runpylama.sh)
+[ ] pytest
+[ ] tox
+[ ] Commit and push
+[ ] Pass Travis and Appveyor tests
+[ ] Tag
+[ ] Build wheel
+[ ] Send to PyPI tests
+[ ] Send to PyPI

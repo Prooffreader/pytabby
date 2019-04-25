@@ -1,0 +1,4 @@
+API
+===
+
+.. autoclass:: tabbedshellmenus.Menu

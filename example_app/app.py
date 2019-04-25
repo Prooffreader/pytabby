@@ -70,7 +70,7 @@ def get_files():
     files = []
     for item in glob.glob("./*"):
         # add current .py file in case it's in the directory
-        if os.path.isfile(item) and item != os.path.split(__file__)[1]:
+        if os.path.isfile(item) and os.path.split(item)[1] != os.path.split(__file__)[1]:
             files.append(item)
     return sorted(files)
 
@@ -94,38 +94,47 @@ def move_to_subdir(filename, subdirname):
     print("{0} moved to ./{1}/".format(filename, subdirname))
     print("")
 
-
 def main_loop():  # noqa: C901
     """All the logic for the app"""
+    def print_current_file(files, current_position):
+        filename = files[current_position]
+        print('')
+        print("File {0} of {1}: {2}".format(current_position + 1, len(files), os.path.split(filename)[1]))
     menu = Menu(CONFIG)
     files = get_files()
-    for i, filename in enumerate(files):
-        print("File {0} of {1}: {2}".format(i + 1, len(files), filename))
-        interrupt_while = False
-        exit_files = False
-        while not interrupt_while:
-            result = menu.run()
-            if result == ("subdirs", "create_subdirs"):
-                create_subdirectories()
-            elif result == ("subdirs", "help"):
-                print_help()
-            elif result == ("subdirs", "quit"):
-                exit_files = True
-            elif result[0] == "files" and result[1] in ["interesting", "boring"]:
-                if not os.path.isdir(result[1]):
-                    raise ValueError("Directory must be created first")
-                move_to_subdir(filename, result[1])
-                interrupt_while = True
-            elif result == ("files", "skip"):
-                interrupt_while = True
-            else:
-                raise ValueError("Unrecognized input")
-        if exit_files:
-            break
-    if exit_files:
-        print("Program exited.")
-    else:
+    current_position = 0
+    print_current_file(files, current_position)
+    quit_early = False
+    files_exhausted = False
+    start_tab = 0
+    while not (quit_early or files_exhausted):
+    result = menu.run()
+        if result == ("subdirs", "create_subdirs"):
+            create_subdirectories()
+        elif result == ("subdirs", "help"):
+            print_help()
+        elif result == ("subdirs", "quit"):
+            quit_early = True
+        elif result[0] == "files" and result[1] in ["interesting", "boring"]:
+            if not os.path.isdir(result[1]):
+                raise ValueError("Directory must be created first")
+            move_to_subdir(filename, result[1])
+            print('File moved to {}'.format(result[1]))
+            current_position += 1
+            files_exhausted = current_position >= len(files)
+            if not files_exhausted:
+                print_current_file(files, current_position)
+        elif result == ("files", "skip"):
+            current_position += 1
+            files_exhausted = current_position >= len(files)
+            if not files_exhausted:
+                print_current_file(files, current_position)
+        else:
+            raise AssertionError("Unrecognized input, this should have been caught by Menu validator")
+    if files_exhausted:
         print("All files done.")
+    else:
+        print("Program quit early.")
 
 
 if __name__ == "__main__":
