@@ -99,6 +99,7 @@ def test_method_print_menu(config_all, capsys, data_regression):
     data = {"output": out}
     data_regression.check(data)
 
+
 @pytest.mark.regression
 @pytest.mark.run(order=8)
 def test_method_print_menu_with_message(config_all, capsys, data_regression):
