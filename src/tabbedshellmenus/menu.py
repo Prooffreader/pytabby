@@ -15,9 +15,12 @@ class Menu:
     """Base class to import to create a menu
 
     Args:
-            config (dict): a nested dict, in a schema which will be validated, containing everything needed
-                           to instantiate the Menu class
-            start_tab_number(int): default 0, the number of the tab to start at
+        config (dict): a nested dict, in a schema which will be validated, containing everything needed
+                        to instantiate the Menu class
+        start_tab_number(int): default 0, the number of the tab to start at
+
+    Attributes:
+        message: a message to display the next time menu.run() is called. Reset to None after it's printed.
 
     Methods:
         safe_read_yaml(path_to_yaml): static method to read a yaml file into a config dict
@@ -67,6 +70,7 @@ class Menu:
         # this attribute is only used by the instance to change user input where required;
         # the config contents have already been altered by the normalizer module
         self._case_sensitive = config.get("case_sensitive", False)
+        self.message = None
 
     @staticmethod
     def safe_read_yaml(path_to_yaml):
@@ -128,8 +132,9 @@ class Menu:
 
     def _print_menu(self):
         """Prints formatted menu to stdout"""
-        formatted = formatting.format_menu(self._config, self._current_tab_number, self._screen_width)
+        formatted = formatting.format_menu(self._config, self._current_tab_number, self._screen_width, self.message)
         print(formatted)
+        self.message = None
 
     def _collect_input(self):
         """Gets choice from user, repeating until a valid choice given

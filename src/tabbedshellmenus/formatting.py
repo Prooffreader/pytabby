@@ -4,13 +4,14 @@
 """Contains functions used to format shell text output, i.e. multiline strings sent to stdout"""
 
 
-def format_menu(config, current_tab_number, line_length):
+def format_menu(config, current_tab_number, line_length, message):
     """Creates menu to be displayed to user, called from menu.Menu only, not by user
 
     Args:
         config (dict): the config dict passed to the Menu instantiator, after normalization
         current_tab_number (int): number of currently selected tab (always 0 for single-tabbed menus)
         line_length (int): value from config
+        message (str or None): a message to print from Menu.message
 
     Returns:
         (str) menu to send to stdout
@@ -36,6 +37,9 @@ def format_menu(config, current_tab_number, line_length):
         description = item["item_description"]
         spacer = " " * (max_choice_len - len(choice))
         menu.append("[{0}{1}] {2}".format(choice, spacer, description))
+    # add message if applicable
+    if message is not None:
+        menu.append(message)
     # return one string by concatenating lines of list
     return "\n".join(menu)
 
