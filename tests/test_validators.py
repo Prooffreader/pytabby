@@ -85,7 +85,7 @@ def test_fn__determine_config_layout(config_all_with_id):
                 raise AssertionError("this id should include with_key")
 
 
-@pytest.mark.integration
+@pytest.mark.smoke
 @pytest.mark.run(order=2)  # order 2 because it depends on determine_config_layout(), and breaking tests depend on it
 def test_fn__validate_schema(config_all):
     """Test _validate_schema. Since it depends on _determine_config_layout, order=2"""
