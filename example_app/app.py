@@ -103,9 +103,10 @@ def main_loop():  # noqa: C901
     files_exhausted = False
     while not (quit_early or files_exhausted):
         filename = files[current_position]
-        menu.message = "Current_file: {0} of {1}: {2}".format(current_position + 1, len(files),
-                                                              os.path.split(filename)[1])
-        result = menu.run()
+        files_message = "Current_file: {0} of {1}: {2}".format(current_position + 1, len(files),
+                                                               os.path.split(filename)[1])
+        # message will be shown only when we are on the files tab
+        result = menu.run(message={'files': files_message})
         if result == ("subdirs", "create_subdirs"):
             create_subdirectories()
         elif result == ("subdirs", "help"):

@@ -207,11 +207,11 @@ class Menu:
                 (tab_header_input, input_returns value). If there is only one tab, returns
                 input_returns value only.
         """
-        # flag
         self._validate_message(message)
-        message_ = self._get_message(message)
+        # flag
         received_return_value = False
         while not received_return_value:
+            message_ = self._get_message(message)
             self._print_menu(message_)
             return_dict = self._collect_input()
             if self._testing in ["run_invalid", "message"]:

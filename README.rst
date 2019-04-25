@@ -95,14 +95,20 @@ FAQ
     ``config['tabs'][0]['items][0]['item_returns'] = 1``,
     the return value will be '1'.
 
-**Why do ``items`` have both 'item_choice_displayed' and 'item_inputs' keys?**
+**Why do 'items' have both 'item_choice_displayed' and 'item_inputs' keys?**
     To keep things flexible, you don't have to display exactly
     what you'll accept as input. For example, you could display
     'yes/no' as the suggested answers to a yes or no question, but
     actually accept ['y', 'n', 'yes', 'no'], etc.
 
-**I have ``case_sensitive = False``, but my return value is still uppercase.**
+**I have 'case_sensitive' = False, but my return value is still uppercase.**
     ``case_sensitive`` only affects inputs, not outputs
+
+**What's up with passing a dict with the tab name as a message to Menu.run()?**
+    The message might be different depending on the tab, and ``run()`` 
+    only exits when it returns a value when given a valid item input.
+    It changes tabs in a loop, keeping that implementation detail 
+    abstracted away from the user, as is right.
 
 
 Dependencies
