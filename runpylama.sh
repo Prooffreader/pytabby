@@ -1,3 +1,0 @@
-pylama src/tabbedshellmenus
-pylama tests
-pylama example_app
