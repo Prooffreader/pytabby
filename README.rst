@@ -51,7 +51,7 @@ It's just that easy.
 Usage
 -----
 
-:: code:: python
+.. code-block:: python
 
     from tabbedshellmenus import Menu
     myconfig = Menu.safe_read_yaml('path/to/yaml')
@@ -59,10 +59,11 @@ Usage
     mymenu = Menu(myconfig)
     result = mymenu.run()
 
-    if result == 'result1':``
-        do_this_interesting_thing()``
-    elif result == 'result2':``
-        do_this_other_thing()  # etc...``
+    if result == 'result1':
+        do_this_interesting_thing()
+    elif result == 'result2':
+        do_this_other_thing()
+    # etc...
 
 
 See it in action!
