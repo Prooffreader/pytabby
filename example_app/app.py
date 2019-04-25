@@ -95,7 +95,7 @@ def move_to_subdir(filename, subdirname):
     print("")
 
 
-def main_loop():
+def main_loop():  # noqa: C901
     """All the logic for the app"""
     menu = Menu(CONFIG)
     files = get_files()
