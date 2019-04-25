@@ -6,4 +6,5 @@ coverage
 codecov
 pylama
 eradicate
+pygments
 restructuredtext-lint

@@ -96,17 +96,15 @@ def move_to_subdir(filename, subdirname):
 
 def main_loop():  # noqa: C901
     """All the logic for the app"""
-    def print_current_file(files, current_position):
-        filename = files[current_position]
-        print('')
-        print("File {0} of {1}: {2}".format(current_position + 1, len(files), os.path.split(filename)[1]))
     menu = Menu(CONFIG)
     files = get_files()
     current_position = 0
-    print_current_file(files, current_position)
     quit_early = False
     files_exhausted = False
     while not (quit_early or files_exhausted):
+        filename = files[current_position]
+        menu.message = "Current_file: {0} of {1}: {2}".format(current_position + 1, len(files),
+                                                              os.path.split(filename)[1])
         result = menu.run()
         if result == ("subdirs", "create_subdirs"):
             create_subdirectories()
@@ -121,13 +119,9 @@ def main_loop():  # noqa: C901
             print('File moved to {}'.format(result[1]))
             current_position += 1
             files_exhausted = current_position >= len(files)
-            if not files_exhausted:
-                print_current_file(files, current_position)
         elif result == ("files", "skip"):
             current_position += 1
             files_exhausted = current_position >= len(files)
-            if not files_exhausted:
-                print_current_file(files, current_position)
         else:
             raise AssertionError("Unrecognized input, this should have been caught by Menu validator")
     if files_exhausted:

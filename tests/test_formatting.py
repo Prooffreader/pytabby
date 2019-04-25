@@ -30,16 +30,22 @@ def test_regress__format_headers(data_regression, config_multiple):
 @pytest.mark.regression
 @pytest.mark.run(order=3)
 def test_regress__format_menu(data_regression, config_all_with_id):
-    """Normalize first"""
+    """Normalize first; call with different kinds of messages"""
     config, id_ = config_all_with_id
     c = deepcopy(config)
+    data = {}
     if id_.find("multiple") != -1:
         tab_num = 1
     else:
         tab_num = 0
     c = normalizer.normalize(c)
-    result = formatting.format_menu(c, tab_num, 80).split("\n")
-    data = {"data": result}
+    for message_type in ["string", "None"]:
+        if message_type == "None":
+            message = None
+        elif message_type == "string":
+            message = "This is a magic string, but it's okay"
+    result = formatting.format_menu(c, tab_num, 80, message).split("\n")
+    data["message={}".format(message)] = result
     data_regression.check(data)
 
 
