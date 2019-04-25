@@ -28,7 +28,7 @@ def read(*names, **kwargs):
 
 setup(
     name='tabbedshellmenus',
-    version='0.0.1-dev',
+    version='0.1.0',
     license='MIT',
     description='A simple, nonopinionated python shell menu system WITH TABS',
     long_description='%s' % (
