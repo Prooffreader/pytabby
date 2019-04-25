@@ -7,7 +7,6 @@ Only regression tests are used for these, because it's string output.
 Just don't forget to replace data files if input file changes.
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 from copy import deepcopy
 

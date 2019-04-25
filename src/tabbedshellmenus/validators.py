@@ -16,8 +16,6 @@ There are three possible values of config_layout, determined from the config dic
 """
 
 
-from __future__ import absolute_import, division, print_function, unicode_literals
-
 import re
 from collections import Counter
 
@@ -299,7 +297,12 @@ def _validate_no_return_value_overlap(error_messages, config):
     """
     tabs = _config_tabs(config)
     for tab_num, tab in enumerate(tabs):
-        returns = [x["item_returns"] for x in tab["items"]]
+        returns = []
+        if "items" in tab.keys():  # so as not to raise premature KeyError in invalid schema
+            for item in tab["items"]:
+                value = item.get("item_returns", None)
+                if value:  # so as not to raise premature KeyError in invalid schema
+                    returns.append(value)
         multiples = _count_for_overlap(returns)
         if multiples:
             if "tab_header_input" in tab.keys():
@@ -309,7 +312,7 @@ def _validate_no_return_value_overlap(error_messages, config):
     return error_messages
 
 
-def _validate_no_input_value_overlap(error_messages, config):
+def _validate_no_input_value_overlap(error_messages, config):  # noqa:C901
     """Validates that the potential inputs on each tab are unambiguous.
 
     In other words, validates that any entry will either lead
@@ -326,14 +329,17 @@ def _validate_no_input_value_overlap(error_messages, config):
     # get tab header choices if multiple tabs
     if config_layout == "multiple":
         for tab in tabs:
-            starting_choices.append(tab["tab_header_input"])
+            if tab.get("tab_header_input", None):  # so as not to raise premature KeyError for invalid schema
+                starting_choices.append(tab["tab_header_input"])
     for tab_num, tab in enumerate(tabs):
         choices = starting_choices[:]
-        for item in tab["items"]:
-            for entry in item["item_inputs"]:
-                choices.append(entry)
-        if not case_sensitive:
-            choices = [str(choice).lower() for choice in choices]
+        if "items" in tab.keys():  # so as not to raise premature KeyError for invalid schema
+            for item in tab["items"]:
+                if "item_inputs" in item.keys():  # so as not to raise premature KeyError for invalid schema
+                    for entry in item["item_inputs"]:
+                        choices.append(entry)
+            if not case_sensitive:
+                choices = [str(choice).lower() for choice in choices]
         multiples = _count_for_overlap(choices)
         if multiples:
             if not case_sensitive:
@@ -373,7 +379,6 @@ def validate_all(config):
     error_messages = _validate_no_input_value_overlap(error_messages, config)
     error_messages = _validate_no_return_value_overlap(error_messages, config)
     if error_messages:
-        # import pdb;pdb.set_trace()
         error_messages = _shorten_long_schema_error_messages(error_messages)
         printed_message = ["", "Errors:"]
         for i, message in enumerate(error_messages):

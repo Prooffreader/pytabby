@@ -1,1 +1,1 @@
-"""Blank init.py for Python 2.7"""
+"""Blank init.py for namespace"""

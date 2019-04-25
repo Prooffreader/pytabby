@@ -8,35 +8,31 @@ matrix:
   include:
     - python: '3.7'
       env:
-        - TRAVIS_TEST_NAME="Pylama_only"
+        - TRAVIS_TEST_NAME="Lint_only"
       install:
-        - 'pip install pylama'
-        - 'pip install eradicate'
+        - 'pip install --upgrade pip'
         - 'pip install .'
-      script: pylama src,tests,example_data_and_app
-    - python: '3.5'
-      env:
-       - TRAVIS_TEST_NAME="Py35"
-      install:
-        - 'pip install -r requirements.txt'
-        - 'pip install -r requirements-devwin.txt'  # despite the name, because of black
-        - 'pip install .'
-      script: pytest
+        - 'pip install -r requirements-ci.txt' 
+      script: 
+        - pylama -i E501 src
+        - pylama -i E501 tests
+        - pylama -i E501 example_app
+        - rst-lint *.rst
     - python: '3.6'
       env:
-       - TRAVIS_TEST_NAME="Py36"
+       - TRAVIS_TEST_NAME="Py36_nocodecov"
       install:
-        - 'pip install -r requirements.txt'
-        - 'pip install -r requirements-dev.txt'
+        - 'pip install --upgrade pip'
         - 'pip install .'
+        - 'pip install -r requirements-ci.txt'        
       script: pytest
     - python: '3.7'
       env:
        - TRAVIS_TEST_NAME="Py37_codecov"
       install:
-        - 'pip install -r requirements.txt'
-        - 'pip install -r requirements-dev.txt'
+        - 'pip install --upgrade pip'
         - 'pip install .'
+        - 'pip install -r requirements-ci.txt'        
       script: pytest
       after_success:
         - bash <(curl -s https://codecov.io/bash)

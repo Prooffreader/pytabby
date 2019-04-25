@@ -1,0 +1,33 @@
+case_sensitive: False
+screen_width: 80
+tabs:
+  - tab_header_input: a  
+    tab_header_description: Menu a
+    items:
+      - item_choice_displayed: 1
+        item_description: First choice
+        item_inputs: 
+          - 1
+        item_returns: choice1
+      - item_choice_displayed: 2
+        item_description: Second choice
+        item_inputs: 
+          - 2
+        item_returns: choice2
+  - tab_header_input: b
+    tab_header_long_description: You have just selected Menu B
+    items:
+      - item_choice_displayed: x,y,x
+        item_description: x or y or z
+        item_inputs: 
+          - x
+          - y
+          - z 
+        item_returns: xyz
+      - item_choice_displayed: q
+        item_description: Quit
+        item_inputs: 
+          - Q
+          - qUiT
+          - bye
+        item_returns: quit

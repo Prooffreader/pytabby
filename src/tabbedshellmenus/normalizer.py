@@ -12,7 +12,6 @@ Normalization consists of, for those parts of the config that require it:
 3. Converting elements to lower-case where appropriate if config's case_sensitive is False
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 from copy import deepcopy
 

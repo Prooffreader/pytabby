@@ -3,7 +3,6 @@
 
 """Tests menu.py"""
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 from copy import deepcopy
 import json
@@ -23,8 +22,15 @@ def yaml_path():
     return os.path.join(this_dir, "data", "test_config.yaml")
 
 
+@pytest.mark.smoke
+@pytest.mark.run(order=-1)
+def test_menu_smoke(config_all):
+    """Smoke test to see if menu creation succeeds"""
+    _ = Menu(config_all)
+
+
 @pytest.mark.integration
-@pytest.mark.run(order=-5)
+@pytest.mark.run(order=5)
 class TestStaticMethods:
     """Tests the static methods to load data"""
 

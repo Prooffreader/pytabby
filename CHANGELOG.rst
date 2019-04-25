@@ -2,21 +2,15 @@
 Change Log
 ==========
 
+.. inclusion-marker-top
+
 This document records all notable changes to `tabbedshellmenus <http://github.com/Prooffreader/tabbedshellmenus>`_.
 This project adheres to `Semantic Versioning <http://semver.org/>`_.
 
-`0.1.0`_ (unreleased)
--------------------------
+`0.1.0`_
+---------
 
-* Initial release (eventually).
-
-
-`0.0.1-dev`_ (unreleased)
--------------------------
-
-* Initial development, untagged.
+* 2019-05-01: Initial release
 
 
 .. _`0.1.0`: https://github.com/Prooffreader/tabbedshellmenus/master
-
-Changelog template shamelessly copied from HTTPie.
