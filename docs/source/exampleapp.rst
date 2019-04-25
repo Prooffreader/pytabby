@@ -21,42 +21,140 @@ less space. Note that this program doesn't *show* the images, but feel free to b
 
 Here's an example terminal session using the above script:
 
-(tabsh) prooff@dts76:~/MyPython/venvs/tabsh/tabbedshellmenus/example_app$ ls
-app.py                              cade-roberts-769333-unsplash.jpg  prince-akachi-728006-unsplash.jpg    tyler-nix-597157-unsplash.jpg
-brandon-nelson-667507-unsplash.jpg  colton-duke-732468-unsplash.jpg   raj-eiamworakul-514562-unsplash.jpg
-(tabsh) prooff@dts76:~/MyPython/venvs/tabsh/tabbedshellmenus/example_app$ echo 'Note that app.py is in the same directory, but the app is smart enough to ignore its own file'
-Note that app.py is in the same directory, but the app is smart enough to ignore its own file
-(tabsh) prooff@dts76:~/MyPython/venvs/tabsh/tabbedshellmenus/example_app$ echo 'Note also that the subdirectories do not yet exist. The app will create them.'
-Note also that the subdirectories do not yet exist. The app will create them.
-(tabsh) prooff@dts76:~/MyPython/venvs/tabsh/tabbedshellmenus/example_app$ python app.py
-Enter directory (blank for current): 
+.. code-block::
 
-(tabsh) prooff@dts76:~/MyPython/venvs/tabsh/tabbedshellmenus/example_app$ python app.py
-Enter directory (blank for current): 
+    example_app$ ls
+    app.py                              cade-roberts-769333-unsplash.jpg  
+    prince-akachi-728006-unsplash.jpg    tyler-nix-597157-unsplash.jpg
+    brandon-nelson-667507-unsplash.jpg  colton-duke-732468-unsplash.jpg   
+    raj-eiamworakul-514562-unsplash.jpg
 
-[subdirs|files]
- ======= ------
-[c] Create missing subdirectories
-[h] Help
-[q] Quit
-?: c
-./interesting/ CREATED
-./boring/ CREATED
+There are six jpgs we will classify as interesting or boring, plus the app.py script that is smart enough to ignore itself when moving files.
+The ``boring`` and ``interesting`` folders are not yet present.
 
-[subdirs|files]
- ======= ------
-[c] Create missing subdirectories
-[h] Help
-[q] Quit
-?: c
-./interesting/ EXISTS
-./boring/ EXISTS
+.. code-block::
 
+    example_app$ python app.py
+    Enter directory (blank for current): 
+    
+    [subdirs|files]
+     ======= ------
+    [c] Create missing subdirectories
+    [h] Help
+    [q] Quit
+    ?: c
+    ./interesting/ CREATED
+    ./boring/ CREATED
+    
+If we try to create the directories again, we'll just be told they already exist
 
-[subdirs|files]
- ======= ------
-[c] Create missing subdirectories
-[h] Help
-[q] Quit
-?: files
-Change tab to files
+.. code-block::
+
+    [subdirs|files]
+     ======= ------
+    [c] Create missing subdirectories
+    [h] Help
+    [q] Quit
+    ?: c
+    ./interesting/ EXISTS
+    ./boring/ EXISTS
+    
+    
+    [subdirs|files]
+     ======= ------
+    [c] Create missing subdirectories
+    [h] Help
+    [q] Quit
+    ?: h
+    This app goes through the contents of a directory and allows you to
+    categorize the files, either moving them to subdirectories called 
+    interesting/ and boring/ or skipping them. This functionality is 
+    handled by the second tab
+        The first tab allows you to check if the subdirectories already 
+    exist, allows you to create them if they are missing, shows this help 
+    text and allows you to quit the app
+    
+    
+    [subdirs|files]
+     ======= ------
+    [c] Create missing subdirectories
+    [h] Help
+    [q] Quit
+    ?: files
+    Change tab to files
+    
+    [subdirs|files]
+     ------- ======
+    [i] Move to interesting/
+    [b] Move to boring/
+    [s] Skip
+    Current_file: 1 of 6: brandon-nelson-667507-unsplash.jpg
+    ?: i
+    ./brandon-nelson-667507-unsplash.jpg moved to ./interesting/
+    
+    File moved to interesting
+    
+    [subdirs|files]
+     ------- ======
+    [i] Move to interesting/
+    [b] Move to boring/
+    [s] Skip
+    Current_file: 2 of 6: cade-roberts-769333-unsplash.jpg
+    ?: b
+    ./cade-roberts-769333-unsplash.jpg moved to ./boring/
+    
+    File moved to boring
+    
+    [subdirs|files]
+     ------- ======
+    [i] Move to interesting/
+    [b] Move to boring/
+    [s] Skip
+    Current_file: 3 of 6: colton-duke-732468-unsplash.jpg
+    ?: s
+    
+    [subdirs|files]
+     ------- ======
+    [i] Move to interesting/
+    [b] Move to boring/
+    [s] Skip
+    Current_file: 4 of 6: prince-akachi-728006-unsplash.jpg
+    ?: i
+    ./prince-akachi-728006-unsplash.jpg moved to ./interesting/
+    
+    File moved to interesting
+    
+    [subdirs|files]
+     ------- ======
+    [i] Move to interesting/
+    [b] Move to boring/
+    [s] Skip
+    Current_file: 5 of 6: raj-eiamworakul-514562-unsplash.jpg
+    ?: i
+    ./raj-eiamworakul-514562-unsplash.jpg moved to ./interesting/
+    
+    File moved to interesting
+    
+    [subdirs|files]
+     ------- ======
+    [i] Move to interesting/
+    [b] Move to boring/
+    [s] Skip
+    Current_file: 6 of 6: tyler-nix-597157-unsplash.jpg
+    ?: i
+    ./tyler-nix-597157-unsplash.jpg moved to ./interesting/
+    
+    File moved to interesting
+    All files done.
+
+Now the program exits, and we can verify all the files are where we expect
+
+.. code-block::
+
+    example_app$ ls
+    app.py  boring  colton-duke-732468-unsplash.jpg  interesting
+    example_app$ ls boring/
+    cade-roberts-769333-unsplash.jpg
+    example_app$ ls interesting/
+    brandon-nelson-667507-unsplash.jpg  prince-akachi-728006-unsplash.jpg  
+    raj-eiamworakul-514562-unsplash.jpg  tyler-nix-597157-unsplash.jpg
