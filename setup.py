@@ -37,7 +37,7 @@ setup(
     author='David Taylor',
     author_email='prooffreader@gmail.com',
     url='http://github.com/Prooffreader/pytabby',
-    download_url = 'https://github.com/Prooffreader/pytabby/archive/pytabby-0.1.0.tar.gz',
+    download_url = 'https://github.com/Prooffreader/pytabby/archive/v0.1.0.tar.gz',
     packages=find_packages('src'),
     package_dir={'': 'src'},
     py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
