@@ -1,0 +1,7 @@
+# minimal testing packages for Appveyor
+pytest
+pytest-ordering
+pytest-regressions
+pytest-cov
+coverage
+codecov
