@@ -66,7 +66,7 @@ Now enter 'b' to switch to that tab. The following is sent to stdout:
 
 As you can see, the second tab, ``b``, is now underlined. (It really is more obvious if you use descriptions.)
 
-The program output ``Change tab to\ `` & the tab_header_input
+The program output ``Change tab to`` & the tab_header_input
 
 Since for this second tab, 'tab_long_description' was defined, that was printed as well (``You have just selected Menu B``, how boring).
 

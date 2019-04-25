@@ -30,8 +30,8 @@ pytabby
 .. image:: https://badge.fury.io/py/pytabby.svg
     :target: https://pypi.org/project/pytabby
 
-A *flexible, non-opinionated*, **tabbed** menu system to run in the shell and control program
-flow interactively. It's a class with one sole public method which runs in a ``while``
+A *flexible, non-opinionated*, **tabbed** menu system to interactively control program flow for
+terminal-based programs. It's a class with one sole public method which runs in a ``while``
 loop as you switch tabs (if you want tabs, that is; you're free not to have any) or if you 
 enter invalid input, and then returns a string based on the value you selected that
 you can use to control the outer program flow.
@@ -45,7 +45,7 @@ Installation
 
 ``pip install pytabby``
 
-It's just that easy.
+Meow.
 
 
 Usage
@@ -131,3 +131,10 @@ Wish List:
   ENTER with the input() function, using ``msvcrt`` package in Windows
   or ``tty`` and ``termios`` in Mac/Linux. (This will make coverage platform-
   dependent, so it will have to be cumulative on travis and appveyor)
+
+.. inclusion-marker-stop-wishlist
+
+Photo Credit
+------------
+
+`Erik-Jan Leusink via Unsplash <https://unsplash.com/@ejleusink?utm_medium=referral&utm_campaign=photographer-credit&utm_content=creditBadge>`_
