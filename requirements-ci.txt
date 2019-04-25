@@ -4,3 +4,6 @@ pytest-regressions
 pytest-cov
 coverage
 codecov
+pylama
+eradicate
+restructuredtext-lint

@@ -1,4 +1,3 @@
-# TODO: add rst linting
 language: python
 dist: xenial
 branches:
@@ -11,10 +10,9 @@ matrix:
       env:
         - TRAVIS_TEST_NAME="Lint_only"
       install:
+        - 'pip install --upgrade pip'
         - 'pip install .'
-        - 'pip install pylama'
-        - 'pip install eradicate'
-        - 'pip install python-restructuredtext-lint'
+        - 'pip install -r requirements-ci.txt' 
       script: 
         - pylama -i E501 src
         - pylama -i E501 tests
@@ -24,6 +22,7 @@ matrix:
       env:
        - TRAVIS_TEST_NAME="Py36_nocodecov"
       install:
+        - 'pip install --upgrade pip'
         - 'pip install .'
         - 'pip install -r requirements-ci.txt'        
       script: pytest
@@ -31,8 +30,9 @@ matrix:
       env:
        - TRAVIS_TEST_NAME="Py37_codecov"
       install:
+        - 'pip install --upgrade pip'
         - 'pip install .'
-        - 'pip install -r requirements-ci.txt'       
+        - 'pip install -r requirements-ci.txt'        
       script: pytest
       after_success:
         - bash <(curl -s https://codecov.io/bash)
