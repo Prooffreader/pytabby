@@ -14,10 +14,11 @@ matrix:
         - 'pip install .'
         - 'pip install pylama'
         - 'pip install eradicate'
+        - 'pip install python-restructuredtext-lint'
       script: 
-        - pylama src
-        - pylama tests
-        - pylama example_app
+        - pylama -i E501 src
+        - pylama -i E501 tests
+        - pylama -i E501 example_app
         - rst-lint *.rst
     - python: '3.6'
       env:
