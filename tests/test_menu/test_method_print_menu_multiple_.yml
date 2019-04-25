@@ -1,2 +1,15 @@
-output: "\n[un:Description|deux:has a description]\n ============== -----------------------\n\
-  [1] One\n[2] 2\n"
+output_with_message:
+- ''
+- '[un:Description|deux:has a description]'
+- ' ============== -----------------------'
+- '[1] One'
+- '[2] 2'
+- This is a magic string and that's okay
+- ''
+output_without_message:
+- ''
+- '[un:Description|deux:has a description]'
+- ' ============== -----------------------'
+- '[1] One'
+- '[2] 2'
+- ''

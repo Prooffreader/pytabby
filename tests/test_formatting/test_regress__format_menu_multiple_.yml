@@ -1,4 +1,4 @@
-data:
+message=None:
 - ''
 - '[un:Description|deux:has a description]'
 - ' -------------- ======================='

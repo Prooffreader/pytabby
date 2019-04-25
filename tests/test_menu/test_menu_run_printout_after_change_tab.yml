@@ -1,0 +1,52 @@
+after_change_None:
+- 'Change tab to deux: has a description'
+- This one has a long description, the other one does not
+- ''
+- '[un:Description|deux:has a description]'
+- ' -------------- ======================='
+- '[three] 3'
+- '[four ] 4'
+- ''
+after_change_dict:
+- 'Change tab to deux: has a description'
+- This one has a long description, the other one does not
+- ''
+- '[un:Description|deux:has a description]'
+- ' -------------- ======================='
+- '[three] 3'
+- '[four ] 4'
+- Message 2
+- ''
+after_change_string:
+- 'Change tab to deux: has a description'
+- This one has a long description, the other one does not
+- ''
+- '[un:Description|deux:has a description]'
+- ' -------------- ======================='
+- '[three] 3'
+- '[four ] 4'
+- Magic string but that's okay
+- ''
+before_change_None:
+- ''
+- '[un:Description|deux:has a description]'
+- ' -------------- ======================='
+- '[three] 3'
+- '[four ] 4'
+- ''
+before_change_dict:
+- ''
+- '[un:Description|deux:has a description]'
+- ' ============== -----------------------'
+- '[1] One'
+- '[2] 2'
+- Message 1
+- ''
+before_change_string:
+- ''
+- '[un:Description|deux:has a description]'
+- ' -------------- ======================='
+- '[three] 3'
+- '[four ] 4'
+- Magic string but that's okay
+- ''

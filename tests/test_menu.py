@@ -92,45 +92,54 @@ def test_breaking_change_tab(config_single_with_key, config_single_without_key):
 @pytest.mark.regression
 @pytest.mark.run(order=8)
 def test_method_print_menu(config_all, capsys, data_regression):
-    """Simple regression test of print output"""
+    """Simple regression test of print output, with and without menu"""
     menu = Menu(config_all)
+    data = {}
+    menu._print_menu("This is a magic string and that's okay")
+    out, _ = capsys.readouterr()
+    data["output_with_message"] = out.split("\n")
     menu._print_menu()
     out, _ = capsys.readouterr()
-    data = {"output": out}
+    data["output_without_message"] = out.split("\n")
+    if data["output_with_message"] == data["output_without_message"]:
+        raise AssertionError("output without message should differ from output with message")
     data_regression.check(data)
 
 
 @pytest.mark.regression
 @pytest.mark.run(order=8)
-def test_method_print_menu_with_message(config_all, capsys, data_regression):
-    """Simple regression test of print output"""
-    menu = Menu(config_all)
-    menu.message = 'This is a message'
-    menu._print_menu()
-    if menu.message is not None:
-        raise AssertionError('menu did not reset message to None')
-    out, _ = capsys.readouterr()
-    data = {"output_with_message": out}
-    menu._print_menu()
-    out, _ = capsys.readouterr()
-    data = {"output_with_message": out}
-    data_regression.check(data)
-
-
-@pytest.mark.regression
-@pytest.mark.run(order=8)
-def test_method_print_menu_after_change_tab(config_multiple, capsys, data_regression):
-    """Simple regression test of print output"""
+def test_menu_run_printout_after_change_tab(config_multiple, capsys, data_regression):
+    """Simple regression test of print output, with different kinds of message for that tab"""
     menu = Menu(config_multiple)
-    menu._print_menu()
-    out_before_change, _ = capsys.readouterr()
-    menu._change_tab(1)
-    menu._print_menu()
-    out, _ = capsys.readouterr()
-    # test that different tabs give different outputs
-    if out_before_change == out:
+    menu._testing = "message"
+    data = {}
+    tab_names = (config_multiple["tabs"][0]["tab_header_input"], config_multiple["tabs"][1]["tab_header_input"])
+    for message_type in ["dict", "string", "None"]:
+        if message_type == "None":
+            message = None
+        elif message_type == "string":
+            message = "Magic string but that's okay"
+        elif message_type == "dict":
+            message = {tab_names[0]: "Message 1", tab_names[1]: "Message 2"}
+        menu.run(message)
+        out_before_change, _ = capsys.readouterr()
+        menu._change_tab(1)
+        menu.run(message)
+        out, _ = capsys.readouterr()
+        # test that different tabs give different outputs
+        if out_before_change == out:
+            raise AssertionError
+        data["before_change_" + message_type] = out_before_change.split("\n")
+        data["after_change_" + message_type] = out.split("\n")
+    if (
+        data["before_change_dict"] == data["before_change_string"]
+        or data["before_change_dict"] == data["before_change_None"]
+        or data["before_change_string"] == data["before_change_None"]
+        or data["after_change_dict"] == data["after_change_string"]
+        or data["after_change_dict"] == data["after_change_None"]
+        or data["after_change_string"] == data["after_change_None"]
+    ):
         raise AssertionError
-    data = {"output": out}
     data_regression.check(data)
 
 
@@ -227,6 +236,24 @@ class TestRun:
         result = menu.run()
         data["result"] = result
         data_regression.check(data)
+
+    def test_fail_dict_message_on_single_tab(self, config_single_with_key):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
+        menu = Menu(config_single_with_key)
+        with pytest.raises(ValueError):
+            menu.run({"any_key": "any string"})
+
+    def test_fail_invalid_key_dict_message(self, config_multiple):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
+        menu = Menu(config_multiple)
+        with pytest.raises(ValueError):
+            menu.run({"nonexistent_key_magic_string": "any string"})
+
+    def test_fail_wong_type_message(self, config_multiple):
+        _ = self.__class__  # just to get rid of codacy warning, I know, it's stupid
+        menu = Menu(config_multiple)
+        with pytest.raises(TypeError):
+            menu.run({3})
 
     def teardown_method(self):
         """Reverts input"""

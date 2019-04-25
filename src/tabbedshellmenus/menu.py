@@ -19,13 +19,10 @@ class Menu:
                         to instantiate the Menu class
         start_tab_number(int): default 0, the number of the tab to start at
 
-    Attributes:
-        message: a message to display the next time menu.run() is called. Reset to None after it's printed.
-
     Methods:
         safe_read_yaml(path_to_yaml): static method to read a yaml file into a config dict
         read_json(path_to_json): static method to read a json file into a config dict
-        run(): Displays menu at currently selected tab, asks for user input and returns it as a string
+        run(message=None): Displays menu at currently selected tab, asks for user input and returns it as a string
 
     Examples:
 
@@ -70,7 +67,6 @@ class Menu:
         # this attribute is only used by the instance to change user input where required;
         # the config contents have already been altered by the normalizer module
         self._case_sensitive = config.get("case_sensitive", False)
-        self.message = None
 
     @staticmethod
     def safe_read_yaml(path_to_yaml):
@@ -107,6 +103,7 @@ class Menu:
         1. 'collect_input' when testing that function
         2. 'run_tab' when testing tab changing in run()
         3. 'run_invalid' when testing run() with invalid input
+        4. 'message' when testing run() with messages
         """
         self._testing = False
 
@@ -130,11 +127,10 @@ class Menu:
             print("".join(msg))
         self._current_tab_number = new_number
 
-    def _print_menu(self):
+    def _print_menu(self, message=None):
         """Prints formatted menu to stdout"""
-        formatted = formatting.format_menu(self._config, self._current_tab_number, self._screen_width, self.message)
+        formatted = formatting.format_menu(self._config, self._current_tab_number, self._screen_width, message)
         print(formatted)
-        self.message = None
 
     def _collect_input(self):
         """Gets choice from user, repeating until a valid choice given
@@ -146,6 +142,8 @@ class Menu:
         # flag
         received_valid_input = False
         prompt = "?"
+        if self._testing == "message":
+            return prompt
         while not received_valid_input:
             selection = input("{0}: ".format(prompt))  # the 'input' built-in is monkeypatched for testing
             # change input to lower-case if config is not case sensitive
@@ -161,20 +159,62 @@ class Menu:
                 return prompt
         return return_dict
 
-    def run(self):
+    def _validate_message(self, message):
+        """If run() is called with message as a dict, validates that all keys are valid tab_header_inputs.
+
+        If message is None or string, does nothing.
+
+        Raises:
+            ValueError if keys do not match tab_header_inputs
+        """
+        if isinstance(message, dict):
+            if not self._has_multiple_tabs:
+                raise ValueError("Menu instance has only one tab, so cannot take a dict as message arg for run()")
+            nonmatching_keys = []
+            for key in message.keys():
+                if not any([x == key for x in self._tabs[0].selectors]):
+                    nonmatching_keys.append(key)
+            if nonmatching_keys:
+                raise ValueError(
+                    "The following key(s) in message dict do not match tab_header_inputs: {}".format(
+                        "; ".join(nonmatching_keys)
+                    )
+                )
+        else:
+            if not isinstance(message, str) and message is not None:
+                raise TypeError("message arg to run() must be None, str or dict")
+
+    def _get_message(self, message):
+        """Returns None or str or dict's value, as appropriate"""
+        if not isinstance(message, dict):
+            return message
+        current_selector = self._tabs[0].selectors[self._current_tab_number]
+        return message.get(current_selector, None)
+
+    def run(self, message=None):
         """Called by user, runs menu until valid selection from a tab is made, and returns value
+
+        Args:
+            message (None, str or dict(str: str)): a message to display when the menu is shown.
+                If it is a string, it will be shown at every iteration of the menu being shown
+                until a valid item input is received and the function returns a value.
+                If it is a dict, it should be key=tab_header_input and value=string message
+                to be shown only when the current tab equals the key. There can be multiple
+                key/value pairs.
 
         Returns:
             (str, str) or str: if there are multiple tabs, returns tuple of
-                               (tab_header_input, input_returns value).
-                               If there is only one tab, returns input_returns value only.
+                (tab_header_input, input_returns value). If there is only one tab, returns
+                input_returns value only.
         """
         # flag
+        self._validate_message(message)
+        message_ = self._get_message(message)
         received_return_value = False
         while not received_return_value:
-            self._print_menu()
+            self._print_menu(message_)
             return_dict = self._collect_input()
-            if self._testing == "run_invalid":
+            if self._testing in ["run_invalid", "message"]:
                 return return_dict
             if return_dict["type"] == "change_tab":
                 self._change_tab(return_dict["new_number"])

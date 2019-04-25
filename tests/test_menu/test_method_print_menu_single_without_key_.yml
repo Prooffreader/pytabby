@@ -1,7 +1,11 @@
-output: '
-
-  [1] One
-
-  [2] 2
-
-  '
+output_with_message:
+- ''
+- '[1] One'
+- '[2] 2'
+- This is a magic string and that's okay
+- ''
+output_without_message:
+- ''
+- '[1] One'
+- '[2] 2'
+- ''
