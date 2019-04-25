@@ -106,9 +106,8 @@ def main_loop():  # noqa: C901
     print_current_file(files, current_position)
     quit_early = False
     files_exhausted = False
-    start_tab = 0
     while not (quit_early or files_exhausted):
-    result = menu.run()
+        result = menu.run()
         if result == ("subdirs", "create_subdirs"):
             create_subdirectories()
         elif result == ("subdirs", "help"):
@@ -118,7 +117,7 @@ def main_loop():  # noqa: C901
         elif result[0] == "files" and result[1] in ["interesting", "boring"]:
             if not os.path.isdir(result[1]):
                 raise ValueError("Directory must be created first")
-            move_to_subdir(filename, result[1])
+            move_to_subdir(files[current_position], result[1])
             print('File moved to {}'.format(result[1]))
             current_position += 1
             files_exhausted = current_position >= len(files)

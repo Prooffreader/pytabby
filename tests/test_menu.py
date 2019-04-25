@@ -102,6 +102,23 @@ def test_method_print_menu(config_all, capsys, data_regression):
 
 @pytest.mark.regression
 @pytest.mark.run(order=8)
+def test_method_print_menu_with_message(config_all, capsys, data_regression):
+    """Simple regression test of print output"""
+    menu = Menu(config_all)
+    menu.message = 'This is a message'
+    menu._print_menu()
+    if menu.message is not None:
+        raise AssertionError('menu did not reset message to None')
+    out, _ = capsys.readouterr()
+    data = {"output_with_message": out}
+    menu._print_menu()
+    out, _ = capsys.readouterr()
+    data = {"output_with_message": out}
+    data_regression.check(data)
+
+
+@pytest.mark.regression
+@pytest.mark.run(order=8)
 def test_method_print_menu_after_change_tab(config_multiple, capsys, data_regression):
     """Simple regression test of print output"""
     menu = Menu(config_multiple)
