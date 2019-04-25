@@ -30,6 +30,8 @@ pytabby
 .. image:: https://badge.fury.io/py/pytabby.svg
     :target: https://pypi.org/project/pytabby
 
+.. image:: https://readthedocs.org/projects/pytabby/badge/?version=latest
+
 A *flexible, non-opinionated*, **tabbed** menu system to interactively control program flow for
 terminal-based programs. It's a class with one sole public method which runs in a ``while``
 loop as you switch tabs (if you want tabs, that is; you're free not to have any) or if you 
