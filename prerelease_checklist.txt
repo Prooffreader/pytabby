@@ -1,4 +1,4 @@
-[ ] Update version in src/tabbedshellmenus/_version.py4
+[ ] Update version in src/pytabby/_version.py4
 [ ] Update version in setup.py
 [ ] Add version to changelog
 [ ] black (bash runblack.sh)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
-"""setup.py for tabbedshellmenus"""
+"""setup.py for pytabby"""
 
 
 
@@ -27,7 +27,7 @@ def read(*names, **kwargs):
 
 
 setup(
-    name='tabbedshellmenus',
+    name='pytabby',
     version='0.1.0',
     license='MIT',
     description='A simple, nonopinionated python shell menu system WITH TABS',
@@ -36,7 +36,7 @@ setup(
     ),
     author='David Taylor',
     author_email='prooffreader@gmail.com',
-    url='http://github.com/Prooffreader/tabbedshellmenus',
+    url='http://github.com/Prooffreader/pytabby',
     packages=find_packages('src'),
     package_dir={'': 'src'},
     py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
@@ -72,7 +72,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'tabbedshellmenus = tabbedshellmenus.cli:main',
+            'pytabby = pytabby.cli:main',
         ]
     },
 )

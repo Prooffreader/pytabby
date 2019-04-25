@@ -1,4 +1,4 @@
-tabbedshellmenus
+pytabby
 ================
 
 .. include:: ../../README.rst

@@ -1,22 +1,22 @@
-tabbedshellmenus
+pytabby
 ================
 
 .. inclusion-marker-top-of-index
 
-.. image:: https://secure.travis-ci.org/Prooffreader/tabbedshellmenus.png
-    :target: http://travis-ci.org/Prooffreader/tabbedshellmenus
+.. image:: https://secure.travis-ci.org/Prooffreader/pytabby.png
+    :target: http://travis-ci.org/Prooffreader/pytabby
 
 .. image:: https://ci.appveyor.com/api/projects/status/preqq0h4peiad07a?svg=true
-    :target: https://ci.appveyor.com/project/Prooffreader/tabbedshellmenus
+    :target: https://ci.appveyor.com/project/Prooffreader/pytabby
 
-.. image:: https://codecov.io/gh/Prooffreader/tabbedshellmenus/branch/master/graph/badge.svg
-    :target: https://codecov.io/gh/Prooffreader/tabbedshellmenus
+.. image:: https://codecov.io/gh/Prooffreader/pytabby/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/Prooffreader/pytabby
 
 .. image:: https://api.codacy.com/project/badge/Grade/dae598fbe5b04b0e90e9e2080bb68c11
-    :target: https://www.codacy.com/app/Prooffreader/tabbedshellmenus?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Prooffreader/tabbedshellmenus&amp;utm_campaign=Badge_Grade)
+    :target: https://www.codacy.com/app/Prooffreader/pytabby?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Prooffreader/pytabby&amp;utm_campaign=Badge_Grade)
 
 .. image:: https://camo.githubusercontent.com/14a9abb7e83098f2949f26d2190e04fb1bd52c06/68747470733a2f2f626c61636b2e72656164746865646f63732e696f2f656e2f737461626c652f5f7374617469632f6c6963656e73652e737667
-    :target: https://github.com/Prooffreader/tabbedshellmenus/blob/master/LICENSE
+    :target: https://github.com/Prooffreader/pytabby/blob/master/LICENSE
 
 .. image:: https://camo.githubusercontent.com/28a51fe3a2c05048d8ca8ecd039d6b1619037326/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f636f64652532307374796c652d626c61636b2d3030303030302e737667
     :target: https://github.com/ambv/black
@@ -25,10 +25,10 @@ tabbedshellmenus
     :target: https://www.python.org/
 
 .. image:: https://img.shields.io/badge/platform-linux--64%7Cwin--32%7Cwin--64-lightgrey.svg
-    :target: https://github.com/Prooffreader/tabbedshellmenus
+    :target: https://github.com/Prooffreader/pytabby
 
-.. image:: https://badge.fury.io/py/tabbedshellmenus.svg
-    :target: https://pypi.org/project/tabbedshellmenus
+.. image:: https://badge.fury.io/py/pytabby.svg
+    :target: https://pypi.org/project/pytabby
 
 A *flexible, non-opinionated*, **tabbed** menu system to run in the shell and control program
 flow interactively. It's a class with one sole public method which runs in a ``while``
@@ -43,7 +43,7 @@ menu choice after menu choice returned as you navigate a program.
 Installation
 ------------
 
-``pip install tabbedshellmenus``
+``pip install pytabby``
 
 It's just that easy.
 
@@ -53,7 +53,7 @@ Usage
 
 .. code-block:: python
 
-    from tabbedshellmenus import Menu
+    from pytabby import Menu
     myconfig = Menu.safe_read_yaml('path/to/yaml')
     # or Menu.read_json() or just pass a dict in the next step
     mymenu = Menu(myconfig)
@@ -69,7 +69,7 @@ Usage
 See it in action!
 -----------------
 
-.. image:: https://www.dtdata.io/shared/tabbedshellmenus.gif
+.. image:: https://www.dtdata.io/shared/pytabby.gif
 
 FAQ
 ---

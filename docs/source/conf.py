@@ -13,20 +13,20 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../../src/'))
-import tabbedshellmenus
+import pytabby
 
 import sphinx_rtd_theme
 
 
 # -- Project information -----------------------------------------------------
 
-project = 'tabbedshellmenus'
+project = 'pytabby'
 copyright = '2019, David Taylor'
 author = 'David Taylor'
 
 # The full version, including alpha/beta/rc tags
-release = tabbedshellmenus.__version__
-version = tabbedshellmenus.__version__
+release = pytabby.__version__
+version = pytabby.__version__
 
 
 # -- General configuration ---------------------------------------------------
@@ -72,4 +72,4 @@ html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
-htmlhelp_basename = 'tabbedshellmenus'
+htmlhelp_basename = 'pytabby'

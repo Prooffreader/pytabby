@@ -16,7 +16,7 @@ import os
 
 import pytest
 
-from tabbedshellmenus import Menu
+from pytabby import Menu
 
 pytest_plugins = ("regressions",)
 

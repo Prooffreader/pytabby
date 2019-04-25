@@ -11,7 +11,7 @@ This is a config for two tabs, each with two choices.
 
 First, import the ``Menu`` class:
 
->>> from tabbedshellmenus import Menu
+>>> from pytabby import Menu
 
 Then, you need a config file. There are two static methods you can call from the
 uninstantiated class, ``safe_read_yaml(path)`` and ``read_json`` path. Or you can
