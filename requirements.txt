@@ -1,2 +1,4 @@
+# these are also included in setup.py
+# tabbedshellmenus should be installed as pip install . or, if developing, pip install -e .
 PyYAML>=5.1
 schema>=0.7.0
