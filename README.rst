@@ -31,6 +31,7 @@ pytabby
     :target: https://pypi.org/project/pytabby
 
 .. image:: https://readthedocs.org/projects/pytabby/badge/?version=latest
+    :target: https://pytabby.readthedocs.io/en/latest/
 
 A *flexible, non-opinionated*, **tabbed** menu system to interactively control program flow for
 terminal-based programs. It's a class with one sole public method which runs in a ``while``
@@ -48,6 +49,12 @@ Installation
 ``pip install pytabby``
 
 Meow.
+
+
+Documentation
+-------------
+
+On `readthedocs <https://pytabby.readthedocs.io/en/latest/>`_.
 
 
 Usage
