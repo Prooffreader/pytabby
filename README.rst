@@ -143,7 +143,9 @@ Wish List:
 
 .. inclusion-marker-stop-wishlist
 
-Photo Credit
-------------
+Here's a picture of the pytabby tabby!
+--------------------------------------
 
-`Erik-Jan Leusink via Unsplash <https://unsplash.com/@ejleusink?utm_medium=referral&utm_campaign=photographer-credit&utm_content=creditBadge>`_
+.. image:: https://www.dtdata.io/shared/pytabby-tabby.jpg
+
+Photo credit: `Erik-Jan Leusink via Unsplash <https://unsplash.com/@ejleusink?utm_medium=referral&utm_campaign=photographer-credit&utm_content=creditBadge>`_
