@@ -146,6 +146,6 @@ Wish List:
 Here's a picture of the pytabby tabby!
 --------------------------------------
 
-.. image:: https://www.dtdata.io/shared/pytabby-tabby.jpg
+.. image:: https://www.dtdata.io/shared/pytabby-kitty.jpg
 
 Photo credit: `Erik-Jan Leusink via Unsplash <https://unsplash.com/@ejleusink?utm_medium=referral&utm_campaign=photographer-credit&utm_content=creditBadge>`_
