@@ -21,7 +21,7 @@ less space. Note that this program doesn't *show* the images, but feel free to b
 
 Here's an example terminal session using the above script:
 
-.. code-block::
+::
 
     example_app$ ls
     app.py                              cade-roberts-769333-unsplash.jpg  
@@ -32,7 +32,7 @@ Here's an example terminal session using the above script:
 There are six jpgs we will classify as interesting or boring, plus the app.py script that is smart enough to ignore itself when moving files.
 The ``boring`` and ``interesting`` folders are not yet present.
 
-.. code-block::
+::
 
     example_app$ python app.py
     Enter directory (blank for current): 
@@ -48,7 +48,7 @@ The ``boring`` and ``interesting`` folders are not yet present.
     
 If we try to create the directories again, we'll just be told they already exist
 
-.. code-block::
+::
 
     [subdirs|files]
      ======= ------
@@ -149,7 +149,7 @@ If we try to create the directories again, we'll just be told they already exist
 
 Now the program exits, and we can verify all the files are where we expect
 
-.. code-block::
+::
 
     example_app$ ls
     app.py  boring  colton-duke-732468-unsplash.jpg  interesting

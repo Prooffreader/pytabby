@@ -24,9 +24,6 @@ Contents
    changelog.rst
    wishlist.rst
 
-<blockquote class="imgur-embed-pub" lang="en" data-id="a/zaGXfRC"><a href="//imgur.com/zaGXfRC"></a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
-
-
 Indices and tables
 ==================
 
