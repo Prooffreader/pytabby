@@ -42,6 +42,8 @@ you can use to control the outer program flow.
 Of course, you can run the class itself in a ``while`` loop in the enclosing program, getting
 menu choice after menu choice returned as you navigate a program.
 
+`Blog post about why I did this. <http://www.prooffreader.com/2019/04/27/pytabby-a-tabbed-menu-system-for-console-based-python-programs/>`_
+
 
 Installation
 ------------
