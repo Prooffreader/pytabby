@@ -3,7 +3,7 @@ pytest-ordering==0.6
 pytest-regressions==1.0.5
 pytest-cov==2.7.1
 coverage==4.5.3
-codecov
+codecov==2.0.15
 pylama
 eradicate
 pygments
