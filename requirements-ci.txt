@@ -4,7 +4,7 @@ pytest-regressions==1.0.5
 pytest-cov==2.7.1
 coverage==4.5.3
 codecov==2.0.15
-pylama
+pylama==7.7.1
 eradicate
 pygments
 restructuredtext-lint
