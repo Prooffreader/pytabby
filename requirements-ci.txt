@@ -1,6 +1,6 @@
 pytest==4.5.0
 pytest-ordering==0.6
-pytest-regressions
+pytest-regressions==1.0.5
 pytest-cov
 coverage
 codecov
