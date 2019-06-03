@@ -142,6 +142,9 @@ Wish List:
   ENTER with the input() function, using ``msvcrt`` package in Windows
   or ``tty`` and ``termios`` in Mac/Linux. (This will make coverage platform-
   dependent, so it will have to be cumulative on travis and appveyor)
+* incorporate ansimarkup (https://pypi.org/project/ansimarkup/) -- is it
+  cross compatible? Will it work with cmder.exe on windows? So the app
+  could have really cool colored tabs!!!
 
 .. inclusion-marker-stop-wishlist
 
