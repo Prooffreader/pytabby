@@ -32,6 +32,10 @@ pytabby
 
 .. image:: https://readthedocs.org/projects/pytabby/badge/?version=latest
     :target: https://pytabby.readthedocs.io/en/latest/
+    
+.. image:: https://pyup.io/repos/github/Prooffreader/pytabby/shield.svg
+     :target: https://pyup.io/repos/github/Prooffreader/pytabby/
+     :alt: Updates
 
 A *flexible, non-opinionated*, **tabbed** menu system to interactively control program flow for
 terminal-based programs. It's a class with one sole public method which runs in a ``while``
