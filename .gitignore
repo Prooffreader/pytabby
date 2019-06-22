@@ -8,6 +8,7 @@ pip-wheel-metadata/
 wishlist.txt
 codecov.sh
 prerelease_checklist.txt
+.python-version
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -53,7 +54,7 @@ htmlcov/
 .coverage.*
 .cache
 nosetests.xml
-coverage.xml
+#coverage.xml
 *.cover
 .hypothesis/
 .pytest_cache/
