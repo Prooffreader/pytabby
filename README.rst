@@ -150,6 +150,9 @@ Wish List:
   cross compatible? Will it work with cmder.exe on windows? So the app
   could have really cool colored tabs!!! Would colorama work?
 * Add MacOS CI (Circle?)
+* Fix tests by (1) changing lazy regression tests to true tests, (2) relying
+  less on ordering to be true unit tests, (3) monkeypatch inputs instead of
+  that ugly menu.Menu._testing hacks
 
 .. inclusion-marker-stop-wishlist
 
