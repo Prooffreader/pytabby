@@ -46,7 +46,7 @@ class InvalidInputError(Exception):
     """
 
 
-class _ValidSchemas:
+class _ValidSchemas:  # pylint: disable=R0903
     """Data-holding class for Schema instances appropriate for different types of config.
 
     Instantiated from validate_schema() only
