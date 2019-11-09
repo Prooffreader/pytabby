@@ -8,7 +8,7 @@ Just don't forget to replace data files if input file changes.
 """
 
 # pylama: ignore=D102
-# pylint: disable=C0116,W0212
+# pylint: disable=C0116,C0330,W0212
 
 
 from copy import deepcopy

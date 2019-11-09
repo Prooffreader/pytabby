@@ -9,8 +9,7 @@ If input config changes, regression tests will have to change.
 Functionality of this module is tested in menu.py tests
 """
 
-# pylama: ignore=D102
-# pylint: disable=C0116,W0212
+# pylint: disable=C0116,C0330,W0212
 
 from copy import deepcopy
 

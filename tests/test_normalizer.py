@@ -4,13 +4,13 @@
 """Tests pytabby.normalizer.py"""
 
 # pylama: ignore=D102
+# pylint: disable=C0116,C0330,W0212
 
 from copy import deepcopy
 
 import pytest
 
 import pytabby.normalizer as normalizer
-
 
 @pytest.mark.function
 @pytest.mark.run(order=1)

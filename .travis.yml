@@ -14,9 +14,9 @@ matrix:
         - 'pip install .'
         - 'pip install -r requirements-ci.txt'
       script:
-        - pylama -i E501 src
-        - pylama -i E501 tests
-        - pylama -i E501 example_app
+        - pylama src
+        - pylama tests
+        - pylama example_app
         - pylint src
         - pylint tests
         - pylint example_app
