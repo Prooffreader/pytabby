@@ -7,6 +7,8 @@ Only regression tests are used for these, because it's string output.
 Just don't forget to replace data files if input file changes.
 """
 
+# pylama: ignore=D102
+
 
 from copy import deepcopy
 

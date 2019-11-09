@@ -3,7 +3,7 @@
 
 """Tests pytabby.normalizer.py"""
 
-# pylint: ignore=D102
+# pylama: ignore=D102
 
 from copy import deepcopy
 

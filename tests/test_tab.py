@@ -9,6 +9,8 @@ If input config changes, regression tests will have to change.
 Functionality of this module is tested in menu.py tests
 """
 
+# pylama: ignore=D102
+
 from copy import deepcopy
 
 import pytest

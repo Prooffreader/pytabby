@@ -10,6 +10,7 @@ raised here before those tests run, redundantly, but they're in both places to e
 TODO: Fix this
 """
 
+# pylama: ignore=D102
 
 from copy import deepcopy
 import os
