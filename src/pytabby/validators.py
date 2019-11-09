@@ -47,6 +47,7 @@ class InvalidInputError(Exception):
 
 
 class _ValidSchemas:  # pylint: disable=R0903
+
     """Data-holding class for Schema instances appropriate for different types of config.
 
     Instantiated from validate_schema() only
@@ -108,7 +109,7 @@ class _ValidSchemas:  # pylint: disable=R0903
 
 
 def _extract_class(class_repr):
-    """Helper function to prettify class specifications in error messages
+    """Prettify class specifications in error messages
 
     Example:
         >>> _extract_class("<class 'str'>)
@@ -124,7 +125,7 @@ def _extract_class(class_repr):
 
 
 def _validate_schema_part(error_messages, schema_, to_validate, prefix=None):
-    """Validates that a section of the config follows schema
+    """Validate that a section of the config follows schema
 
     Args:
         error_messages (list of str): list of all error messages produced by the validator to date
@@ -149,7 +150,7 @@ def _validate_schema_part(error_messages, schema_, to_validate, prefix=None):
 
 
 def _determine_config_layout(config):
-    """Determines which of three valid schema types applies to input dict.
+    """Determine which of three valid schema types applies to input dict.
 
     Used in validate_schema()
 
@@ -173,7 +174,7 @@ def _determine_config_layout(config):
 
 
 def _validate_schema_multiple(error_messages, config, valid_schemas):
-    """Called by _validate_schema() (q.v.) if multiple type"""
+    """Validate type of schema, called by _validate_schema() (q.v.) if multiple type"""
     error_messages = _validate_schema_part(
         error_messages, valid_schemas.outer_schema_multiple_or_single_with_key, config
     )
@@ -196,7 +197,7 @@ def _validate_schema_multiple(error_messages, config, valid_schemas):
 
 
 def _validate_schema_single_with_key(error_messages, config, valid_schemas):
-    """Called by _validate_schema() (q.v.) if single_with_tab type"""
+    """Validate type of schema, called by _validate_schema() (q.v.) if single_with_tab type"""
     error_messages = _validate_schema_part(
         error_messages, valid_schemas.outer_schema_multiple_or_single_with_key, config
     )
@@ -220,7 +221,7 @@ def _validate_schema_single_with_key(error_messages, config, valid_schemas):
 
 
 def _validate_schema_single_without_key(error_messages, config, valid_schemas):
-    """Called by _validate_schema() (q.v.) if single_without_tab type"""
+    """Validate type of schema, called by _validate_schema() (q.v.) if single_without_tab type"""
     error_messages = _validate_schema_part(error_messages, valid_schemas.outer_schema_single_without_key, config)
     try:
         level = "items"
@@ -237,7 +238,7 @@ def _validate_schema_single_without_key(error_messages, config, valid_schemas):
 
 
 def _catch_iteration_error(error_messages, e, level):
-    """Stops introspection on an iterable when it throws an exception, adds it to error_messages"""
+    """Stop introspection on an iterable when it throws an exception, add it to error_messages"""
     error_type = _extract_class(str(e.__class__)) + ": "
     error_description = str(e).replace("\n", " ")
     error_message = "WHILE ITERATING OVER {0}: {1}{2}. No further introspection possible.".format(
@@ -248,7 +249,7 @@ def _catch_iteration_error(error_messages, e, level):
 
 
 def _validate_schema(error_messages, config):
-    """Validates that config has the expected schema.
+    """Validate that config has the expected schema.
 
     Examples of valid schemas can be seen in the examples/ folder of the git repo, or in the docs.
     There are three kinds of schemas, one with multiple tabs, one with a single tab, and one with an implicit single
@@ -275,7 +276,7 @@ def _validate_schema(error_messages, config):
 
 
 def _config_tabs(config):
-    """Returns 'tabs' list unless single_without_key, in which case it manufactures one"""
+    """Return 'tabs' list unless single_without_key, in which case manufacture one"""
     config_layout = _determine_config_layout(config)
     if config_layout == "single_without_key":
         return [{"items": config["items"]}]
@@ -283,14 +284,14 @@ def _config_tabs(config):
 
 
 def _count_for_overlap(items_):
-    """Counts items, returns multiple values only or empty set"""
+    """Count items, return multiple values only or empty set"""
     counter = Counter(items_)
     multiples = [x for x in counter.most_common() if x[1] > 1]
     return multiples
 
 
 def _validate_no_return_value_overlap(error_messages, config):
-    """Validates that all return values in every tab are unique.
+    """Validate that all return values in every tab are unique.
 
     Checks all tabs, so can result in long error message
     Case insensitivity does not affect return values
@@ -313,7 +314,7 @@ def _validate_no_return_value_overlap(error_messages, config):
 
 
 def _validate_no_input_value_overlap(error_messages, config):  # noqa:C901
-    """Validates that the potential inputs on each tab are unambiguous.
+    """Validate that the potential inputs on each tab are unambiguous.
 
     In other words, validates that any entry will either lead
     to another tab OR to returning a unique value OR the current tab's input value (this could have gone either
@@ -365,7 +366,7 @@ def _validate_no_input_value_overlap(error_messages, config):  # noqa:C901
 
 
 def _shorten_long_schema_error_messages(error_messages):
-    """The schema package puts the entire config in the error message; this function removes it."""
+    """Remove entire config string from schema package error message."""
     for i, message in enumerate(error_messages[:]):
         if re.search("in {.+}$", message):
             error_messages[i] = re.sub(r"in \{.+\}$", "in config", message)
@@ -373,7 +374,7 @@ def _shorten_long_schema_error_messages(error_messages):
 
 
 def validate_all(config):
-    """Runs above non-underscored functions on input"""
+    """Run above non-underscored functions on input"""
     error_messages = []
     error_messages = _validate_schema(error_messages, config)
     error_messages = _validate_no_input_value_overlap(error_messages, config)

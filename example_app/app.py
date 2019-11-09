@@ -40,7 +40,7 @@ CONFIG = {
 
 
 def print_help():
-    """Prints help string to stdout"""
+    """Print help string to stdout"""
     help_text = (
         "This app goes through the contents of a directory and allows you to categorize the files, "
         "either moving them to subdirectories called interesting/ and boring/ or skipping them. This "
@@ -52,7 +52,7 @@ def print_help():
 
 
 def get_directory():
-    """Gets the name of a directory to use, or uses the current one"""
+    """Get the name of a directory to use, or uses the current one"""
     valid = False
     while not valid:
         directory = input("Enter directory (blank for current): ")
@@ -66,7 +66,7 @@ def get_directory():
 
 
 def get_files():
-    """Returns a list of files in the current working directory"""
+    """Determine sorted list of files in the current working directory"""
     files = []
     for item in glob.glob("./*"):
         # add current .py file in case it's in the directory
@@ -76,7 +76,7 @@ def get_files():
 
 
 def create_subdirectories():
-    """Creates subdirectories if they do not exist"""
+    """Create subdirectories if they do not exist"""
     for subdir in ["interesting", "boring"]:
         if os.path.isdir(subdir):
             print("./{0}/ EXISTS".format(subdir))
@@ -87,7 +87,7 @@ def create_subdirectories():
 
 
 def move_to_subdir(filename, subdirname):
-    """Moves filename to subdirname"""
+    """Move filename to subdirname"""
     if os.path.isfile(os.path.join(subdirname, filename)):
         raise ValueError("File already exists in that subdirectory!")
     shutil.move(filename, subdirname)
@@ -95,7 +95,7 @@ def move_to_subdir(filename, subdirname):
     print("")
 
 def main_loop():  # noqa: C901
-    """All the logic for the app"""
+    """Contain all the logic for the app"""
     menu = Menu(CONFIG)
     files = get_files()
     current_position = 0

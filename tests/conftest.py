@@ -22,7 +22,7 @@ pytest_plugins = ("regressions",)
 
 
 def load_multiple_config_yaml():
-    """Retrieves config dict from tests/data/test_config.yaml
+    """Retrieve config dict from tests/data/test_config.yaml
 
     Tests whether it is multiple
     """
@@ -38,7 +38,7 @@ def load_multiple_config_yaml():
 
 
 def create_single_with_key(multiple_config):
-    """Creates single_with_key type from multiple config"""
+    """Create single_with_key type from multiple config"""
     d = deepcopy(multiple_config)
     d["tabs"] = d["tabs"][:1]
     del d["tabs"][0]["tab_header_input"]
@@ -51,7 +51,7 @@ def create_single_with_key(multiple_config):
 
 
 def create_single_without_key(with_key):
-    """Creates single_without_key type from single_with_key config"""
+    """Create single_without_key type from single_with_key config"""
     d = deepcopy(with_key)
     d["items"] = d["tabs"][0]["items"]
     del d["tabs"]
@@ -60,20 +60,20 @@ def create_single_without_key(with_key):
 
 @pytest.fixture(scope="function")
 def config_multiple():
-    """Returns multiple config fixture."""
+    """Return multiple config fixture."""
     return load_multiple_config_yaml()
 
 
 @pytest.fixture(scope="function")
 def config_single_with_key():
-    """Returns single with key config fixture."""
+    """Return single with key config fixture."""
     multiple = load_multiple_config_yaml()
     return create_single_with_key(multiple)
 
 
 @pytest.fixture(scope="function")
 def config_single_without_key():
-    """Returns single without key config fixture"""
+    """Return single without key config fixture"""
     multiple = load_multiple_config_yaml()
     with_key = create_single_with_key(multiple)
     return create_single_without_key(with_key)
@@ -89,7 +89,7 @@ def config_single_without_key():
     ids=["multiple", "single_with_key", "single_without_key"],
 )
 def config_all(request):
-    """Returns all three config types"""
+    """Return all three config types"""
     return request.param
 
 
@@ -103,7 +103,7 @@ def config_all(request):
     ids=["multiple", "single_with_key", "single_without_key"],
 )
 def config_all_with_id(request):
-    """Returns tuple of config dict, id for all config types"""
+    """Return tuple of config dict, id for all config types"""
     return (request.param, ["multiple", "single_with_key", "single_without_key"][request.param_index])
 
 

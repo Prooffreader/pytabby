@@ -3,6 +3,7 @@
 
 """Tests menu.py"""
 
+# pylint: ignore=D102
 
 from copy import deepcopy
 import json
