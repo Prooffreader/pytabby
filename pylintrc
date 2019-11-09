@@ -1,0 +1,1839 @@
+### This is a detailed .pylintrc file compiled by David Taylor
+### I took the default .pylintrc, added all errors (mostly commented out) explicitly,
+### and changed some defaults
+### My comments are preceded by three hashes; comments in the default file have one hash
+
+[MASTER]
+
+# A comma-separated list of package or module names from where C extensions may
+# be loaded. Extensions are loading into the active Python interpreter and may
+# run arbitrary code.
+extension-pkg-whitelist=
+
+# Add files or directories to the blacklist. They should be base names, not
+# paths.
+# removed
+# ignore=CVS
+ignore=
+
+# Add files or directories matching the regex patterns to the blacklist. The
+# regex matches against base names, not paths.
+ignore-patterns=
+
+# Python code to execute, usually for sys.path manipulation such as
+# pygtk.require().
+#init-hook=
+
+# Use multiple processes to speed up Pylint. Specifying 0 will auto-detect the
+# number of processors available to use.
+jobs=1
+
+# Control the amount of potential inferred values when inferring a single
+# object. This can help the performance when dealing with large functions or
+# complex, nested conditions.
+limit-inference-results=100
+
+# List of plugins (as comma separated values of python module names) to load,
+# usually to register additional checkers.
+load-plugins=
+
+# Pickle collected data for later comparisons.
+# changed from yes to no
+persistent=no
+
+# Specify a configuration file.
+#rcfile=
+
+# When enabled, pylint would attempt to guess common misconfiguration and emit
+# user-friendly hints instead of false-positive error messages.
+suggestion-mode=yes
+
+# Allow loading of arbitrary C extensions. Extensions are imported into the
+# active Python interpreter and may run arbitrary code.
+unsafe-load-any-extension=no
+
+
+[MESSAGES CONTROL]
+
+# Only show warnings with the listed confidence levels. Leave empty to show
+# all. Valid levels: HIGH, INFERENCE, INFERENCE_FAILURE, UNDEFINED.
+confidence=
+
+# Disable the message, report, category or checker with the given id(s). You
+# can either give multiple identifiers separated by comma (,) or put this
+# option multiple times (only on the command line, not in the configuration
+# file where it should appear only once). You can also use "--disable=all" to
+# disable everything first and then reenable specific checks. For example, if
+# you want to run only the similarities checker, you can use "--disable=all
+# --enable=similarities". If you want to run only the classes checker, but have
+# no Warning level messages displayed, use "--disable=all --enable=classes
+# --disable=W".
+
+### Start with:
+### Disabled by default but not deprecated in Python 3
+
+disable=I0001,
+      # :raw-checker-failed: (Unable to run raw checkers on built-in module %s)
+        # Used to inform that a built-in module has not been checked using the raw checkers.
+    I0010,
+      # :bad-inline-option: (Unable to consider inline option %r)
+        # Used when an inline option is either badly formatted or can't be used inside modules.
+    I0011,
+      # :locally-disabled: (Locally disabling %s (%s))
+        # Used when an inline option disables a message or a messages category.
+    I0013,
+      # :file-ignored: (Ignoring entire file)
+        # Used to inform that the file will not be checked
+    I0020,
+      # :suppressed-message: (Suppressed %s (from line %d))
+        # A message was triggered on a line, but suppressed explicitly by a disable= comment in the
+        #   file. This message is not generated for messages that are ignored due to configuration
+        #   settings.
+    I0021,
+      # :useless-suppression: (Useless suppression of %s)
+        # Reported when a message is explicitly disabled for a line or a block of code, but never
+        #   triggered.
+    I0022,
+      # :deprecated-pragma: (Pragma "%s" is deprecated, use "%s" instead)
+        # Some inline pylint options have been renamed or reworked, only the most recent form should
+        #   be used. NOTE:skip-all is only available with pylint >= 0.26
+    I0023,
+      # :use-symbolic-message-instead: (None)
+        # Used when a message is enabled or disabled by id.
+    W1641,
+      # :eq-without-hash: (Implementing __eq__ without also implementing __hash__)
+        # Used when a class implements __eq__ but not __hash__. In Python 2, objects get
+        #   object.__hash__ as the default implementation, in Python 3 objects get None as their
+        #   default __hash__ implementation if they also implement __eq__.
+    W1642,
+      # :div-method: (__div__ method defined)
+        # Used when a __div__ method is defined. Using `__truediv__` and setting__div__ =
+        #   __truediv__ should be preferred.(method is not used by Python 3)
+    W1643,
+      # :idiv-method: (__idiv__ method defined)
+        # Used when an __idiv__ method is defined. Using `__itruediv__` and setting__idiv__ =
+        #   __itruediv__ should be preferred.(method is not used by Python 3)
+    W1644,
+      # :rdiv-method: (__rdiv__ method defined)
+        # Used when a __rdiv__ method is defined. Using `__rtruediv__` and setting__rdiv__ =
+        #   __rtruediv__ should be preferred.(method is not used by Python 3)
+    W1645,
+      # :exception-message-attribute: (Exception.message removed in Python 3)
+        # Used when the message attribute is accessed on an Exception. Use str(exception) instead.
+    W1646,
+      # :invalid-str-codec: (non-text encoding used in str.decode)
+        # Used when using str.encode or str.decode with a non-text encoding. Use codecs module to
+        #   handle arbitrary codecs.
+    W1647,
+      # :sys-max-int: (sys.maxint removed in Python 3)
+        # Used when accessing sys.maxint. Use sys.maxsize instead.
+    W1648,
+      # :bad-python3-import: (Module moved in Python 3)
+        # Used when importing a module that no longer exists in Python 3.
+    W1649,
+      # :deprecated-string-function: (Accessing a deprecated function on the string module)
+        # Used when accessing a string function that has been deprecated in Python 3.
+    W1650,
+      # :deprecated-str-translate-call: (Using str.translate with deprecated deletechars parameters)
+        # Used when using the deprecated deletechars parameters from str.translate. Use re.sub to
+        #   remove the desired characters
+    W1651,
+      # :deprecated-itertools-function: (Accessing a deprecated function on the itertools module)
+        # Used when accessing a function on itertools that has been removed in Python 3.
+    W1652,
+      # :deprecated-types-field: (Accessing a deprecated fields on the types module)
+        # Used when accessing a field on types that has been removed in Python 3.
+    W1653,
+      # :next-method-defined: (next method defined)
+        # Used when a next method is defined that would be an iterator in Python 2 but is treated as
+        #   a normal function in Python 3.
+    W1654,
+      # :dict-items-not-iterating: (dict.items referenced when not iterating)
+        # Used when dict.items is referenced in a non-iterating context (returns an iterator in
+        #   Python 3)
+    W1655,
+      # :dict-keys-not-iterating: (dict.keys referenced when not iterating)
+        # Used when dict.keys is referenced in a non-iterating context (returns an iterator in
+        #   Python 3)
+    W1656,
+      # :dict-values-not-iterating: (dict.values referenced when not iterating)
+        # Used when dict.values is referenced in a non-iterating context (returns an iterator in
+        #   Python 3)
+    W1657,
+      # :deprecated-operator-function: (Accessing a removed attribute on the operator module)
+        # Used when accessing a field on operator module that has been removed in Python 3.
+    W1658,
+      # :deprecated-urllib-function: (Accessing a removed attribute on the urllib module)
+        # Used when accessing a field on urllib module that has been removed or moved in Python 3.
+    W1659,
+      # :xreadlines-attribute: (Accessing a removed xreadlines attribute)
+        # Used when accessing the xreadlines() function on a file stream, removed in Python 3.
+    W1660,
+      # :deprecated-sys-function: (Accessing a removed attribute on the sys module)
+        # Used when accessing a field on sys module that has been removed in Python 3.
+    W1661,
+      # :exception-escape: (Using an exception object that was bound by an except handler)
+        # Emitted when using an exception, that was bound in an except handler, outside of the
+        #   except handler. On Python 3 these exceptions will be deleted once they get out of the
+        #   except handler.
+    W1662,
+      # :comprehension-escape: (Using a variable that was bound inside a comprehension)
+        # Emitted when using a variable, that was bound in a comprehension handler, outside of the
+        #   comprehension itself. On Python 3 these variables will be deleted outside of the
+        #   comprehension.
+
+    ### Disabled by default AND deprecated in Python 3
+    ### There are no codes that are deprecated in Python 3 and NOT disabled by default
+
+    E1601,
+      # :print-statement: (print statement used)
+        # Used when a print statement is used (`print` is a function in Python 3)
+    E1602,
+      # :parameter-unpacking: (Parameter unpacking specified)
+        # Used when parameter unpacking is specified for a function(Python 3 doesn't allow it)
+    E1603,
+      # :unpacking-in-except: (Implicit unpacking of exceptions is not supported in Python 3)
+        # Python3 will not allow implicit unpacking of exceptions in except clauses. See
+        #   http://www.python.org/dev/peps/pep-3110/
+    E1604,
+      # :old-raise-syntax: (Use raise ErrorClass(args) instead of raise ErrorClass, args.)
+        # Used when the alternate raise syntax 'raise foo, bar' is used instead of 'raise foo(bar)'.
+    E1605,
+      # :backtick: (Use of the `` operator)
+        # Used when the deprecated "``" (backtick) operator is used instead of the str() function.
+    W1601,
+      # :apply-builtin: (apply built-in referenced)
+        # Used when the apply built-in function is referenced (missing from Python 3)
+    W1602,
+      # :basestring-builtin: (basestring built-in referenced)
+        # Used when the basestring built-in function is referenced (missing from Python 3)
+    W1603,
+      # :buffer-builtin: (buffer built-in referenced)
+        # Used when the buffer built-in function is referenced (missing from Python 3)
+    W1604,
+      # :cmp-builtin: (cmp built-in referenced)
+        # Used when the cmp built-in function is referenced (missing from Python 3)
+    W1605,
+      # :coerce-builtin: (coerce built-in referenced)
+        # Used when the coerce built-in function is referenced (missing from Python 3)
+    W1606,
+      # :execfile-builtin: (execfile built-in referenced)
+        # Used when the execfile built-in function is referenced (missing from Python 3)
+    W1607,
+      # :file-builtin: (file built-in referenced)
+        # Used when the file built-in function is referenced (missing from Python 3)
+    W1608,
+      # :long-builtin: (long built-in referenced)
+        # Used when the long built-in function is referenced (missing from Python 3)
+    W1609,
+      # :raw_input-builtin: (raw_input built-in referenced)
+        # Used when the raw_input built-in function is referenced (missing from Python 3)
+    W1610,
+      # :reduce-builtin: (reduce built-in referenced)
+        # Used when the reduce built-in function is referenced (missing from Python 3)
+    W1611,
+      # :standarderror-builtin: (StandardError built-in referenced)
+        # Used when the StandardError built-in function is referenced (missing from Python 3)
+    W1612,
+      # :unicode-builtin: (unicode built-in referenced)
+        # Used when the unicode built-in function is referenced (missing from Python 3)
+    W1613,
+      # :xrange-builtin: (xrange built-in referenced)
+        # Used when the xrange built-in function is referenced (missing from Python 3)
+    W1614,
+      # :coerce-method: (__coerce__ method defined)
+        # Used when a __coerce__ method is defined (method is not used by Python 3)
+    W1615,
+      # :delslice-method: (__delslice__ method defined)
+        # Used when a __delslice__ method is defined (method is not used by Python 3)
+    W1616,
+      # :getslice-method: (__getslice__ method defined)
+        # Used when a __getslice__ method is defined (method is not used by Python 3)
+    W1617,
+      # :setslice-method: (__setslice__ method defined)
+        # Used when a __setslice__ method is defined (method is not used by Python 3)
+    W1618,
+      # :no-absolute-import: (import missing `from __future__ import absolute_import`)
+        # Used when an import is not accompanied by ``from __future__ import absolute_import``
+        #   (default behaviour in Python 3)
+    W1619,
+      # :old-division: (division w/o __future__ statement)
+        # Used for non-floor division w/o a float literal or ``from __future__ import division``
+        #   (Python 3 returns a float for int division unconditionally)
+    W1620,
+      # :dict-iter-method: (Calling a dict.iter*() method)
+        # Used for calls to dict.iterkeys(), itervalues() or iteritems() (Python 3 lacks these
+        #   methods)
+    W1621,
+      # :dict-view-method: (Calling a dict.view*() method)
+        # Used for calls to dict.viewkeys(), viewvalues() or viewitems() (Python 3 lacks these
+        #   methods)
+    W1622,
+      # :next-method-called: (Called a next() method on an object)
+        # Used when an object's next() method is called (Python 3 uses the next() built- in
+        #   function)
+    W1623,
+      # :metaclass-assignment: (Assigning to a class's __metaclass__ attribute)
+        # Used when a metaclass is specified by assigning to __metaclass__ (Python 3 specifies the
+        #   metaclass as a class statement argument)
+    W1624,
+      # :indexing-exception: (Indexing exceptions will not work on Python 3)
+        # Indexing exceptions will not work on Python 3. Use `exception.args[index]` instead.
+    W1625,
+      # :raising-string: (Raising a string exception)
+        # Used when a string exception is raised. This will not work on Python 3.
+    W1626,
+      # :reload-builtin: (reload built-in referenced)
+        # Used when the reload built-in function is referenced (missing from Python 3). You can use
+        #   instead imp.reload or importlib.reload.
+    W1627,
+      # :oct-method: (__oct__ method defined)
+        # Used when an __oct__ method is defined (method is not used by Python 3)
+    W1628,
+      # :hex-method: (__hex__ method defined)
+        # Used when a __hex__ method is defined (method is not used by Python 3)
+    W1629,
+      # :nonzero-method: (__nonzero__ method defined)
+        # Used when a __nonzero__ method is defined (method is not used by Python 3)
+    W1630,
+      # :cmp-method: (__cmp__ method defined)
+        # Used when a __cmp__ method is defined (method is not used by Python 3)
+    W1632,
+      # :input-builtin: (input built-in referenced)
+        # Used when the input built-in is referenced (backwards-incompatible semantics in Python 3)
+    W1633,
+      # :round-builtin: (round built-in referenced)
+        # Used when the round built-in is referenced (backwards-incompatible semantics in Python 3)
+    W1634,
+      # :intern-builtin: (intern built-in referenced)
+        # Used when the intern built-in is referenced (Moved to sys.intern in Python 3)
+    W1635,
+      # :unichr-builtin: (unichr built-in referenced)
+        # Used when the unichr built-in is referenced (Use chr in Python 3)
+    W1636,
+      # :map-builtin-not-iterating: (map built-in referenced when not iterating)
+        # Used when the map built-in is referenced in a non-iterating context (returns an iterator
+        #   in Python 3)
+    W1637,
+      # :zip-builtin-not-iterating: (zip built-in referenced when not iterating)
+        # Used when the zip built-in is referenced in a non-iterating context (returns an iterator
+        #   in Python 3)
+    W1638,
+      # :range-builtin-not-iterating: (range built-in referenced when not iterating)
+        # Used when the range built-in is referenced in a non-iterating context (returns a range in
+        #   Python 3)
+    W1639,
+      # :filter-builtin-not-iterating: (filter built-in referenced when not iterating)
+        # Used when the filter built-in is referenced in a non-iterating context (returns an
+        #   iterator in Python 3)
+    W1640,
+      # :using-cmp-argument: (Using the cmp argument for list.sort / sorted)
+        # Using the cmp argument for list.sort or the sorted builtin should be avoided, since it was
+        #   removed in Python 3. Using either `key` or `functools.cmp_to_key` should be preferred.
+    E1606,
+      # :long-suffix: (Use of long suffix)
+        # Used when "l" or "L" is used to mark a long integer. This will not work in Python 3, since
+        #   int and long types have merged. This message can’t be emitted when using Python >= 3.0.
+    E1607,
+      # :old-ne-operator: (Use of the <> operator)
+        # Used when the deprecated \<>" operator is used instead of "!=". This is removed in Python
+        #   3. This message can’t be emitted when using Python >= 3.0.
+    E1608,
+      # :old-octal-literal: (Use of old octal literal)
+        # Used when encountering the old octal syntax, removed in Python 3. To use the new syntax,
+        #   prepend 0o on the number. This message can’t be emitted when using Python >= 3.0.
+    E1609,
+      # :import-star-module-level: (Import * only allowed at module level)
+        # Used when the import star syntax is used somewhere else than the module level. This
+        #   message can’t be emitted when using Python >= 3.0.
+    E1610,
+      # :non-ascii-bytes-literal: (Non-ascii bytes literals not supported in 3.x)
+        # Used when non-ascii bytes literals are found in a program. They are no longer supported in
+        #   Python 3.
+    W0331,
+      # :old-old-ne-operator: (Use of old old ne operator)
+        # Deprecated and replaced by E1607
+
+### Neither disabled by default nor enabled by default; to be selected manually
+
+#    C0102,
+      # :blacklisted-name: (Black listed name "%s")
+      # Used when the name is listed in the black list (unauthorized names).
+#    C0103,
+      # :invalid-name: (%s name "%s" doesn't conform to %s)
+      # Used when the name doesn't conform to naming rules associated to its type (constant,
+      #   variable, class...).
+#    C0112,
+      # :empty-docstring: (Empty %s docstring)
+      # Used when a module, function, class or method has an empty docstring (it would be too easy
+      #   ;).
+#    C0113,
+      # :unneeded-not: (Consider changing "%s" to "%s")
+      # Used when a boolean expression contains an unneeded negation.
+#    C0114,
+      # :missing-module-docstring: (Missing module docstring)
+      # Used when a module has no docstring. Empty modules do not require a docstring.
+#    C0115,
+      # :missing-class-docstring: (Missing class docstring)
+      # Used when a class has no docstring. Even an empty class must have a docstring.
+#    C0116,
+      # :missing-function-docstring: (Missing function or method docstring)
+      # Used when a function or method has no docstring. Some special methods like __init__ do not
+      #   require a docstring.
+#    C0121,
+      # :singleton-comparison: (Comparison to %s should be %s)
+      # Used when an expression is compared to singleton values like True, False or None.
+#    C0122,
+      # :misplaced-comparison-constant: (Comparison should be %s)
+      # Used when the constant is placed on the left side of a comparison. It is usually clearer
+      #   in intent to place it in the right hand side of the comparison.
+#    C0123,
+      # :unidiomatic-typecheck: (Using type() instead of isinstance() for a typecheck.)
+      # The idiomatic way to perform an explicit typecheck in Python is to use isinstance(x, Y)
+      #   rather than type(x) == Y, type(x) is Y. Though there are unusual situations where these
+      #   give different results.
+#    C0200,
+      # :consider-using-enumerate: (Consider using enumerate instead of iterating with range and len)
+      # Emitted when code that iterates with range and len is encountered. Such code can be
+      #   simplified by using the enumerate builtin.
+#    C0201,
+      # :consider-iterating-dictionary: (Consider iterating the dictionary directly instead of calling .keys())
+      # Emitted when the keys of a dictionary are iterated through the .keys() method. It is
+      #   enough to just iterate through the dictionary itself, as in "for key in dictionary".
+#    C0202,
+      # :bad-classmethod-argument: (Class method %s should have %s as first argument)
+      # Used when a class method has a first argument named differently than the value specified
+      #   in valid-classmethod-first-arg option (default to "cls"), recommended to easily
+      #   differentiate them from regular instance methods.
+#    C0203,
+      # :bad-mcs-method-argument: (Metaclass method %s should have %s as first argument)
+      # Used when a metaclass method has a first argument named differently than the value
+      #   specified in valid-classmethod-first-arg option (default to "cls"), recommended to
+      #   easily differentiate them from regular instance methods.
+#    C0204,
+      # :bad-mcs-classmethod-argument: (Metaclass class method %s should have %s as first argument)
+      # Used when a metaclass class method has a first argument named differently than the value
+      #   specified in valid-metaclass-classmethod-first-arg option (default to "mcs"),
+      #   recommended to easily differentiate them from regular instance methods.
+#    C0205,
+      # :single-string-used-for-slots: (Class __slots__ should be a non-string iterable)
+      # Used when a class __slots__ is a simple string, rather than an iterable.
+#    C0301,
+      # :line-too-long: (Line too long (%s/%s))
+      # Used when a line is longer than a given number of characters.
+#    C0302,
+      # :too-many-lines: (Too many lines in module (%s/%s))
+      # Used when a module has too many lines, reducing its readability.
+### I have explicitly disabled C0303, C0304 and C0305
+    C0303,
+      # :trailing-whitespace: (Trailing whitespace)
+      # Used when there is whitespace between the end of a line and the newline.
+    C0304,
+      # :missing-final-newline: (Final newline missing)
+      # Used when the last line in a file is missing a newline.
+    C0305,
+      # :trailing-newlines: (Trailing newlines)
+      # Used when there are trailing blank lines in a file.
+#    C0321,
+      # :multiple-statements: (More than one statement on a single line)
+      # Used when more than on statement are found on the same line.
+#    C0325,
+      # :superfluous-parens: (Unnecessary parens after %r keyword)
+      # Used when a single item in parentheses follows an if, for, or other keyword.
+#    C0326,
+      # :bad-whitespace: (%s space %s %s %s)
+      # Used when a wrong number of spaces is used around an operator, bracket or block opener.
+#    C0327,
+      # :mixed-line-endings: (Mixed line endings LF and CRLF)
+      # Used when there are mixed (LF and CRLF) newline signs in a file.
+#    C0328,
+      # :unexpected-line-ending-format: (Unexpected line ending format. There is '%s' while it should be '%s'.)
+      # Used when there is different newline than expected.
+#    C0330,
+      # :bad-continuation: (Wrong %s indentation%s%s.)
+      # TODO
+#    C0401,
+      # :wrong-spelling-in-comment: (Wrong spelling of a word '%s' in a comment:)
+      # Used when a word in comment is not spelled correctly.
+#    C0402,
+      # :wrong-spelling-in-docstring: (Wrong spelling of a word '%s' in a docstring:)
+      # Used when a word in docstring is not spelled correctly.
+#    C0403,
+      # :invalid-characters-in-docstring: (Invalid characters %r in a docstring)
+      # Used when a word in docstring cannot be checked by enchant.
+#    C0410,
+      # :multiple-imports: (Multiple imports on one line (%s))
+      # Used when import statement importing multiple modules is detected.
+#    C0411,
+      # :wrong-import-order: (%s should be placed before %s)
+      # Used when PEP8 import order is not respected (standard imports first, then third-party
+      #   libraries, then local imports)
+#    C0412,
+      # :ungrouped-imports: (Imports from package %s are not grouped)
+      # Used when imports are not grouped by packages
+#    C0413,
+      # :wrong-import-position: (Import "%s" should be placed at the top of the module)
+      # Used when code and imports are mixed
+#    C0414,
+      # :useless-import-alias: (Import alias does not rename original package)
+      # Used when an import alias is same as original package, e.g. using import numpy as numpy
+      #   instead of import numpy as np
+#    C0415,
+      # :import-outside-toplevel: (Import outside toplevel (%s))
+      # Used when an import statement is used anywhere other than the module toplevel. Move this
+      #   import to the top of the file.
+#    C1801,
+      # :len-as-condition: (Do not use `len(SEQUENCE)` without comparison to determine if a sequence is empty)
+      # Used when Pylint detects that len(sequence) is being used without explicit comparison
+      #   inside a condition to determine if a sequence is empty. Instead of coercing the length
+      #   to a boolean, either rely on the fact that empty sequences are false or compare the
+      #   length against a scalar.
+#    E0001,
+      # :syntax-error: (None)
+      # Used when a syntax error is raised for a module.
+#    E0011,
+      # :unrecognized-inline-option: (Unrecognized file option %r)
+      # Used when an unknown inline option is encountered.
+#    E0012,
+      # :bad-option-value: (Bad option value %r)
+      # Used when a bad value for an inline option is encountered.
+#    E0100,
+      # :init-is-generator: (__init__ method is a generator)
+      # Used when the special class method __init__ is turned into a generator by a yield in its
+      #   body.
+#    E0101,
+      # :return-in-init: (Explicit return in __init__)
+      # Used when the special class method __init__ has an explicit return value.
+#    E0102,
+      # :function-redefined: (%s already defined line %s)
+      # Used when a function / class / method is redefined.
+#    E0103,
+      # :not-in-loop: (%r not properly in loop)
+      # Used when break or continue keywords are used outside a loop.
+#    E0104,
+      # :return-outside-function: (Return outside function)
+      # Used when a "return" statement is found outside a function or method.
+#    E0105,
+      # :yield-outside-function: (Yield outside function)
+      # Used when a "yield" statement is found outside a function or method.
+#    E0107,
+      # :nonexistent-operator: (Use of the non-existent %s operator)
+      # Used when you attempt to use the C-style pre-increment or pre-decrement operator -- and
+      #   ++, which doesn't exist in Python.
+#    E0108,
+      # :duplicate-argument-name: (Duplicate argument name %s in function definition)
+      # Duplicate argument names in function definitions are syntax errors.
+#    E0110,
+      # :abstract-class-instantiated: (Abstract class %r with abstract methods instantiated)
+      # Used when an abstract class with `abc.ABCMeta` as metaclass has abstract methods and is
+      #   instantiated.
+#    E0111,
+      # :bad-reversed-sequence: (The first reversed() argument is not a sequence)
+      # Used when the first argument to reversed() builtin isn't a sequence (does not implement
+      #   __reversed__, nor __getitem__ and __len__
+#    E0112,
+      # :too-many-star-expressions: (More than one starred expression in assignment)
+      # Emitted when there are more than one starred expressions (`*x`) in an assignment. This is
+      #   a SyntaxError.
+#    E0113,
+      # :invalid-star-assignment-target: (Starred assignment target must be in a list or tuple)
+      # Emitted when a star expression is used as a starred assignment target.
+#    E0114,
+      # :star-needs-assignment-target: (Can use starred expression only in assignment target)
+      # Emitted when a star expression is not used in an assignment target.
+#    E0115,
+      # :nonlocal-and-global: (Name %r is nonlocal and global)
+      # Emitted when a name is both nonlocal and global.
+#    E0116,
+      # :continue-in-finally: ('continue' not supported inside 'finally' clause)
+      # Emitted when the `continue` keyword is found inside a finally clause, which is a
+      #   SyntaxError.
+#    E0117,
+      # :nonlocal-without-binding: (nonlocal name %s found without binding)
+      # Emitted when a nonlocal variable does not have an attached name somewhere in the parent
+      #   scopes
+#    E0118,
+      # :used-prior-global-declaration: (Name %r is used prior to global declaration)
+      # Emitted when a name is used prior a global declaration, which results in an error since
+      #   Python 3.6. This message can't be emitted when using Python < 3.6.
+#    E0119,
+      # :misplaced-format-function: (format function is not called on str)
+      # Emitted when format function is not called on str object. e.g doing print("value:
+      #   {}").format(123) instead of print("value: {}".format(123)). This might not be what the
+      #   user intended to do.
+#    E0202,
+      # :method-hidden: (An attribute defined in %s line %s hides this method)
+      # Used when a class defines a method which is hidden by an instance attribute from an
+      #   ancestor class or set by some client code.
+#    E0203,
+      # :access-member-before-definition: (Access to member %r before its definition line %s)
+      # Used when an instance member is accessed before it's actually assigned.
+#    E0211,
+      # :no-method-argument: (Method has no argument)
+      # Used when a method which should have the bound instance as first argument has no argument
+      #   defined.
+#    E0213,
+      # :no-self-argument: (Method should have "self" as first argument)
+      # Used when a method has an attribute different the "self" as first argument. This is
+      #   considered as an error since this is a so common convention that you shouldn't break it!
+#    E0236,
+      # :invalid-slots-object: (Invalid object %r in __slots__, must contain only non empty strings)
+      # Used when an invalid (non-string) object occurs in __slots__.
+#    E0237,
+      # :assigning-non-slot: (Assigning to attribute %r not defined in class slots)
+      # Used when assigning to an attribute not defined in the class slots.
+#    E0238,
+      # :invalid-slots: (Invalid __slots__ object)
+      # Used when an invalid __slots__ is found in class. Only a string, an iterable or a sequence
+      #   is permitted.
+#    E0239,
+      # :inherit-non-class: (Inheriting %r, which is not a class.)
+      # Used when a class inherits from something which is not a class.
+#    E0240,
+      # :inconsistent-mro: (Inconsistent method resolution order for class %r)
+      # Used when a class has an inconsistent method resolution order.
+#    E0241,
+      # :duplicate-bases: (Duplicate bases for class %r)
+      # Used when a class has duplicate bases.
+#    E0242,
+      # :class-variable-slots-conflict: (Value %r in slots conflicts with class variable)
+      # Used when a value in __slots__ conflicts with a class variable, property or method.
+#    E0301,
+      # :non-iterator-returned: (__iter__ returns non-iterator)
+      # Used when an __iter__ method returns something which is not an iterable (i.e. has no
+      #   `__next__` method)
+#    E0302,
+      # :unexpected-special-method-signature: (The special method %r expects %s param(s), %d %s given)
+      # Emitted when a special method was defined with an invalid number of parameters. If it has
+      #   too few or too many, it might not work at all.
+#    E0303,
+      # :invalid-length-returned: (__len__ does not return non-negative integer)
+      # Used when a __len__ method returns something which is not a non-negative integer
+#    E0401,
+      # :import-error: (Unable to import %s)
+      # Used when pylint has been unable to import a module.
+#    E0402,
+      # :relative-beyond-top-level: (Attempted relative import beyond top-level package)
+      # Used when a relative import tries to access too many levels in the current package.
+#    E0601,
+      # :used-before-assignment: (Using variable %r before assignment)
+      # Used when a local variable is accessed before its assignment.
+#    E0602,
+      # :undefined-variable: (Undefined variable %r)
+      # Used when an undefined variable is accessed.
+#    E0603,
+      # :undefined-all-variable: (Undefined variable name %r in __all__)
+      # Used when an undefined variable name is referenced in __all__.
+#    E0604,
+      # :invalid-all-object: (Invalid object %r in __all__, must contain only strings)
+      # Used when an invalid (non-string) object occurs in __all__.
+#    E0611,
+      # :no-name-in-module: (No name %r in module %r)
+      # Used when a name cannot be found in a module.
+#    E0633,
+      # :unpacking-non-sequence: (Attempting to unpack a non-sequence%s)
+      # Used when something which is not a sequence is used in an unpack assignment
+#    E0701,
+      # :bad-except-order: (Bad except clauses order (%s))
+      # Used when except clauses are not in the correct order (from the more specific to the more
+      #   generic). If you don't fix the order, some exceptions may not be caught by the most
+      #   specific handler.
+#    E0702,
+      # :raising-bad-type: (Raising %s while only classes or instances are allowed)
+      # Used when something which is neither a class, an instance or a string is raised (i.e. a
+      #   `TypeError` will be raised).
+#    E0703,
+      # :bad-exception-context: (Exception context set to something which is not an exception, nor None)
+      # Used when using the syntax "raise ... from ...", where the exception context is not an
+      #   exception, nor None.
+#    E0704,
+      # :misplaced-bare-raise: (The raise statement is not inside an except clause)
+      # Used when a bare raise is not used inside an except clause. This generates an error, since
+      #   there are no active exceptions to be reraised. An exception to this rule is represented
+      #   by a bare raise inside a finally clause, which might work, as long as an exception is
+      #   raised inside the try block, but it is nevertheless a code smell that must not be relied
+      #   upon.
+#    E0710,
+      # :raising-non-exception: (Raising a new style class which doesn't inherit from BaseException)
+      # Used when a new style class which doesn't inherit from BaseException is raised.
+#    E0711,
+      # :notimplemented-raised: (NotImplemented raised - should raise NotImplementedError)
+      # Used when NotImplemented is raised instead of NotImplementedError
+#    E0712,
+      # :catching-non-exception: (Catching an exception which doesn't inherit from Exception: %s)
+      # Used when a class which doesn't inherit from Exception is used as an exception in an
+      #   except clause.
+#    E1003,
+      # :bad-super-call: (Bad first argument %r given to super())
+      # Used when another argument than the current class is given as first argument of the super
+      #   builtin.
+#    E1101,
+      # :no-member: (%s %r has no %r member%s)
+      # Used when a variable is accessed for an unexistent member.
+#    E1102,
+      # :not-callable: (%s is not callable)
+      # Used when an object being called has been inferred to a non callable object.
+#    E1111,
+      # :assignment-from-no-return: (Assigning result of a function call, where the function has no return)
+      # Used when an assignment is done on a function call but the inferred function doesn't
+      #   return anything.
+#    E1120,
+      # :no-value-for-parameter: (No value for argument %s in %s call)
+      # Used when a function call passes too few arguments.
+#    E1121,
+      # :too-many-function-args: (Too many positional arguments for %s call)
+      # Used when a function call passes too many positional arguments.
+#    E1123,
+      # :unexpected-keyword-arg: (Unexpected keyword argument %r in %s call)
+      # Used when a function call passes a keyword argument that doesn't correspond to one of the
+      #   function's parameter names.
+#    E1124,
+      # :redundant-keyword-arg: (Argument %r passed by position and keyword in %s call)
+      # Used when a function call would result in assigning multiple values to a function
+      #   parameter, one value from a positional argument and one from a keyword argument.
+#    E1125,
+      # :missing-kwoa: (Missing mandatory keyword argument %r in %s call)
+      # Used when a function call does not pass a mandatory keyword-only argument.
+#    E1126,
+      # :invalid-sequence-index: (Sequence index is not an int, slice, or instance with __index__)
+      # Used when a sequence type is indexed with an invalid type. Valid types are ints, slices,
+      #   and objects with an __index__ method.
+#    E1127,
+      # :invalid-slice-index: (Slice index is not an int, None, or instance with __index__)
+      # Used when a slice index is not an integer, None, or an object with an __index__ method.
+#    E1128,
+      # :assignment-from-none: (Assigning result of a function call, where the function returns None)
+      # Used when an assignment is done on a function call but the inferred function returns
+      #   nothing but None.
+#    E1129,
+      # :not-context-manager: (Context manager '%s' doesn't implement __enter__ and __exit__.)
+      # Used when an instance in a with statement doesn't implement the context manager
+      #   protocol(__enter__/__exit__).
+#    E1130,
+      # :invalid-unary-operand-type: (None)
+      # Emitted when a unary operand is used on an object which does not support this type of
+      #   operation.
+#    E1131,
+      # :unsupported-binary-operation: (None)
+      # Emitted when a binary arithmetic operation between two operands is not supported.
+#    E1132,
+      # :repeated-keyword: (Got multiple values for keyword argument %r in function call)
+      # Emitted when a function call got multiple values for a keyword.
+#    E1133,
+      # :not-an-iterable: (Non-iterable value %s is used in an iterating context)
+      # Used when a non-iterable value is used in place where iterable is expected
+#    E1134,
+      # :not-a-mapping: (Non-mapping value %s is used in a mapping context)
+      # Used when a non-mapping value is used in place where mapping is expected
+#    E1135,
+      # :unsupported-membership-test: (Value '%s' doesn't support membership test)
+      # Emitted when an instance in membership test expression doesn't implement membership
+      #   protocol (__contains__/__iter__/__getitem__).
+#    E1136,
+      # :unsubscriptable-object: (Value '%s' is unsubscriptable)
+      # Emitted when a subscripted value doesn't support subscription (i.e. doesn't define
+      #   __getitem__ method or __class_getitem__ for a class).
+#    E1137,
+      # :unsupported-assignment-operation: (%r does not support item assignment)
+      # Emitted when an object does not support item assignment (i.e. doesn't define __setitem__
+      #   method).
+#    E1138,
+      # :unsupported-delete-operation: (%r does not support item deletion)
+      # Emitted when an object does not support item deletion (i.e. doesn't define __delitem__
+      #   method).
+#    E1139,
+      # :invalid-metaclass: (Invalid metaclass %r used)
+      # Emitted whenever we can detect that a class is using, as a metaclass, something which
+      #   might be invalid for using as a metaclass.
+#    E1140,
+      # :unhashable-dict-key: (Dict key is unhashable)
+      # Emitted when a dict key is not hashable (i.e. doesn't define __hash__ method).
+#    E1141,
+      # :dict-iter-missing-items: (Unpacking a dictionary in iteration without calling .items())
+      # Emitted when trying to iterate through a dict without calling .items()
+#    E1200,
+      # :logging-unsupported-format: (Unsupported logging format character %r (%#02x) at index %d)
+      # Used when an unsupported format character is used in a logging statement format string.
+#    E1201,
+      # :logging-format-truncated: (Logging format string ends in middle of conversion specifier)
+      # Used when a logging statement format string terminates before the end of a conversion
+      #   specifier.
+#    E1205,
+      # :logging-too-many-args: (Too many arguments for logging format string)
+      # Used when a logging format string is given too many arguments.
+#    E1206,
+      # :logging-too-few-args: (Not enough arguments for logging format string)
+      # Used when a logging format string is given too few arguments.
+#    E1300,
+      # :bad-format-character: (Unsupported format character %r (%#02x) at index %d)
+      # Used when an unsupported format character is used in a format string.
+#    E1301,
+      # :truncated-format-string: (Format string ends in middle of conversion specifier)
+      # Used when a format string terminates before the end of a conversion specifier.
+#    E1302,
+      # :mixed-format-string: (Mixing named and unnamed conversion specifiers in format string)
+      # Used when a format string contains both named (e.g. '%(foo)d') and unnamed (e.g. '%d')
+      #   conversion specifiers. This is also used when a named conversion specifier contains *
+      #   for the minimum field width and/or precision.
+#    E1303,
+      # :format-needs-mapping: (Expected mapping for format string, not %s)
+      # Used when a format string that uses named conversion specifiers is used with an argument
+      #   that is not a mapping.
+#    E1304,
+      # :missing-format-string-key: (Missing key %r in format string dictionary)
+      # Used when a format string that uses named conversion specifiers is used with a dictionary
+      #   that doesn't contain all the keys required by the format string.
+#    E1305,
+      # :too-many-format-args: (Too many arguments for format string)
+      # Used when a format string that uses unnamed conversion specifiers is given too many
+      #   arguments.
+#    E1306,
+      # :too-few-format-args: (Not enough arguments for format string)
+      # Used when a format string that uses unnamed conversion specifiers is given too few
+      #   arguments
+#    E1307,
+      # :bad-string-format-type: (Argument %r does not match format type %r)
+      # Used when a type required by format string is not suitable for actual argument type
+#    E1310,
+      # :bad-str-strip-call: (Suspicious argument in %s.%s call)
+      # The argument to a str.{l,r,}strip call contains a duplicate character,
+#    E1507,
+      # :invalid-envvar-value: (%s does not support %s type argument)
+      # Env manipulation functions support only string type arguments. See
+      #   https://docs.python.org/3/library/os.html#os.getenv.
+#    E1700,
+      # :yield-inside-async-function: (Yield inside async function)
+      # Used when an `yield` or `yield from` statement is found inside an async function. This
+      #   message can't be emitted when using Python < 3.5.
+#    E1701,
+      # :not-async-context-manager: (Async context manager '%s' doesn't implement __aenter__ and __aexit__.)
+      # Used when an async context manager is used with an object that does not implement the
+      #   async context management protocol. This message can't be emitted when using Python <
+      #   3.5.
+#    F0001,
+      # :fatal: (None)
+      # Used when an error occurred preventing the analysis of a module (unable to find it for
+      #   instance).
+#    F0002,
+      # :astroid-error: (%s: %s)
+      # Used when an unexpected error occurred while building the Astroid representation. This is
+      #   usually accompanied by a traceback. Please report such errors !
+#    F0010,
+      # :parse-error: (error while code parsing: %s)
+      # Used when an exception occurred while building the Astroid representation which could be
+      #   handled by astroid.
+#    F0202,
+      # :method-check-failed: (Unable to check methods signature (%s / %s))
+      # Used when Pylint has been unable to check methods signature compatibility for an
+      #   unexpected reason. Please report this kind if you don't make sense of it.
+#    R0123,
+      # :literal-comparison: (Comparison to literal)
+      # Used when comparing an object to a literal, which is usually what you do not want to do,
+      #   since you can compare to a different literal than what was expected altogether.
+#    R0124,
+      # :comparison-with-itself: (Redundant comparison - %s)
+      # Used when something is compared against itself.
+#    R0201,
+      # :no-self-use: (Method could be a function)
+      # Used when a method doesn't use its bound instance, and so could be written as a function.
+#    R0202,
+      # :no-classmethod-decorator: (Consider using a decorator instead of calling classmethod)
+      # Used when a class method is defined without using the decorator syntax.
+#    R0203,
+      # :no-staticmethod-decorator: (Consider using a decorator instead of calling staticmethod)
+      # Used when a static method is defined without using the decorator syntax.
+#    R0205,
+      # :useless-object-inheritance: (Class %r inherits from object, can be safely removed from bases in python3)
+      # Used when a class inherit from object, which under python3 is implicit, hence can be
+      #   safely removed from bases.
+#    R0206,
+      # :property-with-parameters: (Cannot have defined parameters for properties)
+      # Used when we detect that a property also has parameters, which are useless, given that
+      #   properties cannot be called with additional arguments.
+#    R0401,
+      # :cyclic-import: (Cyclic import (%s))
+      # Used when a cyclic import between two or more modules is detected.
+#    R0801,
+      # :duplicate-code: (Similar lines in %s files)
+      # Indicates that a set of similar lines has been detected among multiple file. This usually
+      #   means that the code should be refactored to avoid this duplication.
+#    R0901,
+      # :too-many-ancestors: (Too many ancestors (%s/%s))
+      # Used when class has too many parent classes, try to reduce this to get a simpler (and so
+      #   easier to use) class.
+#    R0902,
+      # :too-many-instance-attributes: (Too many instance attributes (%s/%s))
+      # Used when class has too many instance attributes, try to reduce this to get a simpler (and
+      #   so easier to use) class.
+#    R0903,
+      # :too-few-public-methods: (Too few public methods (%s/%s))
+      # Used when class has too few public methods, so be sure it's really worth it.
+#    R0904,
+      # :too-many-public-methods: (Too many public methods (%s/%s))
+      # Used when class has too many public methods, try to reduce this to get a simpler (and so
+      #   easier to use) class.
+#    R0911,
+      # :too-many-return-statements: (Too many return statements (%s/%s))
+      # Used when a function or method has too many return statement, making it hard to follow.
+#    R0912,
+      # :too-many-branches: (Too many branches (%s/%s))
+      # Used when a function or method has too many branches, making it hard to follow.
+#    R0913,
+      # :too-many-arguments: (Too many arguments (%s/%s))
+      # Used when a function or method takes too many arguments.
+#    R0914,
+      # :too-many-locals: (Too many local variables (%s/%s))
+      # Used when a function or method has too many local variables.
+#    R0915,
+      # :too-many-statements: (Too many statements (%s/%s))
+      # Used when a function or method has too many statements. You should then split it in
+      #   smaller functions / methods.
+#    R0916,
+      # :too-many-boolean-expressions: (Too many boolean expressions in if statement (%s/%s))
+      # Used when an if statement contains too many boolean expressions.
+#    R1701,
+      # :consider-merging-isinstance: (Consider merging these isinstance calls to isinstance(%s, (%s)))
+      # Used when multiple consecutive isinstance calls can be merged into one.
+#    R1702,
+      # :too-many-nested-blocks: (Too many nested blocks (%s/%s))
+      # Used when a function or a method has too many nested blocks. This makes the code less
+      #   understandable and maintainable.
+#    R1703,
+      # :simplifiable-if-statement: (The if statement can be replaced with %s)
+      # Used when an if statement can be replaced with 'bool(test)'.
+#    R1704,
+      # :redefined-argument-from-local: (Redefining argument with the local name %r)
+      # Used when a local name is redefining an argument, which might suggest a potential error.
+      #   This is taken in account only for a handful of name binding operations, such as for
+      #   iteration, with statement assignment and exception handler assignment.
+### Explicitly disabling R1705
+    R1705,
+      # :no-else-return: (Unnecessary "%s" after "return")
+      # Used in order to highlight an unnecessary block of code following an if containing a
+      #   return statement. As such, it will warn when it encounters an else following a chain of
+      #   ifs, all of them containing a return statement.
+#    R1706,
+      # :consider-using-ternary: (Consider using ternary (%s))
+      # Used when one of known pre-python 2.5 ternary syntax is used.
+#    R1707,
+      # :trailing-comma-tuple: (Disallow trailing comma tuple)
+      # In Python, a tuple is actually created by the comma symbol, not by the parentheses.
+      #   Unfortunately, one can actually create a tuple by misplacing a trailing comma, which can
+      #   lead to potential weird bugs in your code. You should always use parentheses explicitly
+      #   for creating a tuple.
+#    R1708,
+      # :stop-iteration-return: (Do not raise StopIteration in generator, use return statement instead)
+      # According to PEP479, the raise of StopIteration to end the loop of a generator may lead to
+      #   hard to find bugs. This PEP specify that raise StopIteration has to be replaced by a
+      #   simple return statement
+#    R1709,
+      # :simplify-boolean-expression: (Boolean expression may be simplified to %s)
+      # Emitted when redundant pre-python 2.5 ternary syntax is used.
+#    R1710,
+      # :inconsistent-return-statements: (Either all return statements in a function should return an expression, or none of them should.)
+      # According to PEP8, if any return statement returns an expression, any return statements
+      #   where no value is returned should explicitly state this as return None, and an explicit
+      #   return statement should be present at the end of the function (if reachable)
+#    R1711,
+      # :useless-return: (Useless return at end of function or method)
+      # Emitted when a single "return" or "return None" statement is found at the end of function
+      #   or method definition. This statement can safely be removed because Python will
+      #   implicitly return None
+#    R1712,
+      # :consider-swap-variables: (Consider using tuple unpacking for swapping variables)
+      # You do not have to use a temporary variable in order to swap variables. Using "tuple
+      #   unpacking" to directly swap variables makes the intention more clear.
+#    R1713,
+      # :consider-using-join: (Consider using str.join(sequence) for concatenating strings from an iterable)
+      # Using str.join(sequence) is faster, uses less memory and increases readability compared to
+      #   for-loop iteration.
+#    R1714,
+      # :consider-using-in: (Consider merging these comparisons with "in" to %r)
+      # To check if a variable is equal to one of many values,combine the values into a tuple and
+      #   check if the variable is contained "in" it instead of checking for equality against each
+      #   of the values. This is faster and less verbose.
+#    R1715,
+      # :consider-using-get: (Consider using dict.get for getting values from a dict if a key is present or a default if not)
+      # Using the builtin dict.get for getting a value from a dictionary if a key is present or a
+      #   default if not, is simpler and considered more idiomatic, although sometimes a bit
+      #   slower
+#    R1716,
+      # :chained-comparison: (Simplify chained comparison between the operands)
+      # This message is emitted when pylint encounters boolean operation like"a < b and b < c",
+      #   suggesting instead to refactor it to "a < b < c"
+#    R1717,
+      # :consider-using-dict-comprehension: (Consider using a dictionary comprehension)
+      # Emitted when we detect the creation of a dictionary using the dict() callable and a
+      #   transient list. Although there is nothing syntactically wrong with this code, it is hard
+      #   to read and can be simplified to a dict comprehension. Also it is faster since you don't
+      #   need to create another transient list
+#    R1718,
+      # :consider-using-set-comprehension: (Consider using a set comprehension)
+      # Although there is nothing syntactically wrong with this code, it is hard to read and can
+      #   be simplified to a set comprehension. Also it is faster since you don't need to create
+      #   another transient list
+#    R1719,
+      # :simplifiable-if-expression: (The if expression can be replaced with %s)
+      # Used when an if expression can be replaced with 'bool(test)'.
+#    R1720,
+      # :no-else-raise: (Unnecessary "%s" after "raise")
+      # Used in order to highlight an unnecessary block of code following an if containing a raise
+      #   statement. As such, it will warn when it encounters an else following a chain of ifs,
+      #   all of them containing a raise statement.
+#    R1721,
+      # :unnecessary-comprehension: (Unnecessary use of a comprehension)
+      # Instead of using an identitiy comprehension, consider using the list, dict or set
+      #   constructor. It is faster and simpler.
+#    R1722,
+      # :consider-using-sys-exit: (Consider using sys.exit())
+      # Instead of using exit() or quit(), consider using the sys.exit().
+#    R1723,
+      # :no-else-break: (Unnecessary "%s" after "break")
+      # Used in order to highlight an unnecessary block of code following an if containing a break
+      #   statement. As such, it will warn when it encounters an else following a chain of ifs,
+      #   all of them containing a break statement.
+#    R1724,
+      # :no-else-continue: (Unnecessary "%s" after "continue")
+      # Used in order to highlight an unnecessary block of code following an if containing a
+      #   continue statement. As such, it will warn when it encounters an else following a chain
+      #   of ifs, all of them containing a continue statement.
+#    W0101,
+      # :unreachable: (Unreachable code)
+      # Used when there is some code behind a "return" or "raise" statement, which will never be
+      #   accessed.
+#    W0102,
+      # :dangerous-default-value: (Dangerous default value %s as argument)
+      # Used when a mutable value as list or dictionary is detected in a default value for an
+      #   argument.
+#    W0104,
+      # :pointless-statement: (Statement seems to have no effect)
+      # Used when a statement doesn't have (or at least seems to) any effect.
+#    W0105,
+      # :pointless-string-statement: (String statement has no effect)
+      # Used when a string is used as a statement (which of course has no effect). This is a
+      #   particular case of W0104 with its own message so you can easily disable it if you're
+      #   using those strings as documentation, instead of comments.
+#    W0106,
+      # :expression-not-assigned: (Expression "%s" is assigned to nothing)
+      # Used when an expression that is not a function call is assigned to nothing. Probably
+      #   something else was intended.
+### Explicitly disabling W0107
+    W0107,
+      # :unnecessary-pass: (Unnecessary pass statement)
+      # Used when a "pass" statement that can be avoided is encountered.
+#    W0108,
+      # :unnecessary-lambda: (Lambda may not be necessary)
+      # Used when the body of a lambda expression is a function call on the same argument list as
+      #   the lambda itself; such lambda expressions are in all but a few cases replaceable with
+      #   the function being called in the body of the lambda.
+#    W0109,
+      # :duplicate-key: (Duplicate key %r in dictionary)
+      # Used when a dictionary expression binds the same key multiple times.
+#    W0111,
+      # :assign-to-new-keyword: (Name %s will become a keyword in Python %s)
+      # Used when assignment will become invalid in future Python release due to introducing new
+      #   keyword.
+#    W0120,
+      # :useless-else-on-loop: (Else clause on loop without a break statement)
+      # Loops should only have an else clause if they can exit early with a break statement,
+      #   otherwise the statements under else should be on the same scope as the loop itself.
+#    W0122,
+      # :exec-used: (Use of exec)
+      # Used when you use the "exec" statement (function for Python 3), to discourage its usage.
+      #   That doesn't mean you cannot use it !
+#    W0123,
+      # :eval-used: (Use of eval)
+      # Used when you use the "eval" function, to discourage its usage. Consider using
+      #   `ast.literal_eval` for safely evaluating strings containing Python expressions from
+      #   untrusted sources.
+#    W0124,
+      # :confusing-with-statement: (Following "as" with another context manager looks like a tuple.)
+      # Emitted when a `with` statement component returns multiple values and uses name binding
+      #   with `as` only for a part of those values, as in with ctx() as a, b. This can be
+      #   misleading, since it's not clear if the context manager returns a tuple or if the node
+      #   without a name binding is another context manager.
+#    W0125,
+      # :using-constant-test: (Using a conditional statement with a constant value)
+      # Emitted when a conditional statement (If or ternary if) uses a constant value for its
+      #   test. This might not be what the user intended to do.
+#    W0126,
+      # :missing-parentheses-for-call-in-test: (Using a conditional statement with potentially wrong function or method call due to missing parentheses)
+      # Emitted when a conditional statement (If or ternary if) seems to wrongly call a function
+      #   due to missing parentheses
+#    W0127,
+      # :self-assigning-variable: (Assigning the same variable %r to itself)
+      # Emitted when we detect that a variable is assigned to itself
+#    W0128,
+      # :redeclared-assigned-name: (Redeclared variable %r in assignment)
+      # Emitted when we detect that a variable was redeclared in the same assignment.
+#    W0143,
+      # :comparison-with-callable: (Comparing against a callable, did you omit the parenthesis?)
+      # This message is emitted when pylint detects that a comparison with a callable was made,
+      #   which might suggest that some parenthesis were omitted, resulting in potential unwanted
+      #   behaviour.
+#    W0150,
+      # :lost-exception: (%s statement in finally block may swallow exception)
+      # Used when a break or a return statement is found inside the finally clause of a
+      #   try...finally block: the exceptions raised in the try clause will be silently swallowed
+      #   instead of being re-raised.
+#    W0199,
+      # :assert-on-tuple: (Assert called on a 2-item-tuple. Did you mean 'assert x,y'?)
+      # A call of assert on a tuple will always evaluate to true if the tuple is not empty, and
+      #   will always evaluate to false if it is.
+#    W0201,
+      # :attribute-defined-outside-init: (Attribute %r defined outside __init__)
+      # Used when an instance attribute is defined outside the __init__ method.
+#    W0211,
+      # :bad-staticmethod-argument: (Static method with %r as first argument)
+      # Used when a static method has "self" or a value specified in valid- classmethod-first-arg
+      #   option or valid-metaclass-classmethod-first-arg option as first argument.
+#    W0212,
+      # :protected-access: (Access to a protected member %s of a client class)
+      # Used when a protected member (i.e. class member with a name beginning with an underscore)
+      #   is accessed outside the class or a descendant of the class where it's defined.
+#    W0221,
+      # :arguments-differ: (Parameters differ from %s %r method)
+      # Used when a method has a different number of arguments than in the implemented interface
+      #   or in an overridden method.
+#    W0222,
+      # :signature-differs: (Signature differs from %s %r method)
+      # Used when a method signature is different than in the implemented interface or in an
+      #   overridden method.
+#    W0223,
+      # :abstract-method: (Method %r is abstract in class %r but is not overridden)
+      # Used when an abstract method (i.e. raise NotImplementedError) is not overridden in
+      #   concrete class.
+#    W0231,
+      # :super-init-not-called: (__init__ method from base class %r is not called)
+      # Used when an ancestor class method has an __init__ method which is not called by a derived
+      #   class.
+#    W0232,
+      # :no-init: (Class has no __init__ method)
+      # Used when a class has no __init__ method, neither its parent classes.
+#    W0233,
+      # :non-parent-init-called: (__init__ method from a non direct base class %r is called)
+      # Used when an __init__ method is called on a class which is not in the direct ancestors for
+      #   the analysed class.
+#    W0235,
+      # :useless-super-delegation: (Useless super delegation in method %r)
+      # Used whenever we can detect that an overridden method is useless, relying on super()
+      #   delegation to do the same thing as another method from the MRO.
+#    W0236,
+      # :invalid-overridden-method: (Method %r was expected to be %r, found it instead as %r)
+      # Used when we detect that a method was overridden as a property or the other way around,
+      #   which could result in potential bugs at runtime.
+#    W0301,
+      # :unnecessary-semicolon: (Unnecessary semicolon)
+      # Used when a statement is ended by a semi-colon (";"), which isn't necessary (that's
+      #   python, not C ;).
+#    W0311,
+      # :bad-indentation: (Bad indentation. Found %s %s, expected %s)
+      # Used when an unexpected number of indentations, tabulations or spaces has been found.
+#    W0312,
+      # :mixed-indentation: (Found indentation with %ss instead of %ss)
+      # Used when there are some mixed tabs and spaces in a module.
+#    W0401,
+      # :wildcard-import: (Wildcard import %s)
+      # Used when `from module import *` is detected.
+#    W0402,
+      # :deprecated-module: (Uses of a deprecated module %r)
+      # Used a module marked as deprecated is imported.
+#    W0404,
+      # :reimported: (Reimport %r (imported line %s))
+      # Used when a module is reimported multiple times.
+#    W0406,
+      # :import-self: (Module import itself)
+      # Used when a module is importing itself.
+#    W0407,
+      # :preferred-module: (Prefer importing %r instead of %r)
+      # Used when a module imported has a preferred replacement module.
+### Explicitly silencing W0410
+    W0410,
+      # :misplaced-future: (__future__ import is not the first non docstring statement)
+      # Python 2.5 and greater require __future__ import to be the first non docstring statement
+      #   in the module.
+#    W0511,
+      # :fixme: (None)
+      # Used when a warning note as FIXME or XXX is detected.
+#    W0601,
+      # :global-variable-undefined: (Global variable %r undefined at the module level)
+      # Used when a variable is defined through the "global" statement but the variable is not
+      #   defined in the module scope.
+#    W0602,
+      # :global-variable-not-assigned: (Using global for %r but no assignment is done)
+      # Used when a variable is defined through the "global" statement but no assignment to this
+      #   variable is done.
+#    W0603,
+      # :global-statement: (Using the global statement)
+      # Used when you use the "global" statement to update a global variable. Pylint just try to
+      #   discourage this usage. That doesn't mean you cannot use it !
+#    W0604,
+      # :global-at-module-level: (Using the global statement at the module level)
+      # Used when you use the "global" statement at the module level since it has no effect
+#    W0611,
+      # :unused-import: (Unused %s)
+      # Used when an imported module or variable is not used.
+#    W0612,
+      # :unused-variable: (Unused variable %r)
+      # Used when a variable is defined but not used.
+#    W0613,
+      # :unused-argument: (Unused argument %r)
+      # Used when a function or method argument is not used.
+#    W0614,
+      # :unused-wildcard-import: (Unused import %s from wildcard import)
+      # Used when an imported module or variable is not used from a `'from X import *'` style
+      #   import.
+#    W0621,
+      # :redefined-outer-name: (Redefining name %r from outer scope (line %s))
+      # Used when a variable's name hides a name defined in the outer scope.
+#    W0622,
+      # :redefined-builtin: (Redefining built-in %r)
+      # Used when a variable or function override a built-in.
+#    W0623,
+      # :redefine-in-handler: (Redefining name %r from %s in exception handler)
+      # Used when an exception handler assigns the exception to an existing name
+#    W0631,
+      # :undefined-loop-variable: (Using possibly undefined loop variable %r)
+      # Used when a loop variable (i.e. defined by a for loop or a list comprehension or a
+      #   generator expression) is used outside the loop.
+#    W0632,
+      # :unbalanced-tuple-unpacking: (Possible unbalanced tuple unpacking with sequence%s: left side has %d label(s), right side has %d value(s))
+      # Used when there is an unbalanced tuple unpacking in assignment
+#    W0640,
+      # :cell-var-from-loop: (Cell variable %s defined in loop)
+      # A variable used in a closure is defined in a loop. This will result in all closures using
+      #   the same value for the closed-over variable.
+#    W0641,
+      # :possibly-unused-variable: (Possibly unused variable %r)
+      # Used when a variable is defined but might not be used. The possibility comes from the fact
+      #   that locals() might be used, which could consume or not the said variable
+#    W0642,
+      # :self-cls-assignment: (Invalid assignment to %s in method)
+      # Invalid assignment to self or cls in instance or class method respectively.
+#    W0702,
+      # :bare-except: (No exception type(s) specified)
+      # Used when an except clause doesn't specify exceptions type to catch.
+#    W0703,
+      # :broad-except: (Catching too general exception %s)
+      # Used when an except catches a too general exception, possibly burying unrelated errors.
+#    W0705,
+      # :duplicate-except: (Catching previously caught exception type %s)
+      # Used when an except catches a type that was already caught by a previous handler.
+#    W0706,
+      # :try-except-raise: (The except handler raises immediately)
+      # Used when an except handler uses raise as its first or only operator. This is useless
+      #   because it raises back the exception immediately. Remove the raise operator or the
+      #   entire try-except-raise block!
+#    W0711,
+      # :binary-op-exception: (Exception to catch is the result of a binary "%s" operation)
+      # Used when the exception to catch is of the form "except A or B:". If intending to catch
+      #   multiple, rewrite as "except (A, B):"
+#    W0715,
+      # :raising-format-tuple: (Exception arguments suggest string formatting might be intended)
+      # Used when passing multiple arguments to an exception constructor, the first of them a
+      #   string literal containing what appears to be placeholders intended for formatting
+#    W0716,
+      # :wrong-exception-operation: (Invalid exception operation. %s)
+      # Used when an operation is done against an exception, but the operation is not valid for
+      #   the exception in question. Usually emitted when having binary operations between
+      #   exceptions in except handlers.
+#    W1113,
+      # :keyword-arg-before-vararg: (Keyword argument before variable positional arguments list in the definition of %s function)
+      # When defining a keyword argument before variable positional arguments, one can end up in
+      #   having multiple values passed for the aforementioned parameter in case the method is
+      #   called with keyword arguments.
+#    W1114,
+      # :arguments-out-of-order: (Positional arguments appear to be out of order)
+      # Emitted when the caller's argument names fully match the parameter names in the function
+      #   signature but do not have the same order.
+#    W1201,
+      # :logging-not-lazy: (Specify string format arguments as logging function parameters)
+      # Used when a logging statement has a call form of "logging.<logging method>(format_string %
+      #   (format_args...))". Such calls should leave string interpolation to the logging method
+      #   itself and be written "logging.<logging method>(format_string, format_args...)" so that
+      #   the program may avoid incurring the cost of the interpolation in those cases in which no
+      #   message will be logged. For more, see http://www.python.org/dev/peps/pep-0282/.
+#    W1202,
+      # :logging-format-interpolation: (Use %s formatting in logging functions%s)
+      # Used when a logging statement has a call form of "logging.<logging method>(<string
+      #   formatting>)". with invalid string formatting. Use another way for format the string
+      #   instead.
+#    W1300,
+      # :bad-format-string-key: (Format string dictionary key should be a string, not %s)
+      # Used when a format string that uses named conversion specifiers is used with a dictionary
+      #   whose keys are not all strings.
+#    W1301,
+      # :unused-format-string-key: (Unused key %r in format string dictionary)
+      # Used when a format string that uses named conversion specifiers is used with a dictionary
+      #   that contains keys not required by the format string.
+#    W1302,
+      # :bad-format-string: (Invalid format string)
+      # Used when a PEP 3101 format string is invalid.
+#    W1303,
+      # :missing-format-argument-key: (Missing keyword argument %r for format string)
+      # Used when a PEP 3101 format string that uses named fields doesn't receive one or more
+      #   required keywords.
+#    W1304,
+      # :unused-format-string-argument: (Unused format argument %r)
+      # Used when a PEP 3101 format string that uses named fields is used with an argument that is
+      #   not required by the format string.
+#    W1305,
+      # :format-combined-specification: (Format string contains both automatic field numbering and manual field specification)
+      # Used when a PEP 3101 format string contains both automatic field numbering (e.g. '{}') and
+      #   manual field specification (e.g. '{0}').
+#    W1306,
+      # :missing-format-attribute: (Missing format attribute %r in format specifier %r)
+      # Used when a PEP 3101 format string uses an attribute specifier ({0.length}), but the
+      #   argument passed for formatting doesn't have that attribute.
+#    W1307,
+      # :invalid-format-index: (Using invalid lookup key %r in format specifier %r)
+      # Used when a PEP 3101 format string uses a lookup specifier ({a[1]}), but the argument
+      #   passed for formatting doesn't contain or doesn't have that key as an attribute.
+#    W1308,
+      # :duplicate-string-formatting-argument: (Duplicate string formatting argument %r, consider passing as named argument)
+      # Used when we detect that a string formatting is repeating an argument instead of using
+      #   named string arguments
+#    W1401,
+      # :anomalous-backslash-in-string: (Anomalous backslash in string: '%s'. String constant might be missing an r prefix.)
+      # Used when a backslash is in a literal string but not as an escape.
+#    W1402,
+      # :anomalous-unicode-escape-in-string: (Anomalous Unicode escape in byte string: '%s'. String constant might be missing an r or u prefix.)
+      # Used when an escape like \u is encountered in a byte string where it has no effect.
+#    W1403,
+      # :implicit-str-concat-in-sequence: (Implicit string concatenation found in %s)
+      # String literals are implicitly concatenated in a literal iterable definition : maybe a
+      #   comma is missing ?
+#    W1501,
+      # :bad-open-mode: ("%s" is not a valid mode for open.)
+      # Python supports: r, w, a[, x] modes with b, +, and U (only with r) options. See
+      #   http://docs.python.org/2/library/functions.html#open
+#    W1503,
+      # :redundant-unittest-assert: (Redundant use of %s with constant value %r)
+      # The first argument of assertTrue and assertFalse is a condition. If a constant is passed
+      #   as parameter, that condition will be always true. In this case a warning should be
+      #   emitted.
+#    W1505,
+      # :deprecated-method: (Using deprecated method %s())
+      # The method is marked as deprecated and will be removed in a future version of Python.
+      #   Consider looking for an alternative in the documentation.
+#    W1506,
+      # :bad-thread-instantiation: (threading.Thread needs the target function)
+      # The warning is emitted when a threading.Thread class is instantiated without the target
+      #   function being passed. By default, the first parameter is the group param, not the
+      #   target param.
+#    W1507,
+      # :shallow-copy-environ: (Using copy.copy(os.environ). Use os.environ.copy() instead.)
+      # os.environ is not a dict object but proxy object, so shallow copy has still effects on
+      #   original object. See https://bugs.python.org/issue15373 for reference.
+#    W1508,
+      # :invalid-envvar-default: (%s default type is %s. Expected str or None.)
+      # Env manipulation functions return None or str values. Supplying anything different as a
+      #   default may cause bugs. See https://docs.python.org/3/library/os.html#os.getenv.
+#    W1509,
+      # :subprocess-popen-preexec-fn: (Using preexec_fn keyword which may be unsafe in the presence of threads)
+      # The preexec_fn parameter is not safe to use in the presence of threads in your
+      #   application. The child process could deadlock before exec is called. If you must use it,
+      #   keep it trivial! Minimize the number of libraries you call
+      #   into.https://docs.python.org/3/library/subprocess.html#popen-constructor
+#    W1510,
+      # :subprocess-run-check: (Using subprocess.run without explicitly set `check` is not recommended.)
+      # The check parameter should always be used with explicitly set `check` keyword to make
+      #   clear what the error-handling behavior
+      #   is.https://docs.python.org/3/library/subprocess.html#subprocess.runs
+#    W0331,
+      # :old-old-ne-operator: (Use of old old ne operator)
+      # Deprecated and replaced bt E1607
+
+
+# Enable the message, report, category or checker with the given id(s). You can
+# either give multiple identifier separated by comma (,) or put this option
+# multiple time (only on the command line, not in the configuration file where
+# it should appear only once). See also the "--disable" option for examples.
+
+# Start with:
+# Enabled by default
+
+enable=I1101
+      # :c-extension-no-member: (%s %r has no %r member%s, but source is unavailable. Consider adding this module to
+      #   extension-pkg-whitelist if you want to perform analysis based on run-time introspection of living objects.)
+      # Used when a variable is accessed for non-existent member of C extension. Due to
+      #   unavailability of source static analysis is impossible, but it may be performed by
+      #   introspecting living objects in run-time.
+
+
+[REPORTS]
+
+# Python expression which should return a score less than or equal to 10. You
+# have access to the variables 'error', 'warning', 'refactor', and 'convention'
+# which contain the number of messages in each category, as well as 'statement'
+# which is the total number of statements analyzed. This score is used by the
+# global evaluation report (RP0004).
+evaluation=10.0 - ((float(5 * error + warning + refactor + convention) / statement) * 10)
+
+# Template used to display messages. This is a python new-style format string
+# used to format the message information. See doc for all details.
+#msg-template=
+
+# Set the output format. Available formats are text, parseable, colorized, json
+# and msvs (visual studio). You can also give a reporter class, e.g.
+# mypackage.mymodule.MyReporterClass.
+output-format=text
+
+# Tells whether to display a full report or only the messages.
+reports=no
+
+# Activate the evaluation score.
+### changed from yes to no
+score=no
+
+
+[REFACTORING]
+
+# Maximum number of nested blocks for function / method body
+### Increasing from 5 to 8
+max-nested-blocks=8
+
+# Complete name of functions that never returns. When checking for
+# inconsistent-return-statements if a never returning function is called then
+# it will be considered as an explicit return statement and no message will be
+# printed.
+never-returning-functions=sys.exit
+
+
+[LOGGING]
+
+# Format style used to check logging format string. `old` means using %
+# formatting, `new` is for `{}` formatting,and `fstr` is for f-strings.
+logging-format-style=old
+
+# Logging modules to check that the string format arguments are in logging
+# function parameter format.
+logging-modules=logging
+
+
+[SPELLING]
+
+# Limits count of emitted suggestions for spelling mistakes.
+max-spelling-suggestions=4
+
+# Spelling dictionary name. Available dictionaries: none. To make it work,
+# install the python-enchant package.
+spelling-dict=
+
+# List of comma separated words that should not be checked.
+spelling-ignore-words=
+
+# A path to a file that contains the private dictionary; one word per line.
+spelling-private-dict-file=
+
+# Tells whether to store unknown words to the private dictionary (see the
+# --spelling-private-dict-file option) instead of raising a message.
+spelling-store-unknown-words=no
+
+
+[MISCELLANEOUS]
+
+# List of note tags to take in consideration, separated by a comma.
+### These raise an error if found in a comment
+notes=FIXME,
+      XXX,
+      TODO
+
+
+[TYPECHECK]
+
+# List of decorators that produce context managers, such as
+# contextlib.contextmanager. Add to this list to register other decorators that
+# produce valid context managers.
+contextmanager-decorators=contextlib.contextmanager
+
+# List of members which are set dynamically and missed by pylint inference
+# system, and so shouldn't trigger E1101 when accessed. Python regular
+# expressions are accepted.
+generated-members=
+
+# Tells whether missing members accessed in mixin class should be ignored. A
+# mixin class is detected if its name ends with "mixin" (case insensitive).
+ignore-mixin-members=yes
+
+# Tells whether to warn about missing members when the owner of the attribute
+# is inferred to be None.
+ignore-none=yes
+
+# This flag controls whether pylint should warn about no-member and similar
+# checks whenever an opaque object is returned when inferring. The inference
+# can return multiple potential results while evaluating a Python object, but
+# some branches might not be evaluated, which results in partial inference. In
+# that case, it might be useful to still emit no-member and other checks for
+# the rest of the inferred objects.
+ignore-on-opaque-inference=yes
+
+# List of class names for which member attributes should not be checked (useful
+# for classes with dynamically set attributes). This supports the use of
+# qualified names.
+### Removed optparse.Values as optparse should not be used
+ignored-classes=thread._local,_thread._local
+
+# List of module names for which member attributes should not be checked
+# (useful for modules/projects where namespaces are manipulated during runtime
+# and thus existing member attributes cannot be deduced by static analysis). It
+# supports qualified module names, as well as Unix pattern matching.
+ignored-modules=
+
+# Show a hint with possible names when a member name was not found. The aspect
+# of finding the hint is based on edit distance.
+missing-member-hint=yes
+
+# The minimum edit distance a name should have in order to be considered a
+# similar match for a missing member name.
+missing-member-hint-distance=1
+
+# The total number of similar names that should be taken in consideration when
+# showing a hint for a missing member.
+missing-member-max-choices=1
+
+# List of decorators that change the signature of a decorated function.
+signature-mutators=
+
+
+[VARIABLES]
+
+# List of additional names supposed to be defined in builtins. Remember that
+# you should avoid defining new builtins when possible.
+additional-builtins=
+
+# Tells whether unused global variables should be treated as a violation.
+allow-global-unused-variables=yes
+
+# List of strings which can identify a callback function by name. A callback
+# name must start or end with one of those strings.
+callbacks=cb_,
+          _cb
+
+# A regular expression matching the name of dummy variables (i.e. expected to
+# not be used).
+dummy-variables-rgx=_+$|(_[a-zA-Z0-9_]*[a-zA-Z0-9]+?$)|dummy|^ignored_|^unused_
+
+# Argument names that match this expression will be ignored. Default to name
+# with leading underscore.
+ignored-argument-names=_.*|^ignored_|^unused_
+
+# Tells whether we should check for unused import in __init__ files.
+init-import=no
+
+# List of qualified module names which can have objects that can redefine
+# builtins.
+redefining-builtins-modules=six.moves,past.builtins,future.builtins,builtins,io
+
+
+[FORMAT]
+
+# Expected format of line ending, e.g. empty (any line ending), LF or CRLF.
+expected-line-ending-format=
+
+# Regexp for a line that is allowed to be longer than the limit.
+ignore-long-lines=^\s*(# )?<?https?://\S+>?$
+
+# Number of spaces of indent required inside a hanging or continued line.
+indent-after-paren=4
+
+# String used as indentation unit. This is usually "    " (4 spaces) or "\t" (1
+# tab).
+indent-string='    '
+
+# Maximum number of characters on a single line.
+### Increased from 100 to 119
+max-line-length=119
+
+# Maximum number of lines in a module.
+max-module-lines=1000
+
+# List of optional constructs for which whitespace checking is disabled. `dict-
+# separator` is used to allow tabulation in dicts, etc.: {1  : 1,\n222: 2}.
+# `trailing-comma` allows a space between comma and closing bracket: (a, ).
+# `empty-line` allows space-only lines.
+### Removed this
+#no-space-check=trailing-comma,
+#               dict-separator
+no-space-check=
+
+# Allow the body of a class to be on the same line as the declaration if body
+# contains single statement.
+single-line-class-stmt=no
+
+# Allow the body of an if to be on the same line as the test if there is no
+# else.
+single-line-if-stmt=no
+
+
+[SIMILARITIES]
+
+# Ignore comments when computing similarities.
+ignore-comments=yes
+
+# Ignore docstrings when computing similarities.
+ignore-docstrings=yes
+
+# Ignore imports when computing similarities.
+ignore-imports=no
+
+# Minimum lines number of a similarity.
+min-similarity-lines=4
+
+
+[BASIC]
+
+# Naming style matching correct argument names.
+argument-naming-style=snake_case
+
+# Regular expression matching correct argument names. Overrides argument-
+# naming-style.
+#argument-rgx=
+### added
+argument-rgx=[a-z_][a-z0-9_]{2,39}$
+
+# Naming style matching correct attribute names.
+attr-naming-style=snake_case
+
+# Regular expression matching correct attribute names. Overrides attr-naming-
+# style.
+#attr-rgx=
+### added
+attr-rgx=[a-z_][a-z0-9_]{2,39}$
+
+# Bad variable names which should always be refused, separated by a comma.
+bad-names=foo,
+          bar,
+          foobar,
+          spam,
+          eggs,
+          ham,
+          baz,
+          toto,
+          tutu,
+          tata
+
+# Naming style matching correct class attribute names.
+class-attribute-naming-style=any
+
+# Regular expression matching correct class attribute names. Overrides class-
+# attribute-naming-style.
+#class-attribute-rgx=
+### added
+class-attribute-rgx=([A-Za-z_][A-Za-z0-9_]{2,30}|(__.*__))$
+
+# Naming style matching correct class names.
+class-naming-style=PascalCase
+
+# Regular expression matching correct class names. Overrides class-naming-
+# style.
+#class-rgx=
+### added
+class-rgx=[A-Z_][a-zA-Z0-9]+$
+
+# Naming style matching correct constant names.
+const-naming-style=UPPER_CASE
+
+# Regular expression matching correct constant names. Overrides const-naming-
+# style.
+#const-rgx=
+### added
+const-rgx=(([A-Z_][A-Z0-9_]*)|(__.*__))$
+
+# Minimum line length for functions/classes that require docstrings, shorter
+# ones are exempt.
+docstring-min-length=-1
+
+# Naming style matching correct function names.
+function-naming-style=snake_case
+
+# Regular expression matching correct function names. Overrides function-
+# naming-style.
+#function-rgx=
+### added
+function-rgx=[a-z_][a-z0-9_]{2,39}$
+
+# Good variable names which should always be accepted, separated by a comma.
+good-names=i,
+           j,
+           k,
+           v,  ### added, for transient dict values
+#           ex,  ### removed
+ #          Run,   ### removed
+           _,
+           __, ### added
+           ___,  ### added
+           f,  ### added for file objects
+           e   ### added for exceptions
+
+# Include a hint for the correct naming format with invalid-name.
+include-naming-hint=no
+
+# Naming style matching correct inline iteration names.
+inlinevar-naming-style=any
+
+# Regular expression matching correct inline iteration names. Overrides
+# inlinevar-naming-style.
+#inlinevar-rgx=
+### added
+inlinevar-rgx=[A-Za-z_][A-Za-z0-9_]*$
+
+# Naming style matching correct method names.
+method-naming-style=snake_case
+
+# Regular expression matching correct method names. Overrides method-naming-
+# style.
+#method-rgx=
+### added
+method-rgx=[a-z_][a-z0-9_]{2,39}$
+
+# Naming style matching correct module names.
+module-naming-style=snake_case
+
+# Regular expression matching correct module names. Overrides module-naming-
+# style.
+#module-rgx=
+### added
+module-rgx=(([a-z_][a-z0-9_]*)|([A-Z][a-zA-Z0-9]+))$
+
+# Colon-delimited sets of names that determine each other's naming style when
+# the name regexes allow several styles.
+name-group=
+
+# Regular expression which should only match function or class names that do
+# not require a docstring.
+### disabled
+# no-docstring-rgx=^_
+
+# List of decorators that produce properties, such as abc.abstractproperty. Add
+# to this list to register other decorators that produce valid properties.
+# These decorators are taken in consideration only for invalid-name.
+property-classes=abc.abstractproperty
+
+# Naming style matching correct variable names.
+variable-naming-style=snake_case
+
+# Regular expression matching correct variable names. Overrides variable-
+# naming-style.
+#variable-rgx=
+### added
+variable-rgx=[a-z_][a-z0-9_]{2,39}$
+
+
+[STRING]
+
+# This flag controls whether the implicit-str-concat-in-sequence should
+# generate a warning on implicit string concatenation in sequences defined over
+# several lines.
+check-str-concat-over-line-jumps=no
+
+
+[IMPORTS]
+
+# List of modules that can be imported at any level, not just the top level
+# one.
+allow-any-import-level=
+
+# Allow wildcard imports from modules that define __all__.
+allow-wildcard-with-all=no
+
+# Analyse import fallback blocks. This can be used to support both Python 2 and
+# 3 compatible code, which means that the block might have code that exists
+# only in one or another interpreter, leading to false positives when analysed.
+analyse-fallback-blocks=no
+
+# Deprecated modules which should not be used, separated by a comma.
+deprecated-modules=optparse,tkinter.tix
+
+# Create a graph of external dependencies in the given file (report RP0402 must
+# not be disabled).
+ext-import-graph=
+
+# Create a graph of every (i.e. internal and external) dependencies in the
+# given file (report RP0402 must not be disabled).
+import-graph=
+
+# Create a graph of internal dependencies in the given file (report RP0402 must
+# not be disabled).
+int-import-graph=
+
+# Force import order to recognize a module as part of the standard
+# compatibility libraries.
+known-standard-library=
+
+# Force import order to recognize a module as part of a third party library.
+known-third-party=enchant
+
+# Couples of modules and preferred modules, separated by a comma.
+preferred-modules=
+
+
+[CLASSES]
+
+# List of method names used to declare (i.e. assign) instance attributes.
+defining-attr-methods=__init__,
+                      __new__,
+### removed                      setUp,
+                      __post_init__
+
+# List of member names, which should be excluded from the protected access
+# warning.
+exclude-protected=_asdict,
+                  _fields,
+                  _replace,
+                  _source,
+                  _make
+
+# List of valid names for the first argument in a class method.
+valid-classmethod-first-arg=cls
+
+# List of valid names for the first argument in a metaclass class method.
+# changed from cls to mcs
+valid-metaclass-classmethod-first-arg=mcs
+
+
+[DESIGN]
+
+# Maximum number of arguments for function / method.
+### increased from 5 to 10
+max-args=10
+
+# Maximum number of attributes for a class (see R0902).
+### increased from 7 to 15
+max-attributes=15
+
+# Maximum number of boolean expressions in an if statement (see R0916).
+### increased from 5 to 7
+max-bool-expr=7
+
+# Maximum number of branch for function / method body.
+# increased from 12 to 15
+max-branches=15
+
+# Maximum number of locals for function / method body.
+# increased from 15 to 19
+max-locals=19
+
+# Maximum number of parents for a class (see R0901).
+max-parents=7
+
+# Maximum number of public methods for a class (see R0904).
+max-public-methods=20
+
+# Maximum number of return / yield for function / method body.
+max-returns=6
+
+# Maximum number of statements in function / method body.
+max-statements=50
+
+# Minimum number of public methods for a class (see R0903).
+### Decreased from 2 to 1
+min-public-methods=1
+
+
+[EXCEPTIONS]
+
+# Exceptions that will emit a warning when being caught. Defaults to
+# "BaseException, Exception".
+overgeneral-exceptions=BaseException,
+                       Exception
