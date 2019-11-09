@@ -4,6 +4,7 @@
 """Tests menu.py"""
 
 # pylama: ignore=D102
+# pylint: disable=C0116,W0212
 
 from copy import deepcopy
 import json

@@ -1658,13 +1658,14 @@ good-names=i,
            j,
            k,
            v,  ### added, for transient dict values
-#           ex,  ### removed
- #          Run,   ### removed
+#          ex,  ### removed
+#          Run,   ### removed
            _,
            __, ### added
            ___,  ### added
            f,  ### added for file objects
-           e   ### added for exceptions
+           e,  ### added for exceptions
+           c   ### added for transient counters
 
 # Include a hint for the correct naming format with invalid-name.
 include-naming-hint=no

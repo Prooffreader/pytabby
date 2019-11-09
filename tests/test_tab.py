@@ -10,6 +10,7 @@ Functionality of this module is tested in menu.py tests
 """
 
 # pylama: ignore=D102
+# pylint: disable=C0116,W0212
 
 from copy import deepcopy
 
