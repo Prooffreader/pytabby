@@ -133,7 +133,7 @@ def main_loop():  # noqa: C901
 
 if __name__ == "__main__":
 
-    cwd = os.getcwd()
+    CWD = os.getcwd()
     os.chdir(get_directory())
     main_loop()
-    os.chdir(cwd)
+    os.chdir(CWD)

@@ -15,6 +15,8 @@ There are three possible values of config_layout, determined from the config dic
                          is at the top level of the config dict, i.e. where 'tabs' would have been
 """
 
+# pylint: disable=broad-except
+# allowing this ^ because it's validation
 
 import re
 from collections import Counter
