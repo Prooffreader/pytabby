@@ -3,6 +3,7 @@ coverage==4.5.4
 eradicate==1.0
 pygments==2.4.2
 pylama==7.7.1
+pylint>=2.3.1
 pytest-cov==2.7.1
 pytest-ordering==0.6
 pytest-regressions==2.0.0
