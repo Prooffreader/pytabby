@@ -16,7 +16,7 @@ There are three possible values of config_layout, determined from the config dic
 """
 
 # pylint: disable=broad-except
-# allowing this ^ because it's validation
+# allowing this ^ because it's validation...
 
 import re
 from collections import Counter
