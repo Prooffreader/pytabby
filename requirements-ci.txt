@@ -1,7 +1,7 @@
 codecov==2.0.15
 coverage==4.5.4
 eradicate==1.0
-pygments==2.5.1
+pygments==2.5.2
 pylama==7.7.1
 pylint>=2.3.1
 pytest-cov==2.8.1
